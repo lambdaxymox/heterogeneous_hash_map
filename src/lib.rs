@@ -373,6 +373,14 @@ where
         self.inner.get_mut(key)
     }
 
+    pub fn get_unchecked(&self, key: &Key<T>) -> &T {
+        &self.inner[key]
+    }
+
+    pub fn get_mut_unchecked(&mut self, key: &Key<T>) -> &mut T {
+        &mut self.inner[key]
+    }
+
     pub fn get_disjoint_mut<Q, const N: usize>(&mut self, ks: [&Q; N]) -> [Option<&'_ mut T>; N]
     where
         Key<T>: Borrow<Q>,
@@ -498,6 +506,19 @@ impl HeterogeneousHashMap {
         Map::from_inner(map)
     }
 
+    pub fn get_map_mut_unchecked<T>(&mut self) -> &mut Map<T>
+    where
+        T: any::Any,
+    {
+        let type_id = TypeId::of::<T>();
+        let map = self.map
+            .get_mut(&type_id)
+            .unwrap()
+            .as_proj_mut::<Key<T>, T, hash::RandomState, alloc::Global>();
+
+        Map::from_inner_mut(map)
+    }
+
     pub fn get_map<T>(&self) -> Option<&Map<T>>
     where
         T: any::Any,
@@ -621,6 +642,26 @@ impl HeterogeneousHashMap {
         let map = self.get_map_mut::<T>()?;
 
         map.remove_entry(key)
+    }
+}
+
+impl HeterogeneousHashMap {
+    pub fn get_unchecked<T>(&self, key: &Key<T>) -> &T
+    where
+        T: any::Any,
+    {
+        let map = self.get_map_unchecked::<T>();
+
+        map.get_unchecked(key)
+    }
+
+    pub fn get_mut_unchecked<T>(&mut self, key: &Key<T>) -> &mut T
+    where
+        T: any::Any,
+    {
+        let mut map = self.get_map_mut_unchecked::<T>();
+
+        map.get_mut_unchecked(key)
     }
 }
 
