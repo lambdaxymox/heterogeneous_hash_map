@@ -623,3 +623,10 @@ impl HeterogeneousHashMap {
         map.remove_entry(key)
     }
 }
+
+impl fmt::Debug for HeterogeneousHashMap {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.debug_struct("HeterogeneousHashMap").finish()
+    }
+}
+
