@@ -315,6 +315,122 @@ impl<'a, T> Default for Values<'a, T> {
     }
 }
 
+pub struct Drain<'a, T>
+where
+    T: any::Any,
+{
+    iter: opaque::index_map::map::Drain<'a, Key<T>, T>,
+}
+
+impl<'a, T> Drain<'a, T>
+where
+    T: any::Any,
+{
+    const fn new(iter: opaque::index_map::map::Drain<'a, Key<T>, T>) -> Self {
+        Self { iter }
+    }
+}
+
+impl<'a, T> Iterator for Drain<'a, T>
+where
+    T: any::Any,
+{
+    type Item = (Key<T>, T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+impl<'a, T> DoubleEndedIterator for Drain<'a, T>
+where
+    T: any::Any,
+{
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.iter.next_back()
+    }
+
+    fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
+        self.iter.nth_back(n)
+    }
+}
+
+impl<'a, T> ExactSizeIterator for Drain<'a, T>
+where
+    T: any::Any,
+{
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<'a, T> iter::FusedIterator for Drain<'a, T>
+where
+    T: any::Any,
+{
+}
+
+impl<'a, T> fmt::Debug for Drain<'a, T>
+where
+    T: any::Any + fmt::Debug,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(&self.iter, formatter)
+    }
+}
+
+pub struct ExtractIf<'a, T, F>
+where
+    T: any::Any,
+    F: FnMut(&Key<T>, &mut T) -> bool,
+{
+    iter: opaque::index_map::map::ExtractIf<'a, Key<T>, T, F>,
+}
+
+impl<'a, T, F> ExtractIf<'a, T, F>
+where
+    T: any::Any,
+    F: FnMut(&Key<T>, &mut T) -> bool,
+{
+    #[inline]
+    const fn new(iter: opaque::index_map::map::ExtractIf<'a, Key<T>, T, F>) -> ExtractIf<'a, T, F> {
+        ExtractIf { iter }
+    }
+}
+
+impl<'a, T, F> Iterator for ExtractIf<'a, T, F>
+where
+    T: any::Any,
+    F: FnMut(&Key<T>, &mut T) -> bool,
+{
+    type Item = (Key<T>, T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.iter.size_hint()
+    }
+}
+
+impl<T, F> iter::FusedIterator for ExtractIf<'_, T, F>
+where
+    T: any::Any,
+    F: FnMut(&Key<T>, &mut T) -> bool,
+{
+}
+
+impl<'a, T, F> fmt::Debug for ExtractIf<'a, T, F>
+where
+    T: any::Any + fmt::Debug,
+    F: FnMut(&Key<T>, &mut T) -> bool,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.debug_struct("ExtractIf").finish_non_exhaustive()
+    }
+}
+
 #[repr(transparent)]
 pub struct Map<T>
 where
@@ -417,6 +533,10 @@ where
         Values::new(self.inner.values())
     }
 
+    pub fn drain(&mut self) -> Drain<'_, T> {
+        Drain::new(self.inner.drain(..))
+    }
+
     pub fn clear(&mut self) {
         self.inner.clear();
     }
@@ -461,6 +581,30 @@ where
 
     fn index(&self, key: &Key<T>) -> &Self::Output {
         &self.inner[key]
+    }
+}
+
+impl<T> Extend<(Key<T>, T)> for Map<T>
+where
+    T: any::Any + hash::Hash + Eq,
+{
+    fn extend<I>(&mut self, iterable: I)
+    where
+        I: IntoIterator<Item = (Key<T>, T)>,
+    {
+        self.inner.extend(iterable);
+    }
+}
+
+impl<'a, T> Extend<(&'a Key<T>, &'a T)> for Map<T>
+where
+    T: any::Any + hash::Hash + Eq + Copy,
+{
+    fn extend<I>(&mut self, iterable: I)
+    where
+        I: IntoIterator<Item = (&'a Key<T>, &'a T)>,
+    {
+        self.inner.extend(iterable);
     }
 }
 
@@ -659,9 +803,22 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let mut map = self.get_map_mut_unchecked::<T>();
+        let map = self.get_map_mut_unchecked::<T>();
 
         map.get_mut_unchecked(key)
+    }
+}
+
+impl HeterogeneousHashMap {
+    #[inline]
+    pub fn extend<I, T>(&mut self, iterable: I)
+    where
+        T: any::Any + hash::Hash + Eq,
+        I: IntoIterator<Item = (Key<T>, T)>,
+    {
+        let map = self.get_or_insert_map_mut::<T>();
+
+        map.extend(iterable)
     }
 }
 
