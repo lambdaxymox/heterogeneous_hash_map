@@ -517,24 +517,31 @@ where
         self.inner.swap_remove_entry(key)
     }
 
-    pub fn iter(&self) -> Iter<T> {
+    pub fn iter(&self) -> Iter<'_, T> {
         Iter::new(self.inner.iter())
     }
 
-    pub fn iter_mut(&mut self) -> IterMut<T> {
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
         IterMut::new(self.inner.iter_mut())
     }
 
-    pub fn keys(&self) -> Keys<T> {
+    pub fn keys(&self) -> Keys<'_, T> {
         Keys::new(self.inner.keys())
     }
 
-    pub fn values(&self) -> Values<T> {
+    pub fn values(&self) -> Values<'_, T> {
         Values::new(self.inner.values())
     }
 
     pub fn drain(&mut self) -> Drain<'_, T> {
         Drain::new(self.inner.drain(..))
+    }
+
+    pub fn extract_if<F>(&mut self, keep: F) -> ExtractIf<'_, T, F>
+    where
+        F: FnMut(&Key<T>, &mut T) -> bool,
+    {
+        ExtractIf::new(self.inner.extract_if(.., keep))
     }
 
     pub fn clear(&mut self) {
@@ -618,6 +625,12 @@ impl HeterogeneousHashMap {
             map: HashMap::new(),
         }
     }
+
+    pub fn with_capacity(capacity: usize) -> Self {
+        Self {
+            map: HashMap::with_capacity(capacity),
+        }
+    }
 }
 
 impl HeterogeneousHashMap {
@@ -627,6 +640,16 @@ impl HeterogeneousHashMap {
     {
         let type_id = TypeId::of::<T>();
         let map = opaque::index_map::TypeErasedIndexMap::new::<Key<T>, T>();
+
+        self.map.insert(type_id, map);
+    }
+
+    pub fn insert_type_with_capacity<T>(&mut self, capacity: usize)
+    where
+        T: any::Any,
+    {
+        let type_id = TypeId::of::<T>();
+        let map = opaque::index_map::TypeErasedIndexMap::with_capacity::<Key<T>, T>(capacity);
 
         self.map.insert(type_id, map);
     }
