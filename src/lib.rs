@@ -709,6 +709,35 @@ impl HeterogeneousHashMap {
 }
 
 impl HeterogeneousHashMap {
+    pub fn capacity<T>(&self) -> Option<usize>
+    where
+        T: any::Any,
+    {
+        let map = self.get_map::<T>()?;
+
+        Some(map.capacity())
+    }
+
+    pub fn len<T>(&self) -> Option<usize>
+    where
+        T: any::Any,
+    {
+        let map = self.get_map::<T>()?;
+
+        Some(map.len())
+    }
+
+    pub fn is_empty<T>(&self) -> Option<bool>
+    where
+        T: any::Any,
+    {
+        let map = self.get_map::<T>()?;
+
+        Some(map.is_empty())
+    }
+}
+
+impl HeterogeneousHashMap {
     pub fn contains_key<T>(&self, key: &Key<T>) -> bool
     where
         T: any::Any,
