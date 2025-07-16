@@ -373,10 +373,10 @@ where
         self.inner.get_mut(key)
     }
 
-    pub fn get_disjoint_mut<Q: ?Sized, const N: usize>(&mut self, ks: [&Q; N]) -> [Option<&'_ mut T>; N]
+    pub fn get_disjoint_mut<Q, const N: usize>(&mut self, ks: [&Q; N]) -> [Option<&'_ mut T>; N]
     where
         Key<T>: Borrow<Q>,
-        Q: hash::Hash + Eq,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.get_disjoint_mut(ks)
     }
@@ -415,9 +415,33 @@ where
 
     pub fn retain<F>(&mut self, keep: F)
     where
-        F: FnMut(&Key<T>) -> bool,
+        F: FnMut(&Key<T>, &mut T) -> bool,
     {
         self.inner.retain(keep)
+    }
+}
+
+impl<T> PartialEq for Map<T>
+where
+    T: any::Any + PartialEq,
+{
+    fn eq(&self, other: &Self) -> bool {
+        PartialEq::eq(&self.inner, &other.inner)
+    }
+}
+
+impl<T> Eq for Map<T>
+where
+    T: any::Any + Eq,
+{
+}
+
+impl<T> fmt::Debug for Map<T>
+where
+    T: any::Any + fmt::Debug,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.debug_map().entries(self.iter()).finish()
     }
 }
 
@@ -561,10 +585,11 @@ impl HeterogeneousHashMap {
         map.get_mut(key)
     }
 
-    pub fn get_disjoint_mut<T, Q: ?Sized, const N: usize>(&mut self, ks: [&Q; N]) -> Option<[Option<&'_ mut T>; N]>
+    pub fn get_disjoint_mut<T, Q, const N: usize>(&mut self, ks: [&Q; N]) -> Option<[Option<&'_ mut T>; N]>
     where
+        T: any::Any,
         Key<T>: Borrow<Q>,
-        Q: hash::Hash + Eq,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>()?;
 
