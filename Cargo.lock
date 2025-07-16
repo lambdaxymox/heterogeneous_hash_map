@@ -284,8 +284,8 @@ checksum = "d6790f58c7ff633d8771f42965289203411a5e5c68388703c06e14f24770b41e"
 
 [[package]]
 name = "opaque"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 dependencies = [
  "opaque_alloc",
  "opaque_allocator_api",
@@ -297,8 +297,8 @@ dependencies = [
 
 [[package]]
 name = "opaque_alloc"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 dependencies = [
  "opaque_allocator_api",
  "opaque_polyfill",
@@ -306,26 +306,26 @@ dependencies = [
 
 [[package]]
 name = "opaque_allocator_api"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 dependencies = [
  "opaque_polyfill",
 ]
 
 [[package]]
 name = "opaque_error"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 
 [[package]]
 name = "opaque_hash"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 
 [[package]]
 name = "opaque_index_map"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 dependencies = [
  "criterion",
  "equivalent",
@@ -339,13 +339,13 @@ dependencies = [
 
 [[package]]
 name = "opaque_polyfill"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 
 [[package]]
 name = "opaque_vec"
-version = "1.0.0"
-source = "git+https://github.com/lambdaxymox/opaque#994caa94ae07dc278ba84ec0f775f830f978470e"
+version = "1.1.0"
+source = "git+https://github.com/lambdaxymox/opaque#75cd524dc85f84346a928cd22aaf1e53322f39d8"
 dependencies = [
  "opaque_alloc",
  "opaque_allocator_api",
