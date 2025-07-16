@@ -1,1 +1,10 @@
+Cargo.lock
 /target
+**/*.rs.bk
+.idea
+*.iml
+.DS_Store
+._.DS_Store
+.vscode
+*.proptest-regressions
+proptest-regressions
