@@ -10,6 +10,7 @@ use std::alloc;
 use opaque::allocator_api::alloc;
 
 use core::any;
+use std::vec::Vec;
 use std::boxed::Box;
 use std::string::String;
 
@@ -81,6 +82,30 @@ fn test_heterogeneous_hash_map_contains_type() {
 }
 
 #[test]
+fn test_heterogeneous_hash_map_get_map_empty() {
+    let het_map = HeterogeneousHashMap::new();
+
+    assert!(het_map.get_map::<()>().is_none());
+    assert!(het_map.get_map::<bool>().is_none());
+    assert!(het_map.get_map::<i8>().is_none());
+    assert!(het_map.get_map::<i16>().is_none());
+    assert!(het_map.get_map::<i32>().is_none());
+    assert!(het_map.get_map::<i64>().is_none());
+    assert!(het_map.get_map::<isize>().is_none());
+    assert!(het_map.get_map::<u8>().is_none());
+    assert!(het_map.get_map::<u16>().is_none());
+    assert!(het_map.get_map::<u32>().is_none());
+    assert!(het_map.get_map::<u64>().is_none());
+    assert!(het_map.get_map::<usize>().is_none());
+    assert!(het_map.get_map::<f32>().is_none());
+    assert!(het_map.get_map::<f64>().is_none());
+    assert!(het_map.get_map::<char>().is_none());
+    assert!(het_map.get_map::<String>().is_none());
+    assert!(het_map.get_map::<&str>().is_none());
+    assert!(het_map.get_map::<Box<dyn any::Any>>().is_none());
+}
+
+#[test]
 fn test_heterogeneous_hash_map_single_type_zst1() {
     let mut het_map = HeterogeneousHashMap::new();
 
@@ -100,6 +125,49 @@ fn test_heterogeneous_hash_map_single_type_zst1() {
     assert_eq!(het_map.is_empty::<()>(), Some(false));
     assert_eq!(het_map.len::<()>(), Some(1));
     assert_eq!(het_map.get(&Key::new(0)), Some(&()));
+}
+
+#[test]
+fn test_heterogeneous_hash_map_get_map() {
+    let mut het_map = HeterogeneousHashMap::new();
+
+    het_map.insert_type::<()>();
+    het_map.insert_type::<bool>();
+    het_map.insert_type::<i8>();
+    het_map.insert_type::<i16>();
+    het_map.insert_type::<i32>();
+    het_map.insert_type::<i64>();
+    het_map.insert_type::<isize>();
+    het_map.insert_type::<u8>();
+    het_map.insert_type::<u16>();
+    het_map.insert_type::<u32>();
+    het_map.insert_type::<u64>();
+    het_map.insert_type::<usize>();
+    het_map.insert_type::<f32>();
+    het_map.insert_type::<f64>();
+    het_map.insert_type::<char>();
+    het_map.insert_type::<String>();
+    het_map.insert_type::<&str>();
+    het_map.insert_type::<Box<dyn any::Any>>();
+
+    assert!(het_map.get_map::<()>().is_some());
+    assert!(het_map.get_map::<bool>().is_some());
+    assert!(het_map.get_map::<i8>().is_some());
+    assert!(het_map.get_map::<i16>().is_some());
+    assert!(het_map.get_map::<i32>().is_some());
+    assert!(het_map.get_map::<i64>().is_some());
+    assert!(het_map.get_map::<isize>().is_some());
+    assert!(het_map.get_map::<u8>().is_some());
+    assert!(het_map.get_map::<u16>().is_some());
+    assert!(het_map.get_map::<u32>().is_some());
+    assert!(het_map.get_map::<u64>().is_some());
+    assert!(het_map.get_map::<usize>().is_some());
+    assert!(het_map.get_map::<f32>().is_some());
+    assert!(het_map.get_map::<f64>().is_some());
+    assert!(het_map.get_map::<char>().is_some());
+    assert!(het_map.get_map::<String>().is_some());
+    assert!(het_map.get_map::<&str>().is_some());
+    assert!(het_map.get_map::<Box<dyn any::Any>>().is_some());
 }
 
 #[test]
@@ -184,4 +252,371 @@ fn test_heterogeneous_hash_map_single_type_zst4() {
     }
 
     assert_eq!(het_map.get::<()>(&Key::new(len)), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_extend1() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let array = [
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+
+    het_map.extend::<_, String>(array);
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), Some(&String::from("foo")));
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), Some(&String::from("bar")));
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), Some(&String::from("baz")));
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_extend2() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let vec = std::vec![
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+
+    het_map.extend::<_, String>(vec);
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), Some(&String::from("foo")));
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), Some(&String::from("bar")));
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), Some(&String::from("baz")));
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_remove1() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let array = [
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+    het_map.extend::<_, String>(array);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(1_usize)), Some(String::from("foo")));
+
+    for _ in 0..100 {
+        assert_eq!(het_map.remove::<String>(&Key::new(1_usize)), None);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_remove2() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let array = [
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+    het_map.extend::<_, String>(array);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(2_usize)), Some(String::from("bar")));
+
+    for _ in 0..100 {
+        assert_eq!(het_map.remove::<String>(&Key::new(2_usize)), None);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_remove3() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let array = [
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+    het_map.extend::<_, String>(array);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(3_usize)), Some(String::from("baz")));
+
+    for _ in 0..100 {
+        assert_eq!(het_map.remove::<String>(&Key::new(3_usize)), None);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_remove_contains_key() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let array = [
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+    het_map.extend::<_, String>(array);
+
+    assert!(het_map.contains_key::<String>(&Key::new(1_usize)));
+    assert!(het_map.contains_key::<String>(&Key::new(2_usize)));
+    assert!(het_map.contains_key::<String>(&Key::new(3_usize)));
+    assert!(!het_map.contains_key::<String>(&Key::new(4_usize)));
+
+    assert_eq!(het_map.remove::<String>(&Key::new(1_usize)), Some(String::from("foo")));
+
+    assert!(!het_map.contains_key::<String>(&Key::new(1_usize)));
+    assert!(het_map.contains_key::<String>(&Key::new(2_usize)));
+    assert!(het_map.contains_key::<String>(&Key::new(3_usize)));
+    assert!(!het_map.contains_key::<String>(&Key::new(4_usize)));
+
+    assert_eq!(het_map.remove::<String>(&Key::new(2_usize)), Some(String::from("bar")));
+
+    assert!(!het_map.contains_key::<String>(&Key::new(1_usize)));
+    assert!(!het_map.contains_key::<String>(&Key::new(2_usize)));
+    assert!(het_map.contains_key::<String>(&Key::new(3_usize)));
+    assert!(!het_map.contains_key::<String>(&Key::new(4_usize)));
+
+    assert_eq!(het_map.remove::<String>(&Key::new(3_usize)), Some(String::from("baz")));
+
+    assert!(!het_map.contains_key::<String>(&Key::new(1_usize)));
+    assert!(!het_map.contains_key::<String>(&Key::new(2_usize)));
+    assert!(!het_map.contains_key::<String>(&Key::new(3_usize)));
+    assert!(!het_map.contains_key::<String>(&Key::new(4_usize)));
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_remove_get() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let array = [
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+    het_map.extend::<_, String>(array);
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), Some(&String::from("foo")));
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), Some(&String::from("bar")));
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), Some(&String::from("baz")));
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(1_usize)), Some(String::from("foo")));
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), Some(&String::from("bar")));
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), Some(&String::from("baz")));
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(2_usize)), Some(String::from("bar")));
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), Some(&String::from("baz")));
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(3_usize)), Some(String::from("baz")));
+
+    assert_eq!(het_map.get::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(2_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(3_usize)), None);
+    assert_eq!(het_map.get::<String>(&Key::new(4_usize)), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_remove_get_key_value() {
+    let mut het_map = HeterogeneousHashMap::new();
+    let array = [
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+    ];
+    het_map.extend::<_, String>(array);
+
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(1_usize)), Some((&Key::new(1_usize), &String::from("foo"))));
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(2_usize)), Some((&Key::new(2_usize), &String::from("bar"))));
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(4_usize)), None);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(1_usize)), Some(String::from("foo")));
+
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(2_usize)), Some((&Key::new(2_usize), &String::from("bar"))));
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(4_usize)), None);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(2_usize)), Some(String::from("bar")));
+
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(2_usize)), None);
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(4_usize)), None);
+
+    assert_eq!(het_map.remove::<String>(&Key::new(3_usize)), Some(String::from("baz")));
+
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(1_usize)), None);
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(2_usize)), None);
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(3_usize)), None);
+    assert_eq!(het_map.get_key_value::<String>(&Key::new(4_usize)), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_iter1() {
+    let entries = std::vec![
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+        (Key::new(4_usize), String::from("quux")),
+    ];
+
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.extend(entries);
+
+    let map = het_map.get_map::<String>().unwrap();
+    let mut iter = map.iter();
+
+    assert_eq!(iter.next(), Some((&Key::new(1_usize), &String::from("foo"))));
+    assert_eq!(iter.next(), Some((&Key::new(2_usize), &String::from("bar"))));
+    assert_eq!(iter.next(), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(iter.next(), Some((&Key::new(4_usize), &String::from("quux"))));
+    assert_eq!(iter.next(), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_iter2() {
+    let entries = std::vec![
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+        (Key::new(4_usize), String::from("quux")),
+    ];
+    let expected = entries.clone();
+
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.extend(entries);
+
+    let map = het_map.get_map::<String>().unwrap();
+    let result: Vec<(Key<String>, String)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_keys1() {
+    let entries = std::vec![
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+        (Key::new(4_usize), String::from("quux")),
+    ];
+
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.extend(entries);
+
+    let map = het_map.get_map::<String>().unwrap();
+    let mut iter = map.keys();
+
+    assert_eq!(iter.next(), Some(&Key::new(1_usize)));
+    assert_eq!(iter.next(), Some(&Key::new(2_usize)));
+    assert_eq!(iter.next(), Some(&Key::new(3_usize)));
+    assert_eq!(iter.next(), Some(&Key::new(4_usize)));
+    assert_eq!(iter.next(), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_keys2() {
+    let entries = std::vec![
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+        (Key::new(4_usize), String::from("quux")),
+    ];
+    let expected: Vec<Key<String>> = entries.iter().map(|(k, v)| k).cloned().collect();
+
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.extend(entries);
+
+    let map = het_map.get_map::<String>().unwrap();
+    let result: Vec<Key<String>> = map.keys().cloned().collect();
+
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_values1() {
+    let entries = std::vec![
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+        (Key::new(4_usize), String::from("quux")),
+    ];
+
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.extend(entries);
+
+    let map = het_map.get_map::<String>().unwrap();
+    let mut iter = map.values();
+
+    assert_eq!(iter.next(), Some(&String::from("foo")));
+    assert_eq!(iter.next(), Some(&String::from("bar")));
+    assert_eq!(iter.next(), Some(&String::from("baz")));
+    assert_eq!(iter.next(), Some(&String::from("quux")));
+    assert_eq!(iter.next(), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_values2() {
+    let entries = std::vec![
+        (Key::new(1_usize), String::from("foo")),
+        (Key::new(2_usize), String::from("bar")),
+        (Key::new(3_usize), String::from("baz")),
+        (Key::new(4_usize), String::from("quux")),
+    ];
+    let expected: Vec<String> = entries.iter().map(|(k, v)| v).cloned().collect();
+
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.extend(entries);
+
+    let map = het_map.get_map::<String>().unwrap();
+    let result: Vec<String> = map.values().cloned().collect();
+
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_clear1() {
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.insert_type::<Box<dyn any::Any>>();
+
+    let map = het_map.get_map_mut::<Box<dyn any::Any>>().unwrap();
+    assert!(map.is_empty());
+
+    map.clear();
+
+    assert!(map.is_empty());
+}
+
+#[test]
+fn test_heterogeneous_hash_map_single_type_clear2() {
+    let mut het_map = HeterogeneousHashMap::new();
+
+    assert_eq!(het_map.len::<i32>(), None);
+
+    het_map.insert_type::<i32>();
+
+    assert_eq!(het_map.len::<i32>(), Some(0));
+    {
+        let map = het_map.get_map_mut::<i32>().unwrap();
+        assert!(map.is_empty());
+
+        map.extend([(Key::new(1_usize), i32::MIN), (Key::new(2_usize), 0_i32), (Key::new(3_usize), i32::MAX)]);
+    }
+    assert_eq!(het_map.len::<i32>(), Some(3));
+    {
+        let map = het_map.get_map_mut::<i32>().unwrap();
+        assert!(!map.is_empty());
+
+        map.clear();
+    }
+    assert_eq!(het_map.len::<i32>(), Some(0));
 }
