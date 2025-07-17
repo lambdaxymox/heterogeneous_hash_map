@@ -106,7 +106,7 @@ fn test_heterogeneous_hash_map_get_map_empty() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_zst1() {
+fn test_heterogeneous_hash_map_one_type_zst1() {
     let mut het_map = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<()>());
@@ -171,7 +171,7 @@ fn test_heterogeneous_hash_map_get_map() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_zst2() {
+fn test_heterogeneous_hash_map_one_type_zst2() {
     let mut het_map = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<()>());
@@ -195,7 +195,7 @@ fn test_heterogeneous_hash_map_single_type_zst2() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_zst3() {
+fn test_heterogeneous_hash_map_one_type_zst3() {
     let mut het_map = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<()>());
@@ -225,7 +225,7 @@ fn test_heterogeneous_hash_map_single_type_zst3() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_zst4() {
+fn test_heterogeneous_hash_map_one_type_zst4() {
     let mut het_map = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<()>());
@@ -255,7 +255,7 @@ fn test_heterogeneous_hash_map_single_type_zst4() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_extend1() {
+fn test_heterogeneous_hash_map_one_type_extend1() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -277,7 +277,7 @@ fn test_heterogeneous_hash_map_single_type_extend1() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_extend2() {
+fn test_heterogeneous_hash_map_one_type_extend2() {
     let mut het_map = HeterogeneousHashMap::new();
     let vec = std::vec![
         (Key::new(1_usize), String::from("foo")),
@@ -299,7 +299,7 @@ fn test_heterogeneous_hash_map_single_type_extend2() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove1() {
+fn test_heterogeneous_hash_map_one_type_remove1() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -316,7 +316,7 @@ fn test_heterogeneous_hash_map_single_type_remove1() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove2() {
+fn test_heterogeneous_hash_map_one_type_remove2() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -333,7 +333,7 @@ fn test_heterogeneous_hash_map_single_type_remove2() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove3() {
+fn test_heterogeneous_hash_map_one_type_remove3() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -350,7 +350,7 @@ fn test_heterogeneous_hash_map_single_type_remove3() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_contains_key() {
+fn test_heterogeneous_hash_map_one_type_remove_contains_key() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -387,7 +387,7 @@ fn test_heterogeneous_hash_map_single_type_remove_contains_key() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_get() {
+fn test_heterogeneous_hash_map_one_type_remove_get() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -424,7 +424,7 @@ fn test_heterogeneous_hash_map_single_type_remove_get() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_get_key_value() {
+fn test_heterogeneous_hash_map_one_type_remove_get_key_value() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -461,7 +461,7 @@ fn test_heterogeneous_hash_map_single_type_remove_get_key_value() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_entry1() {
+fn test_heterogeneous_hash_map_one_type_remove_entry1() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -478,7 +478,7 @@ fn test_heterogeneous_hash_map_single_type_remove_entry1() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_entry2() {
+fn test_heterogeneous_hash_map_one_type_remove_entry2() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -495,7 +495,7 @@ fn test_heterogeneous_hash_map_single_type_remove_entry2() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_entry3() {
+fn test_heterogeneous_hash_map_one_type_remove_entry3() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -512,7 +512,7 @@ fn test_heterogeneous_hash_map_single_type_remove_entry3() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_entry_contains_key() {
+fn test_heterogeneous_hash_map_one_type_remove_entry_contains_key() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -549,7 +549,7 @@ fn test_heterogeneous_hash_map_single_type_remove_entry_contains_key() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_entry_get() {
+fn test_heterogeneous_hash_map_one_type_remove_entry_get() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -586,7 +586,7 @@ fn test_heterogeneous_hash_map_single_type_remove_entry_get() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_remove_entry_get_key_value() {
+fn test_heterogeneous_hash_map_one_type_remove_entry_get_key_value() {
     let mut het_map = HeterogeneousHashMap::new();
     let array = [
         (Key::new(1_usize), String::from("foo")),
@@ -623,7 +623,7 @@ fn test_heterogeneous_hash_map_single_type_remove_entry_get_key_value() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_iter1() {
+fn test_heterogeneous_hash_map_one_type_iter1() {
     let entries = std::vec![
         (Key::new(1_usize), String::from("foo")),
         (Key::new(2_usize), String::from("bar")),
@@ -645,7 +645,7 @@ fn test_heterogeneous_hash_map_single_type_iter1() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_iter2() {
+fn test_heterogeneous_hash_map_one_type_iter2() {
     let entries = std::vec![
         (Key::new(1_usize), String::from("foo")),
         (Key::new(2_usize), String::from("bar")),
@@ -664,7 +664,33 @@ fn test_heterogeneous_hash_map_single_type_iter2() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_keys1() {
+fn test_heterogeneous_hash_map_one_type_iter3() {
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.insert_type::<String>();
+
+    let map = het_map.get_map::<String>().unwrap();
+    let mut iter = map.iter();
+
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_one_type_iter4() {
+    let expected = std::vec![];
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.insert_type::<String>();
+
+    let map = het_map.get_map::<String>().unwrap();
+    let result: Vec<(Key<String>, String)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_one_type_keys1() {
     let entries = std::vec![
         (Key::new(1_usize), String::from("foo")),
         (Key::new(2_usize), String::from("bar")),
@@ -686,7 +712,7 @@ fn test_heterogeneous_hash_map_single_type_keys1() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_keys2() {
+fn test_heterogeneous_hash_map_one_type_keys2() {
     let entries = std::vec![
         (Key::new(1_usize), String::from("foo")),
         (Key::new(2_usize), String::from("bar")),
@@ -705,7 +731,33 @@ fn test_heterogeneous_hash_map_single_type_keys2() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_values1() {
+fn test_heterogeneous_hash_map_one_type_keys3() {
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.insert_type::<String>();
+
+    let map = het_map.get_map::<String>().unwrap();
+    let mut iter = map.keys();
+
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_one_type_keys4() {
+    let expected = std::vec![];
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.insert_type::<String>();
+
+    let map = het_map.get_map::<String>().unwrap();
+    let result: Vec<Key<String>> = map.keys().cloned().collect();
+
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_one_type_values1() {
     let entries = std::vec![
         (Key::new(1_usize), String::from("foo")),
         (Key::new(2_usize), String::from("bar")),
@@ -727,7 +779,7 @@ fn test_heterogeneous_hash_map_single_type_values1() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_values2() {
+fn test_heterogeneous_hash_map_one_type_values2() {
     let entries = std::vec![
         (Key::new(1_usize), String::from("foo")),
         (Key::new(2_usize), String::from("bar")),
@@ -746,7 +798,33 @@ fn test_heterogeneous_hash_map_single_type_values2() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_clear1() {
+fn test_heterogeneous_hash_map_one_type_values3() {
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.insert_type::<String>();
+
+    let map = het_map.get_map::<String>().unwrap();
+    let mut iter = map.values();
+
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+    assert_eq!(iter.next(), None);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_one_type_values4() {
+    let expected: Vec<String> = std::vec![];
+    let mut het_map = HeterogeneousHashMap::new();
+    het_map.insert_type::<String>();
+
+    let map = het_map.get_map::<String>().unwrap();
+    let result: Vec<String> = map.values().cloned().collect();
+
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_heterogeneous_hash_map_one_type_clear1() {
     let mut het_map = HeterogeneousHashMap::new();
     het_map.insert_type::<Box<dyn any::Any>>();
 
@@ -759,7 +837,7 @@ fn test_heterogeneous_hash_map_single_type_clear1() {
 }
 
 #[test]
-fn test_heterogeneous_hash_map_single_type_clear2() {
+fn test_heterogeneous_hash_map_one_type_clear2() {
     let mut het_map = HeterogeneousHashMap::new();
 
     assert_eq!(het_map.len::<i32>(), None);
