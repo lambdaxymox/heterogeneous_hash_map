@@ -729,6 +729,23 @@ impl HeterogeneousHashMap {
 
         self.get_map_mut::<T>().unwrap()
     }
+
+    pub fn remove_type<T>(&mut self) -> Option<usize>
+    where
+        T: any::Any,
+    {
+        let removed_count = {
+            let map = self.get_map_mut::<T>()?;
+            let _removed_count = map.len();
+            map.clear();
+            _removed_count
+        };
+
+        let type_id = TypeId::of::<T>();
+        self.map.remove(&type_id);
+
+        Some(removed_count)
+    }
 }
 
 impl HeterogeneousHashMap {
