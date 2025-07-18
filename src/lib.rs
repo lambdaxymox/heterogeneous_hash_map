@@ -7,18 +7,21 @@ extern crate std;
 use core::any;
 use core::fmt;
 use core::iter;
+use core::mem;
 use core::ops;
 use core::borrow::Borrow;
 
 use std::collections::HashMap;
-use std::any::TypeId;
 use std::hash;
+use std::collections::hash_map;
+use std::vec::Vec;
 
 #[cfg(feature = "nightly")]
 use std::alloc;
 
 #[cfg(not(feature = "nightly"))]
 use opaque::allocator_api::alloc;
+
 
 #[derive(Debug)]
 pub struct Key<T> {
@@ -615,20 +618,84 @@ where
     }
 }
 
+pub struct TypeMetadataIter<'a> {
+    iter: hash_map::Iter<'a, any::TypeId, TypeMetadata>,
+}
+
+impl<'a> TypeMetadataIter<'a> {
+    #[inline]
+    const fn new(iter: hash_map::Iter<'a, any::TypeId, TypeMetadata>) -> Self {
+        Self { iter }
+    }
+}
+
+impl<'a> Iterator for TypeMetadataIter<'a> {
+    type Item = (&'a any::TypeId, &'a TypeMetadata);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+impl<'a> ExactSizeIterator for TypeMetadataIter<'a> {
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<'a> iter::FusedIterator for TypeMetadataIter<'a> {}
+
+impl<'a> Clone for TypeMetadataIter<'a> {
+    fn clone(&self) -> Self {
+        Self::new(self.iter.clone())
+    }
+}
+
+impl<'a> Default for TypeMetadataIter<'a> {
+    fn default() -> Self {
+        Self::new(Default::default())
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct TypeMetadata {
+    pub type_id: any::TypeId,
+    pub type_name: &'static str,
+    pub size: usize,
+    pub alignment: usize,
+}
+
+impl TypeMetadata {
+    pub fn of<T>() -> Self
+    where
+        T: any::Any,
+    {
+        TypeMetadata {
+            type_id: any::TypeId::of::<T>(),
+            type_name: any::type_name::<T>(),
+            size: mem::size_of::<T>(),
+            alignment: mem::align_of::<T>(),
+        }
+    }
+}
+
 pub struct HeterogeneousHashMap {
-    map: HashMap<TypeId, opaque::index_map::TypeErasedIndexMap>,
+    map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap>,
+    registry: HashMap<any::TypeId, TypeMetadata>,
 }
 
 impl HeterogeneousHashMap {
     pub fn new() -> Self {
         Self {
             map: HashMap::new(),
+            registry: HashMap::new(),
         }
     }
 
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             map: HashMap::with_capacity(capacity),
+            registry: HashMap::with_capacity(capacity),
         }
     }
 }
@@ -638,9 +705,11 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
+        let type_metadata = TypeMetadata::of::<T>();
         let map = opaque::index_map::TypeErasedIndexMap::new::<Key<T>, T>();
 
+        self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
     }
 
@@ -648,9 +717,11 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
+        let type_metadata = TypeMetadata::of::<T>();
         let map = opaque::index_map::TypeErasedIndexMap::with_capacity::<Key<T>, T>(capacity);
 
+        self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
     }
 
@@ -658,7 +729,7 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
 
         self.map.contains_key(&type_id)
     }
@@ -667,7 +738,7 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
         let map = self.map[&type_id].as_proj::<Key<T>, T, hash::RandomState, alloc::Global>();
 
         Map::from_inner(map)
@@ -677,7 +748,7 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
         let map = self.map
             .get_mut(&type_id)
             .unwrap()
@@ -690,7 +761,7 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
         if !self.map.contains_key(&type_id) {
             return None;
         }
@@ -706,7 +777,7 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
         if !self.map.contains_key(&type_id) {
             return None;
         }
@@ -722,7 +793,7 @@ impl HeterogeneousHashMap {
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
         if !self.map.contains_key(&type_id) {
             self.insert_type::<T>();
         }
@@ -741,10 +812,39 @@ impl HeterogeneousHashMap {
             _removed_count
         };
 
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
         self.map.remove(&type_id);
+        self.registry.remove(&type_id);
 
         Some(removed_count)
+    }
+}
+
+impl HeterogeneousHashMap {
+    pub fn len_map(&self) -> usize {
+        let mut len = 0;
+        for map in self.map.values() {
+            len += map.len();
+        }
+
+        len
+    }
+}
+
+impl HeterogeneousHashMap {
+    #[inline]
+    pub fn len_types(&self) -> usize {
+        self.map.len()
+    }
+
+    #[inline]
+    pub fn capacity_types(&self) -> usize {
+        self.map.capacity()
+    }
+
+    #[inline]
+    pub fn is_empty_types(&self) -> bool {
+        self.map.is_empty()
     }
 }
 
@@ -778,11 +878,30 @@ impl HeterogeneousHashMap {
 }
 
 impl HeterogeneousHashMap {
+    pub fn get_metadata<T>(&self) -> Option<TypeMetadata>
+    where
+        T: any::Any,
+    {
+        let type_id = any::TypeId::of::<T>();
+
+        self.registry.get(&type_id).cloned()
+    }
+
+    pub fn get_metadata_by_id(&self, type_id: any::TypeId) -> Option<TypeMetadata> {
+        self.registry.get(&type_id).cloned()
+    }
+
+    pub fn metadata_iter(&self) -> TypeMetadataIter<'_> {
+        TypeMetadataIter::new(self.registry.iter())
+    }
+}
+
+impl HeterogeneousHashMap {
     pub fn contains_key<T>(&self, key: &Key<T>) -> bool
     where
         T: any::Any,
     {
-        let type_id = TypeId::of::<T>();
+        let type_id = any::TypeId::of::<T>();
         match self.map.get(&type_id) {
             Some(opaque_map) => {
                 let proj_map = opaque_map.as_proj::<Key<T>, T, hash::RandomState, alloc::Global>();
@@ -892,8 +1011,27 @@ impl HeterogeneousHashMap {
 }
 
 impl fmt::Debug for HeterogeneousHashMap {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter.debug_struct("HeterogeneousHashMap").finish()
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        #[derive(Debug)]
+        struct TypeEntry<'a> {
+            type_id: &'a any::TypeId,
+            metadata: &'a TypeMetadata,
+            length: usize,
+        }
+
+        let entries: Vec<TypeEntry> = self.map.iter().map(|(type_id, map)| {
+            let metadata = self.registry.get(type_id)
+                .expect("Every stored type must have registered metadata");
+
+            TypeEntry {
+                type_id,
+                metadata,
+                length: map.len(),
+            }
+        }).collect();
+
+        f.debug_struct("HeterogeneousHashMap")
+            .field("entries", &entries)
+            .finish()
     }
 }
-
