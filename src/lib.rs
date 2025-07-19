@@ -39,17 +39,17 @@ use opaque::allocator_api::alloc;
 ///
 /// let key: Key<i32> = Key::new(1);
 ///
-/// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
-/// assert!(!het_map.contains_key::<char>(&Key::new(1)));
-/// assert_eq!(het_map.get::<i32>(&Key::new(1)),  None);
-/// assert_eq!(het_map.get::<char>(&Key::new(1)), None);
+/// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
+/// assert!(!het_map.contains_key::<char, _>(&Key::new(1)));
+/// assert_eq!(het_map.get::<i32, _>(&Key::new(1)),  None);
+/// assert_eq!(het_map.get::<char, _>(&Key::new(1)), None);
 ///
 /// het_map.insert::<i32>(key, 3_i32);
 ///
-/// assert!(het_map.contains_key::<i32>(&Key::new(1)));
-/// assert!(!het_map.contains_key::<char>(&Key::new(1)));
-/// assert_eq!(het_map.get::<i32>(&Key::new(1)),  Some(&3_i32));
-/// assert_eq!(het_map.get::<char>(&Key::new(1)), None);
+/// assert!(het_map.contains_key::<i32, _>(&Key::new(1)));
+/// assert!(!het_map.contains_key::<char, _>(&Key::new(1)));
+/// assert_eq!(het_map.get::<i32, _>(&Key::new(1)),  Some(&3_i32));
+/// assert_eq!(het_map.get::<char, _>(&Key::new(1)), None);
 /// ```
 #[derive(Debug)]
 pub struct Key<T> {
@@ -997,7 +997,11 @@ where
     /// assert!(!map.contains_key(&Key::new(4)));
     /// assert!(!map.contains_key(&Key::new(usize::MAX)));
     /// ```
-    pub fn contains_key(&self, key: &Key<T>) -> bool {
+    pub fn contains_key<Q>(&self, key: &Q) -> bool
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         self.inner.contains_key(key)
     }
 
@@ -1027,7 +1031,11 @@ where
     /// assert_eq!(map.get(&Key::new(3)), Some(&4_f64));
     /// assert_eq!(map.get(&Key::new(4)), None);
     /// ```
-    pub fn get(&self, key: &Key<T>) -> Option<&T> {
+    pub fn get<Q>(&self, key: &Q) -> Option<&T>
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         self.inner.get(key)
     }
 
@@ -1057,7 +1065,11 @@ where
     /// assert_eq!(map.get_key_value(&Key::new(3)), Some((&Key::new(3), &4_f64)));
     /// assert_eq!(map.get_key_value(&Key::new(4)), None);
     /// ```
-    pub fn get_key_value(&self, key: &Key<T>) -> Option<(&Key<T>, &T)> {
+    pub fn get_key_value<Q>(&self, key: &Q) -> Option<(&Key<T>, &T)>
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         self.inner.get_key_value(key)
     }
 
@@ -1105,7 +1117,11 @@ where
     ///     assert_eq!(map.get_mut(&Key::new(4)), None);
     /// }
     /// ```
-    pub fn get_mut(&mut self, key: &Key<T>) -> Option<&mut T> {
+    pub fn get_mut<Q>(&mut self, key: &Q) -> Option<&mut T>
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         self.inner.get_mut(key)
     }
 
@@ -1134,7 +1150,11 @@ where
     /// assert_eq!(map.get_unchecked(&Key::new(3)), &4_f64);
     /// ```
     #[track_caller]
-    pub fn get_unchecked(&self, key: &Key<T>) -> &T {
+    pub fn get_unchecked<Q>(&self, key: &Q) -> &T
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         &self.inner[key]
     }
 
@@ -1179,7 +1199,11 @@ where
     /// }
     /// ```
     #[track_caller]
-    pub fn get_mut_unchecked(&mut self, key: &Key<T>) -> &mut T {
+    pub fn get_mut_unchecked<Q>(&mut self, key: &Q) -> &mut T
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         &mut self.inner[key]
     }
 
@@ -1391,7 +1415,11 @@ where
     ///     assert_eq!(map.get(&Key::new(4)), None);
     /// }
     /// ```
-    pub fn remove(&mut self, key: &Key<T>) -> Option<T> {
+    pub fn remove<Q>(&mut self, key: &Q) -> Option<T>
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         self.inner.swap_remove(key)
     }
 
@@ -1475,7 +1503,11 @@ where
     ///     assert_eq!(map.get_key_value(&Key::new(4)), None);
     /// }
     /// ```
-    pub fn remove_entry(&mut self, key: &Key<T>) -> Option<(Key<T>, T)> {
+    pub fn remove_entry<Q>(&mut self, key: &Q) -> Option<(Key<T>, T)>
+    where
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
         self.inner.swap_remove_entry(key)
     }
 
@@ -2066,45 +2098,45 @@ impl TypeMetadata {
 ///     assert_eq!(het_map.len::<u16>(), Some(16));
 ///     assert_eq!(het_map.len::<f64>(), Some(5));
 ///
-///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(3)), Some(&5_i32));
 ///
 ///     for i in 0..=15 {
-///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///         assert_eq!(het_map.get::<u16, _>(&Key::new(i)), Some(&(1_u16 << i)));
 ///     }
 ///
-///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  Some(&champernowne_constant));
-///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  Some(&liouville_number));
-///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  Some(&feigenbaum_delta));
-///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  Some(&khinchin_constant));
-///     assert_eq!(het_map.get::<f64>(&Key::new(11)), Some(&gelfond_schneider_constant));
-///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(2)),  Some(&champernowne_constant));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(3)),  Some(&liouville_number));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(5)),  Some(&feigenbaum_delta));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(7)),  Some(&khinchin_constant));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(11)), Some(&gelfond_schneider_constant));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(13)), None);
 /// }
 ///
 /// // Removing an element of a specific type from a heterogeneous hash map.
 /// {
-///     assert_eq!(het_map.remove::<f64>(&Key::new(5)), Some(feigenbaum_delta));
+///     assert_eq!(het_map.remove::<f64, _>(&Key::new(5)), Some(feigenbaum_delta));
 ///
 ///     assert_eq!(het_map.len_types(), 3);
 ///     assert_eq!(het_map.len::<i32>(), Some(3));
 ///     assert_eq!(het_map.len::<u16>(), Some(16));
 ///     assert_eq!(het_map.len::<f64>(), Some(4));
 ///
-///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(3)), Some(&5_i32));
 ///
 ///     for i in 0..=15 {
-///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///         assert_eq!(het_map.get::<u16, _>(&Key::new(i)), Some(&(1_u16 << i)));
 ///     }
 ///
-///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  Some(&champernowne_constant));
-///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  Some(&liouville_number));
-///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  Some(&khinchin_constant));
-///     assert_eq!(het_map.get::<f64>(&Key::new(11)), Some(&gelfond_schneider_constant));
-///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(2)),  Some(&champernowne_constant));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(3)),  Some(&liouville_number));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(7)),  Some(&khinchin_constant));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(11)), Some(&gelfond_schneider_constant));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(13)), None);
 /// }
 ///
 /// // Removing an entire type from a heterogeneous hash map.
@@ -2123,22 +2155,22 @@ impl TypeMetadata {
 ///     assert_eq!(het_map.len::<f64>(), None);
 ///
 ///     // The `i32` entries remain untouched.
-///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(3)), Some(&5_i32));
 ///
 ///     // The `u16` entries remain untouched.
 ///     for i in 0..=15 {
-///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///         assert_eq!(het_map.get::<u16, _>(&Key::new(i)), Some(&(1_u16 << i)));
 ///     }
 ///
 ///     // Every `f64` entry was removed from the map.
-///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(11)), None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(2)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(3)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(7)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(11)), None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(13)), None);
 /// }
 ///
 /// // Inserting one value of a new data type into a heterogeneous hash map.
@@ -2156,23 +2188,23 @@ impl TypeMetadata {
 ///     assert_eq!(het_map.len::<f64>(), Some(1));
 ///
 ///     // The `i32` entries remain untouched.
-///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
-///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(3)), Some(&5_i32));
 ///
 ///     // The `u16` entries remain untouched.
 ///     for i in 0..=15 {
-///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///         assert_eq!(het_map.get::<u16, _>(&Key::new(i)), Some(&(1_u16 << i)));
 ///     }
 ///
 ///     // The previous `f64` entries prior to the call to `remove_type` no longer exist, but the
 ///     // newly inserted one does.
-///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(11)), None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(13)), Some(&f64::consts::PI));
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(2)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(3)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(7)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(11)), None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(13)), Some(&f64::consts::PI));
 /// }
 ///
 /// // Clearing the entire map.
@@ -2199,22 +2231,22 @@ impl TypeMetadata {
 ///     assert_eq!(het_map.len::<f64>(), None);
 ///
 ///     // Every value of every type `i32` is gone.
-///     assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
-///     assert_eq!(het_map.get::<i32>(&Key::new(2)), None);
-///     assert_eq!(het_map.get::<i32>(&Key::new(3)), None);
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(2)), None);
+///     assert_eq!(het_map.get::<i32, _>(&Key::new(3)), None);
 ///
 ///     // Every value of every type `u16` is gone.
 ///     for i in 0..=15 {
-///         assert_eq!(het_map.get::<u16>(&Key::new(i)), None);
+///         assert_eq!(het_map.get::<u16, _>(&Key::new(i)), None);
 ///     }
 ///
 ///     // Every value of type `f64` is gone.
-///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(11)), None);
-///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(2)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(3)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(7)),  None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(11)), None);
+///     assert_eq!(het_map.get::<f64, _>(&Key::new(13)), None);
 /// }
 /// ```
 pub struct HeterogeneousHashMap {
@@ -3283,7 +3315,7 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(0)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(0)));
     /// ```
     ///
     /// Querying a nonempty heterogeneous hash map.
@@ -3293,22 +3325,24 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(0)));
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(0)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
     ///
     /// het_map.insert_type::<i32>();
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(0)));
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(0)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
     ///
     /// het_map.insert(Key::new(0), i32::MAX);
     ///
-    /// assert!(het_map.contains_key::<i32>(&Key::new(0)));
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(0)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
     /// ```
-    pub fn contains_key<T>(&self, key: &Key<T>) -> bool
+    pub fn contains_key<T, Q>(&self, key: &Q) -> bool
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let type_id = any::TypeId::of::<T>();
         match self.map.get(&type_id) {
@@ -3334,22 +3368,24 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
     ///
     /// het_map.insert_type::<i32>();
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
     ///
     /// het_map.insert(Key::new(0), i32::MAX);
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), Some(&i32::MAX));
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), Some(&i32::MAX));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
     /// ```
-    pub fn get<T>(&self, key: &Key<T>) -> Option<&T>
+    pub fn get<T, Q>(&self, key: &Q) -> Option<&T>
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map::<T>()?;
 
@@ -3371,22 +3407,24 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert_eq!(het_map.get_key_value::<i32>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get_key_value::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(1)), None);
     ///
     /// het_map.insert_type::<i32>();
     ///
-    /// assert_eq!(het_map.get_key_value::<i32>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get_key_value::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(1)), None);
     ///
     /// het_map.insert(Key::new(0), i32::MAX);
     ///
-    /// assert_eq!(het_map.get_key_value::<i32>(&Key::new(0)), Some((&Key::new(0), &i32::MAX)));
-    /// assert_eq!(het_map.get_key_value::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(0)), Some((&Key::new(0), &i32::MAX)));
+    /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(1)), None);
     /// ```
-    pub fn get_key_value<T>(&self, key: &Key<T>) -> Option<(&Key<T>, &T)>
+    pub fn get_key_value<T, Q>(&self, key: &Q) -> Option<(&Key<T>, &T)>
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map::<T>()?;
 
@@ -3407,22 +3445,24 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
     ///
     /// het_map.insert_type::<i32>();
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
     ///
     /// het_map.insert(Key::new(0), i32::MAX);
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), Some(&i32::MAX));
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), Some(&i32::MAX));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
     /// ```
-    pub fn get_mut<T>(&mut self, key: &Key<T>) -> Option<&mut T>
+    pub fn get_mut<T, Q>(&mut self, key: &Q) -> Option<&mut T>
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>()?;
 
@@ -3493,11 +3533,11 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
     ///
     /// het_map.insert(Key::new(1), 5_i32);
     ///
-    /// assert!(het_map.contains_key::<i32>(&Key::new(1)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(1)));
     /// ```
     pub fn insert<T>(&mut self, key: Key<T>, value: T) -> Option<T>
     where
@@ -3522,23 +3562,25 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(2)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(2)));
     ///
     /// het_map.insert(Key::new(1), 3_i32);
     /// het_map.insert(Key::new(2), 5_i32);
     ///
-    /// assert!(het_map.contains_key::<i32>(&Key::new(1)));
-    /// assert!(het_map.contains_key::<i32>(&Key::new(2)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(1)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(2)));
     ///
-    /// assert_eq!(het_map.remove::<i32>(&Key::new(1)), Some(3_i32));
+    /// assert_eq!(het_map.remove::<i32, _>(&Key::new(1)), Some(3_i32));
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
-    /// assert!(het_map.contains_key::<i32>(&Key::new(2)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(2)));
     /// ```
-    pub fn remove<T>(&mut self, key: &Key<T>) -> Option<T>
+    pub fn remove<T, Q>(&mut self, key: &Q) -> Option<T>
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>()?;
 
@@ -3560,23 +3602,25 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(2)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(2)));
     ///
     /// het_map.insert(Key::new(1), 3_i32);
     /// het_map.insert(Key::new(2), 5_i32);
     ///
-    /// assert!(het_map.contains_key::<i32>(&Key::new(1)));
-    /// assert!(het_map.contains_key::<i32>(&Key::new(2)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(1)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(2)));
     ///
-    /// assert_eq!(het_map.remove_entry::<i32>(&Key::new(1)), Some((Key::new(1), 3_i32)));
+    /// assert_eq!(het_map.remove_entry::<i32, _>(&Key::new(1)), Some((Key::new(1), 3_i32)));
     ///
-    /// assert!(!het_map.contains_key::<i32>(&Key::new(1)));
-    /// assert!(het_map.contains_key::<i32>(&Key::new(2)));
+    /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
+    /// assert!(het_map.contains_key::<i32, _>(&Key::new(2)));
     /// ```
-    pub fn remove_entry<T>(&mut self, key: &Key<T>) -> Option<(Key<T>, T)>
+    pub fn remove_entry<T, Q>(&mut self, key: &Q) -> Option<(Key<T>, T)>
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>()?;
 
@@ -3601,12 +3645,14 @@ impl HeterogeneousHashMap {
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.insert(Key::new(1), i32::MAX);
     ///
-    /// assert_eq!(het_map.get_unchecked::<i32>(&Key::new(1)), &i32::MAX);
+    /// assert_eq!(het_map.get_unchecked::<i32, _>(&Key::new(1)), &i32::MAX);
     /// ```
     #[track_caller]
-    pub fn get_unchecked<T>(&self, key: &Key<T>) -> &T
+    pub fn get_unchecked<T, Q>(&self, key: &Q) -> &T
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_unchecked::<T>();
 
@@ -3629,12 +3675,14 @@ impl HeterogeneousHashMap {
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.insert(Key::new(1), i32::MAX);
     ///
-    /// assert_eq!(het_map.get_mut_unchecked::<i32>(&Key::new(1)), &i32::MAX);
+    /// assert_eq!(het_map.get_mut_unchecked::<i32, _>(&Key::new(1)), &i32::MAX);
     /// ```
     #[track_caller]
-    pub fn get_mut_unchecked<T>(&mut self, key: &Key<T>) -> &mut T
+    pub fn get_mut_unchecked<T, Q>(&mut self, key: &Q) -> &mut T
     where
         T: any::Any,
+        Key<T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut_unchecked::<T>();
 
@@ -3656,13 +3704,13 @@ impl HeterogeneousHashMap {
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
-    /// assert_eq!(het_map.get::<i32>(&Key::new(2)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), None);
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(2)), None);
     ///
-    /// assert_eq!(het_map.get::<String>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get::<String>(&Key::new(3)), None);
-    /// assert_eq!(het_map.get::<String>(&Key::new(5)), None);
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(3)), None);
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(5)), None);
     ///
     /// het_map.extend([
     ///     (Key::new(0), 1_i32),
@@ -3670,13 +3718,13 @@ impl HeterogeneousHashMap {
     ///     (Key::new(2), 3_i32),
     /// ]);
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), Some(&1_i32));
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
-    /// assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), Some(&1_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&2_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(2)), Some(&3_i32));
     ///
-    /// assert_eq!(het_map.get::<String>(&Key::new(0)), None);
-    /// assert_eq!(het_map.get::<String>(&Key::new(3)), None);
-    /// assert_eq!(het_map.get::<String>(&Key::new(5)), None);
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(0)), None);
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(3)), None);
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(5)), None);
     ///
     /// het_map.extend([
     ///     (Key::new(0), String::from("foo")),
@@ -3684,13 +3732,13 @@ impl HeterogeneousHashMap {
     ///     (Key::new(5), String::from("baz")),
     /// ]);
     ///
-    /// assert_eq!(het_map.get::<i32>(&Key::new(0)), Some(&1_i32));
-    /// assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
-    /// assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(0)), Some(&1_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&2_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&Key::new(2)), Some(&3_i32));
     ///
-    /// assert_eq!(het_map.get::<String>(&Key::new(0)), Some(&String::from("foo")));
-    /// assert_eq!(het_map.get::<String>(&Key::new(3)), Some(&String::from("bar")));
-    /// assert_eq!(het_map.get::<String>(&Key::new(5)), Some(&String::from("baz")));
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(0)), Some(&String::from("foo")));
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(3)), Some(&String::from("bar")));
+    /// assert_eq!(het_map.get::<String, _>(&Key::new(5)), Some(&String::from("baz")));
     /// ```
     #[inline]
     pub fn extend<I, T>(&mut self, iterable: I)
