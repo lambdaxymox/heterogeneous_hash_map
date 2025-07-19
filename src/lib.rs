@@ -1993,6 +1993,38 @@ impl TypeMetadata {
 
 /// A heterogeneous hash map that can store values of more than one data type.
 ///
+/// This collection is a useful container for situations where you want to store and retrieve
+/// differently-typed values under shared keys, without writing custom boilerplate or using
+/// complex enum workarounds. Perfect for systems where logic depends on the value's type.
+/// Since a heterogeneous hash map can store any [`Any`] type, it is an extremely flexible building
+/// block for many such situations.
+///
+/// # Data Structure Organization
+///
+/// This hash map is a hierarchical two level hash map with both a type key, and value key,
+/// given by the [`Key<T>`] data type. In particular, this hashmap is different from an ordinary
+/// [`HashMap`] in that it can store vales of multiple unrelated data types in the same collection.
+/// This type accomplishes this by keying against the [`TypeId`] of each type stored in it.
+/// This has one caveat that the heterogeneous hash map can only store types with the [`Any`]
+/// trait, but this is not a big deal since virtually every type that can be expressed in Rust's
+/// type system implements [`Any`].
+///
+/// Every type in a heterogeneous hash map gets dedicated per-type storage separate from the other
+/// data types. This way, mutating elements of one type is guaranteed not to affect any other
+/// types in the hash map.
+///
+/// The heterogeneous hash map also stores type metadata for each data type stored in the collection
+/// at any given time by keeping a [`TypeMetadata`] entry inside the map for each type stored in the
+/// map. Rust is a systems language, so it does not have runtime reflection baked in, so the user of
+/// the hash map has to have some way of knowing a priori what types are stored in the map. The
+/// [`TypeMetadata`] feature provides limited type introspection abilities to facilitate this task.
+///
+/// # Limitations
+///
+/// While the heterogeneous hash map can store multiple value types, it uses exactly one hash
+/// builder type (typically the default one from the standard library), and one backing memory
+/// allocator (typically the global one).
+///
 /// # Examples
 ///
 /// ```
@@ -2824,6 +2856,7 @@ impl HeterogeneousHashMap {
     /// het_map.extend([(Key::new(1), 2_f64), (Key::new(2), 3_f64), (Key::new(3), 4_f64)]);
     ///
     /// assert_eq!(het_map.len_types(), 2);
+    /// assert_eq!(het_map.len_map(), 3);
     /// assert_eq!(het_map.len::<i32>(), Some(0));
     /// assert_eq!(het_map.len::<f64>(), Some(3));
     /// assert!(het_map.capacity::<i32>().is_some());
@@ -2833,6 +2866,7 @@ impl HeterogeneousHashMap {
     /// het_map.clear();
     ///
     /// assert_eq!(het_map.len_types(), 0);
+    /// assert_eq!(het_map.len_map(), 0);
     /// assert_eq!(het_map.len::<i32>(), None);
     /// assert_eq!(het_map.len::<f64>(), None);
     /// assert!(het_map.capacity::<i32>().is_none());
