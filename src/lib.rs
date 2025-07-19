@@ -855,13 +855,19 @@ where
 
     /// Constructs a new hash map.
     #[inline]
-    const fn from_inner(map: &opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> &Self {
+    const fn from_inner(inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> Self {
+        Self { inner }
+    }
+
+    /// Constructs a new hash map.
+    #[inline]
+    const fn from_inner_ref(map: &opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> &Self {
         unsafe { &*(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T> as *const Self) }
     }
 
     /// Constructs a new hash map.
     #[inline]
-    const fn from_inner_mut(map: &mut opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> &mut Self {
+    const fn from_inner_ref_mut(map: &mut opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> &mut Self {
         unsafe { &mut *(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T> as *mut Self) }
     }
 }
@@ -1865,7 +1871,7 @@ where
     fn clone(&self) -> Self {
         let cloned_inner = self.inner.clone();
 
-        Map { inner: cloned_inner }
+        Map::from_inner(cloned_inner)
     }
 }
 
@@ -2401,7 +2407,7 @@ impl HeterogeneousHashMap {
         let type_id = any::TypeId::of::<T>();
         let map = self.map[&type_id].as_proj::<Key<T>, T, hash::RandomState, alloc::Global>();
 
-        Map::from_inner(map)
+        Map::from_inner_ref(map)
     }
 
     /// Returns a mutable reference to the hash map containing all values of a given type from the
@@ -2433,7 +2439,7 @@ impl HeterogeneousHashMap {
             .unwrap()
             .as_proj_mut::<Key<T>, T, hash::RandomState, alloc::Global>();
 
-        Map::from_inner_mut(map)
+        Map::from_inner_ref_mut(map)
     }
 
     /// Returns a reference to the hash map containing all values of a given type from the
@@ -2484,7 +2490,7 @@ impl HeterogeneousHashMap {
             .get(&type_id)
             .map(|m| m.as_proj::<Key<T>, T, hash::RandomState, alloc::Global>())?;
 
-        Some(Map::from_inner(map))
+        Some(Map::from_inner_ref(map))
     }
 
     /// Returns a mutable reference to the hash map containing all values of a given type from the
@@ -2541,7 +2547,7 @@ impl HeterogeneousHashMap {
             .get_mut(&type_id)
             .map(|m| m.as_proj_mut::<Key<T>, T, hash::RandomState, alloc::Global>())?;
 
-        Some(Map::from_inner_mut(map))
+        Some(Map::from_inner_ref_mut(map))
     }
 
     /// Returns a mutable reference to the hash map containing all values of a given type from the
@@ -2640,25 +2646,35 @@ impl HeterogeneousHashMap {
     /// assert_eq!(het_map.len::<i32>(), Some(0));
     /// assert_eq!(het_map.len::<f64>(), Some(3));
     ///
+    /// // Removing the type `i32` from the heterogeneous hash map.
     /// assert_eq!(het_map.remove_type::<i32>(), Some(0));
     ///
-    /// assert!(!het_map.contains_type::<i32>());
-    /// assert!(het_map.contains_type::<f64>());
-    /// assert_eq!(het_map.len_types(), 1);
-    /// assert_eq!(het_map.len_map(), 3);
+    /// // Verifying that the type `i32` no longer exists in the heterogeneous hash map.
+    /// {
+    ///     assert!(!het_map.contains_type::<i32>());
+    ///     assert!(het_map.contains_type::<f64>());
+    ///     assert_eq!(het_map.len_types(), 1);
+    ///     assert_eq!(het_map.len_map(), 3);
     ///
-    /// assert_eq!(het_map.len::<i32>(), None);
-    /// assert_eq!(het_map.len::<f64>(), Some(3));
+    ///     assert_eq!(het_map.len::<i32>(), None);
+    ///     assert_eq!(het_map.len::<f64>(), Some(3));
+    /// }
     ///
+    /// // Removing the type `f64` from the heterogeneous hash map.
     /// assert_eq!(het_map.remove_type::<f64>(), Some(3));
     ///
-    /// assert!(!het_map.contains_type::<i32>());
-    /// assert!(!het_map.contains_type::<f64>());
-    /// assert_eq!(het_map.len_types(), 0);
-    /// assert_eq!(het_map.len_map(), 0);
+    /// // Verifying that the type `f64` no longer exists in the heterogeneous hash map.
+    /// {
+    ///     assert!(!het_map.contains_type::<i32>());
+    ///     assert!(!het_map.contains_type::<f64>());
+    ///     assert_eq!(het_map.len_types(), 0);
+    ///     assert_eq!(het_map.len_map(), 0);
     ///
-    /// assert_eq!(het_map.len::<i32>(), None);
-    /// assert_eq!(het_map.len::<f64>(), None);
+    ///     assert_eq!(het_map.len::<i32>(), None);
+    ///     assert_eq!(het_map.len::<f64>(), None);
+    /// }
+    ///
+    /// assert!(het_map.is_empty_types());
     /// ```
     pub fn remove_type<T>(&mut self) -> Option<usize>
     where
@@ -2676,6 +2692,119 @@ impl HeterogeneousHashMap {
         self.registry.remove(&type_id);
 
         Some(removed_count)
+    }
+
+    /// Removes a type from a heterogeneous hash map and returns them as a hash map.
+    ///
+    /// This method behaves as follows:
+    ///
+    /// * If the given type `T` exists in the heterogeneous hash map, this method removes every
+    ///   value of type `T` from the map, deallocates all memory for values of type `T`, and
+    ///   returns `Some(map)`, where `map` is a hash map containing all the removed entries of
+    ///   type `T` from the heterogeneous hash map.
+    /// * If the given type `T` does not exist in the heterogeneous hash map, this method returns
+    ///   `None`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    ///
+    /// assert!(!het_map.contains_type::<i32>());
+    /// assert!(!het_map.contains_type::<f64>());
+    /// assert_eq!(het_map.len_types(), 0);
+    /// assert_eq!(het_map.len_map(), 0);
+    ///
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<f64>();
+    ///
+    /// assert!(het_map.contains_type::<i32>());
+    /// assert!(het_map.contains_type::<f64>());
+    /// assert_eq!(het_map.len_types(), 2);
+    /// assert_eq!(het_map.len_map(), 0);
+    ///
+    /// het_map.extend([
+    ///     (Key::new(0), 1_f64),
+    ///     (Key::new(1), 2_f64),
+    ///     (Key::new(2), 3_f64),
+    /// ]);
+    ///
+    /// assert!(het_map.contains_type::<i32>());
+    /// assert!(het_map.contains_type::<i32>());
+    /// assert_eq!(het_map.len_types(), 2);
+    /// assert_eq!(het_map.len_map(), 3);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(0));
+    /// assert_eq!(het_map.len::<f64>(), Some(3));
+    ///
+    /// // Taking the type `f64` from the heterogeneous hash map.
+    /// {
+    ///     // Taking all entries of type `f64` from the heterogeneous hash map.
+    ///     let result = het_map.take_type::<f64>();
+    ///
+    ///     assert!(result.is_some());
+    ///
+    ///     let map = result.unwrap();
+    ///
+    ///     // Checking that every entry of type `f64` was returned.
+    ///     assert_eq!(map.len(), 3);
+    ///     assert_eq!(map.get(&Key::new(0)), Some(&1_f64));
+    ///     assert_eq!(map.get(&Key::new(1)), Some(&2_f64));
+    ///     assert_eq!(map.get(&Key::new(2)), Some(&3_f64));
+    /// }
+    ///
+    ///  // Verifying that the type `f64` no longer exists in the heterogeneous hash map.
+    /// {
+    ///     assert!(het_map.contains_type::<i32>());
+    ///     assert!(!het_map.contains_type::<f64>());
+    ///
+    ///     assert_eq!(het_map.len_types(), 1);
+    ///     assert_eq!(het_map.len_map(), 0);
+    ///
+    ///     assert_eq!(het_map.len::<i32>(), Some(0));
+    ///     assert_eq!(het_map.len::<f64>(), None);
+    /// }
+    ///
+    /// // Taking the type `i32` from the heterogeneous hash map.
+    /// {
+    ///     // Taking all entries of type `i32` from the heterogeneous hash map.
+    ///     let result = het_map.take_type::<i32>();
+    ///
+    ///     // This method returns `Some(..)` as long as type `i32` exists in the map, even if
+    ///     // no values of type `i32` do.
+    ///     assert!(result.is_some());
+    ///
+    ///     let map = result.unwrap();
+    ///
+    ///     // Checking that every entry of type `f64` was returned.
+    ///     assert_eq!(map.len(), 0);
+    /// }
+    ///
+    /// // Verifying that the type `i32` no longer exists in the heterogeneous hash map.
+    /// {
+    ///     assert!(!het_map.contains_type::<i32>());
+    ///     assert!(!het_map.contains_type::<f64>());
+    ///
+    ///     assert_eq!(het_map.len_types(), 0);
+    ///     assert_eq!(het_map.len_map(), 0);
+    ///
+    ///     assert_eq!(het_map.len::<i32>(), None);
+    ///     assert_eq!(het_map.len::<f64>(), None);
+    /// }
+    ///
+    /// assert!(het_map.is_empty_types());
+    /// ```
+    pub fn take_type<T>(&mut self) -> Option<Map<T>>
+    where
+        T: any::Any,
+    {
+        let type_id = any::TypeId::of::<T>();
+        let removed_map = self.map.remove(&type_id)?;
+        self.registry.remove(&type_id);
+
+        Some(Map::from_inner(removed_map.into_proj::<Key<T>, T, hash::RandomState, alloc::Global>()))
     }
 
     /// Removes all types and all values for each type from the heterogeneous hash map.
