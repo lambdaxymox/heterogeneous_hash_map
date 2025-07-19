@@ -1858,6 +1858,17 @@ where
     }
 }
 
+impl<T> Clone for Map<T>
+where
+    T: any::Any + Clone,
+{
+    fn clone(&self) -> Self {
+        let cloned_inner = self.inner.clone();
+
+        Map { inner: cloned_inner }
+    }
+}
+
 impl<T> Default for Map<T>
 where
     T: any::Any,
@@ -1982,6 +1993,7 @@ impl TypeMetadata {
 /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
 /// # use core::f64;
 /// #
+/// // Some weird mathematical constants.
 /// let champernowne_constant: f64 = 0.123456789101112_f64;
 /// let liouville_number: f64 = 0.110001000000000000000001_f64;
 /// let feigenbaum_delta: f64 = 4.669_201_609_102_990_f64;
@@ -2000,7 +2012,7 @@ impl TypeMetadata {
 /// ]);
 /// het_map.extend((0..=15).map(|i| (Key::new(i), 1_u16 << i)));
 ///
-/// // A heterogeneous hash map can insert new types automatically too.
+/// // A heterogeneous hash map inserts a new type automatically when inserting elements of a new type.
 /// het_map.extend::<_, f64>([
 ///     (Key::new(2),  champernowne_constant),
 ///     (Key::new(3),  liouville_number),
@@ -2123,6 +2135,48 @@ impl TypeMetadata {
 ///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  None);
 ///     assert_eq!(het_map.get::<f64>(&Key::new(11)), None);
 ///     assert_eq!(het_map.get::<f64>(&Key::new(13)), Some(&f64::consts::PI));
+/// }
+///
+/// // Clearing the entire map.
+/// {
+///     assert!(het_map.contains_type::<i32>());
+///     assert!(het_map.contains_type::<u16>());
+///     assert!(het_map.contains_type::<f64>());
+///
+///     assert_eq!(het_map.len_types(), 3);
+///     assert_eq!(het_map.len::<i32>(), Some(3));
+///     assert_eq!(het_map.len::<u16>(), Some(16));
+///     assert_eq!(het_map.len::<f64>(), Some(1));
+///
+///     het_map.clear();
+///
+///     // The heterogeneous hash map no longer contains any types.
+///     assert!(!het_map.contains_type::<i32>());
+///     assert!(!het_map.contains_type::<u16>());
+///     assert!(!het_map.contains_type::<f64>());
+///
+///     assert_eq!(het_map.len_types(), 0);
+///     assert_eq!(het_map.len::<i32>(), None);
+///     assert_eq!(het_map.len::<u16>(), None);
+///     assert_eq!(het_map.len::<f64>(), None);
+///
+///     // Every value of every type `i32` is gone.
+///     assert_eq!(het_map.get::<i32>(&Key::new(1)), None);
+///     assert_eq!(het_map.get::<i32>(&Key::new(2)), None);
+///     assert_eq!(het_map.get::<i32>(&Key::new(3)), None);
+///
+///     // Every value of every type `u16` is gone.
+///     for i in 0..=15 {
+///         assert_eq!(het_map.get::<u16>(&Key::new(i)), None);
+///     }
+///
+///     // Every value of type `f64` is gone.
+///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(11)), None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
 /// }
 /// ```
 pub struct HeterogeneousHashMap {
@@ -2545,9 +2599,10 @@ impl HeterogeneousHashMap {
     /// This method behaves as follows:
     ///
     /// * If the given type `T` exists in the heterogeneous hash map, this method removes every
-    ///   value of type `T` from the map, and returns `Some(count)`, when `count` is the number of
-    ///   values of type `T` that were stored in the map. This method returns `Some(0)` even
-    ///   when the type `T` exists in the map, but no values of type `T` do.
+    ///   value of type `T` from the map, deallocates memory allocated for values of type `T`, and
+    ///   returns `Some(count)`, when `count` is the number of values of type `T` that were stored
+    ///   in the map. This method returns `Some(0)` even when the type `T` exists in the map, but
+    ///   no values of type `T` do.
     /// * If the given type `T` does not exist in the heterogeneous hash map, this method returns
     ///   `None`.
     ///
@@ -2621,6 +2676,46 @@ impl HeterogeneousHashMap {
         self.registry.remove(&type_id);
 
         Some(removed_count)
+    }
+
+    /// Removes all types and all values for each type from the heterogeneous hash map.
+    ///
+    /// This method removes every value of every type stored in the map, removes every type
+    /// from the map, and deallocates memory that was allocated for each type removed from the
+    /// map. The map retains its type capacity after calling this method.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<f64>();
+    /// het_map.extend([(Key::new(1), 2_f64), (Key::new(2), 3_f64), (Key::new(3), 4_f64)]);
+    ///
+    /// assert_eq!(het_map.len_types(), 2);
+    /// assert_eq!(het_map.len::<i32>(), Some(0));
+    /// assert_eq!(het_map.len::<f64>(), Some(3));
+    /// assert!(het_map.capacity::<i32>().is_some());
+    /// assert!(het_map.capacity::<f64>().is_some());
+    ///
+    /// let old_capacity_types = het_map.capacity_types();
+    /// het_map.clear();
+    ///
+    /// assert_eq!(het_map.len_types(), 0);
+    /// assert_eq!(het_map.len::<i32>(), None);
+    /// assert_eq!(het_map.len::<f64>(), None);
+    /// assert!(het_map.capacity::<i32>().is_none());
+    /// assert!(het_map.capacity::<f64>().is_none());
+    ///
+    /// assert_eq!(het_map.capacity_types(), old_capacity_types);
+    /// ```
+    pub fn clear(&mut self) {
+        let type_ids = Vec::from_iter(self.map.keys().cloned());
+        for type_id in type_ids.iter() {
+            let _ = self.map.remove(&type_id);
+        }
     }
 }
 
