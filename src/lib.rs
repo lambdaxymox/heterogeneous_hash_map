@@ -1,3 +1,4 @@
+#![doc = include_str!("../README.md")]
 #![deny(unsafe_op_in_unsafe_fn)]
 #![deny(private_interfaces)]
 #![cfg_attr(feature = "nightly", feature(allocator_api))]
@@ -1973,6 +1974,157 @@ impl TypeMetadata {
     }
 }
 
+/// A heterogeneous hash map that can store values of more than one data type.
+///
+/// # Examples
+///
+/// ```
+/// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+/// # use core::f64;
+/// #
+/// let champernowne_constant: f64 = 0.123456789101112_f64;
+/// let liouville_number: f64 = 0.110001000000000000000001_f64;
+/// let feigenbaum_delta: f64 = 4.669_201_609_102_990_f64;
+/// let khinchin_constant: f64 = 2.685_452_001_f64;
+/// let gelfond_schneider_constant: f64 = f64::powf(2_f64, f64::sqrt(2_f64));
+///
+/// let mut het_map = HeterogeneousHashMap::new();
+/// // Inserting new types.
+/// assert!(het_map.insert_type::<i32>());
+/// assert!(het_map.insert_type::<u16>());
+/// // Inserting entries for existing types.
+/// het_map.extend([
+///     (Key::new(1), 2_i32),
+///     (Key::new(2), 3_i32),
+///     (Key::new(3), 5_i32),
+/// ]);
+/// het_map.extend((0..=15).map(|i| (Key::new(i), 1_u16 << i)));
+///
+/// // A heterogeneous hash map can insert new types automatically too.
+/// het_map.extend::<_, f64>([
+///     (Key::new(2),  champernowne_constant),
+///     (Key::new(3),  liouville_number),
+///     (Key::new(5),  feigenbaum_delta),
+///     (Key::new(7),  khinchin_constant),
+///     (Key::new(11), gelfond_schneider_constant),
+/// ]);
+///
+/// // Checking the contents of the heterogeneous hash map before manipulation.
+/// {
+///     assert_eq!(het_map.len_types(), 3);
+///     assert_eq!(het_map.len::<i32>(), Some(3));
+///     assert_eq!(het_map.len::<u16>(), Some(16));
+///     assert_eq!(het_map.len::<f64>(), Some(5));
+///
+///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///
+///     for i in 0..=15 {
+///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///     }
+///
+///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  Some(&champernowne_constant));
+///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  Some(&liouville_number));
+///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  Some(&feigenbaum_delta));
+///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  Some(&khinchin_constant));
+///     assert_eq!(het_map.get::<f64>(&Key::new(11)), Some(&gelfond_schneider_constant));
+///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
+/// }
+///
+/// // Removing an element of a specific type from a heterogeneous hash map.
+/// {
+///     assert_eq!(het_map.remove::<f64>(&Key::new(5)), Some(feigenbaum_delta));
+///
+///     assert_eq!(het_map.len_types(), 3);
+///     assert_eq!(het_map.len::<i32>(), Some(3));
+///     assert_eq!(het_map.len::<u16>(), Some(16));
+///     assert_eq!(het_map.len::<f64>(), Some(4));
+///
+///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///
+///     for i in 0..=15 {
+///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///     }
+///
+///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  Some(&champernowne_constant));
+///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  Some(&liouville_number));
+///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  Some(&khinchin_constant));
+///     assert_eq!(het_map.get::<f64>(&Key::new(11)), Some(&gelfond_schneider_constant));
+///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
+/// }
+///
+/// // Removing an entire type from a heterogeneous hash map.
+/// {
+///     // The map currently contains the `f64` type.
+///     assert!(het_map.contains_type::<f64>());
+///
+///     assert_eq!(het_map.remove_type::<f64>(), Some(4));
+///
+///     // The map no longer contains the `f64` type.
+///     assert!(!het_map.contains_type::<f64>());
+///
+///     assert_eq!(het_map.len_types(), 2);
+///     assert_eq!(het_map.len::<i32>(), Some(3));
+///     assert_eq!(het_map.len::<u16>(), Some(16));
+///     assert_eq!(het_map.len::<f64>(), None);
+///
+///     // The `i32` entries remain untouched.
+///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///
+///     // The `u16` entries remain untouched.
+///     for i in 0..=15 {
+///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///     }
+///
+///     // Every `f64` entry was removed from the map.
+///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(11)), None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(13)), None);
+/// }
+///
+/// // Inserting one value of a new data type into a heterogeneous hash map.
+/// {
+///     assert!(!het_map.contains_type::<f64>());
+///
+///     assert_eq!(het_map.insert(Key::new(13), f64::consts::PI), None);
+///
+///     // The map now contains the `f64` type again.
+///     assert!(het_map.contains_type::<f64>());
+///
+///     assert_eq!(het_map.len_types(), 3);
+///     assert_eq!(het_map.len::<i32>(), Some(3));
+///     assert_eq!(het_map.len::<u16>(), Some(16));
+///     assert_eq!(het_map.len::<f64>(), Some(1));
+///
+///     // The `i32` entries remain untouched.
+///     assert_eq!(het_map.get::<i32>(&Key::new(1)), Some(&2_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(2)), Some(&3_i32));
+///     assert_eq!(het_map.get::<i32>(&Key::new(3)), Some(&5_i32));
+///
+///     // The `u16` entries remain untouched.
+///     for i in 0..=15 {
+///         assert_eq!(het_map.get::<u16>(&Key::new(i)), Some(&(1_u16 << i)));
+///     }
+///
+///     // The previous `f64` entries prior to the call to `remove_type` no longer exist, but the
+///     // newly inserted one does.
+///     assert_eq!(het_map.get::<f64>(&Key::new(2)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(3)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(5)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(7)),  None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(11)), None);
+///     assert_eq!(het_map.get::<f64>(&Key::new(13)), Some(&f64::consts::PI));
+/// }
+/// ```
 pub struct HeterogeneousHashMap {
     map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap>,
     registry: HashMap<any::TypeId, TypeMetadata>,
