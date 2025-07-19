@@ -988,3 +988,102 @@ fn test_heterogeneous_hash_map_remove_type_get_map() {
     assert!(!het_map.get_map::<&str>().is_some());
     assert!(!het_map.get_map::<Box<dyn any::Any>>().is_some());
 }
+
+#[test]
+fn test_heterogeneous_hash_map_insert_type_repeat1() {
+    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 0);
+
+    het_map.insert_type::<i32>();
+
+    assert!(het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 1);
+
+    for _ in 0..100 {
+        het_map.insert_type::<i32>();
+
+        assert!(het_map.contains_type::<i32>());
+        assert_eq!(het_map.len_types(), 1);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_insert_type_repeat2() {
+    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert!(!het_map.contains_type::<u64>());
+    assert_eq!(het_map.len_types(), 0);
+
+    het_map.insert_type::<i32>();
+    het_map.insert_type::<u64>();
+
+    assert!(het_map.contains_type::<i32>());
+    assert!(het_map.contains_type::<u64>());
+    assert_eq!(het_map.len_types(), 2);
+
+    for _ in 0..100 {
+        het_map.insert_type::<i32>();
+
+        assert!(het_map.contains_type::<i32>());
+        assert!(het_map.contains_type::<u64>());
+        assert_eq!(het_map.len_types(), 2);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_remove_type_repeat1() {
+    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 0);
+
+    het_map.insert_type::<i32>();
+
+    assert!(het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 1);
+
+    het_map.remove_type::<i32>();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 0);
+
+    for _ in 0..100 {
+        het_map.remove_type::<i32>();
+
+        assert!(!het_map.contains_type::<i32>());
+        assert_eq!(het_map.len_types(), 0);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_remove_type_repeat2() {
+    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert!(!het_map.contains_type::<u64>());
+    assert_eq!(het_map.len_types(), 0);
+
+    het_map.insert_type::<i32>();
+    het_map.insert_type::<u64>();
+
+    assert!(het_map.contains_type::<i32>());
+    assert!(het_map.contains_type::<u64>());
+    assert_eq!(het_map.len_types(), 2);
+
+    het_map.remove_type::<i32>();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert!(het_map.contains_type::<u64>());
+    assert_eq!(het_map.len_types(), 1);
+
+    for _ in 0..100 {
+        het_map.remove_type::<i32>();
+
+        assert!(!het_map.contains_type::<i32>());
+        assert!(het_map.contains_type::<u64>());
+        assert_eq!(het_map.len_types(), 1);
+    }
+}
