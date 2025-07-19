@@ -2043,6 +2043,9 @@ impl HeterogeneousHashMap {
     /// for values of that type. A subsequent value insertion will trigger a memory allocation to
     /// occur.
     ///
+    /// This method returns `true` if the type `T` does not exist in the map. This method returns
+    /// `false` if the type `T` already exists in the map.
+    ///
     /// # Examples
     ///
     /// ```
@@ -2060,13 +2063,13 @@ impl HeterogeneousHashMap {
     ///
     /// assert!(het_map.capacity::<i32>() >= Some(0));
     /// ```
-    pub fn insert_type<T>(&mut self)
+    pub fn insert_type<T>(&mut self) -> bool
     where
         T: any::Any,
     {
         let type_id = any::TypeId::of::<T>();
         if self.map.contains_key(&type_id) {
-            return;
+            return false;
         }
 
         let type_metadata = TypeMetadata::of::<T>();
@@ -2074,12 +2077,17 @@ impl HeterogeneousHashMap {
 
         self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
+
+        true
     }
 
     /// Inserts a new type into the heterogeneous hash map with a given minimum type capacity.
     ///
     /// This method registers the type in the heterogeneous hash map, and allocates memory for at
     /// least `capacity` entries for values of that type.
+    ///
+    /// This method returns `true` if the type `T` does not exist in the map. This method returns
+    /// `false` if the type `T` already exists in the map.
     ///
     /// # Examples
     ///
@@ -2101,13 +2109,13 @@ impl HeterogeneousHashMap {
     ///
     /// assert_eq!(het_map.capacity::<i32>(), old_capacity);
     /// ```
-    pub fn insert_type_with_capacity<T>(&mut self, capacity: usize)
+    pub fn insert_type_with_capacity<T>(&mut self, capacity: usize) -> bool
     where
         T: any::Any,
     {
         let type_id = any::TypeId::of::<T>();
         if self.map.contains_key(&type_id) {
-            return;
+            return false;
         }
 
         let type_metadata = TypeMetadata::of::<T>();
@@ -2115,6 +2123,8 @@ impl HeterogeneousHashMap {
 
         self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
+
+        true
     }
 
     /// Determines whether a heterogeneous hash map contains the given type.
