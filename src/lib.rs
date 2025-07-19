@@ -2249,6 +2249,8 @@ impl TypeMetadata {
 ///     assert_eq!(het_map.get::<f64, _>(&Key::new(11)), None);
 ///     assert_eq!(het_map.get::<f64, _>(&Key::new(13)), None);
 /// }
+///
+/// assert!(het_map.is_empty_types());
 /// ```
 pub struct HeterogeneousHashMap {
     map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap>,
@@ -2355,6 +2357,8 @@ impl HeterogeneousHashMap {
         self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
 
+        debug_assert_eq!(self.registry.len(), self.map.len());
+
         true
     }
 
@@ -2400,6 +2404,8 @@ impl HeterogeneousHashMap {
 
         self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
+
+        debug_assert_eq!(self.registry.len(), self.map.len());
 
         true
     }
@@ -2662,6 +2668,8 @@ impl HeterogeneousHashMap {
             self.insert_type::<T>();
         }
 
+        debug_assert_eq!(self.registry.len(), self.map.len());
+
         self.get_map_mut::<T>().unwrap()
     }
 
@@ -2755,6 +2763,8 @@ impl HeterogeneousHashMap {
         let type_id = any::TypeId::of::<T>();
         self.map.remove(&type_id);
         self.registry.remove(&type_id);
+
+        debug_assert_eq!(self.registry.len(), self.map.len());
 
         Some(removed_count)
     }
@@ -2869,6 +2879,8 @@ impl HeterogeneousHashMap {
         let removed_map = self.map.remove(&type_id)?;
         self.registry.remove(&type_id);
 
+        debug_assert_eq!(self.registry.len(), self.map.len());
+
         Some(Map::from_inner(removed_map.into_proj::<Key<T>, T, hash::RandomState, alloc::Global>()))
     }
 
@@ -2911,7 +2923,11 @@ impl HeterogeneousHashMap {
         let type_ids = Vec::from_iter(self.map.keys().cloned());
         for type_id in type_ids.iter() {
             let _ = self.map.remove(&type_id);
+            let _ = self.registry.remove(&type_id);
         }
+
+        debug_assert_eq!(self.registry.len(), 0);
+        debug_assert_eq!(self.map.len(), 0);
     }
 }
 
@@ -3777,5 +3793,236 @@ impl fmt::Debug for HeterogeneousHashMap {
         f.debug_struct("HeterogeneousHashMap")
             .field("entries", &entries)
             .finish()
+    }
+}
+
+#[cfg(test)]
+mod test_internals {
+    use std::boxed::Box;
+    use std::string::String;
+    use super::*;
+
+    #[track_caller]
+    fn match_map_type_ids(het_map: &HeterogeneousHashMap) {
+        for (type_id, map) in het_map.map.iter() {
+            assert_eq!(map.value_type_id(), *type_id);
+        }
+    }
+
+    #[track_caller]
+    fn match_registry_type_ids(het_map: &HeterogeneousHashMap) {
+        for (type_id, metadata) in het_map.registry.iter() {
+            assert_eq!(metadata.type_id, *type_id);
+        }
+    }
+
+    #[test]
+    fn test_map_type_ids() {
+        let mut het_map = HeterogeneousHashMap::new();
+
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<()>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<bool>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<i8>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<i16>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<i32>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<i64>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<isize>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<u8>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<u16>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<u32>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<u64>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<usize>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<f32>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<f64>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<char>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<String>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<&str>();
+        match_map_type_ids(&het_map);
+        het_map.insert_type::<Box<dyn any::Any>>();
+        match_map_type_ids(&het_map);
+    }
+
+    #[test]
+    fn test_registry_type_ids() {
+        let mut het_map = HeterogeneousHashMap::new();
+
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<()>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<bool>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<i8>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<i16>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<i32>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<i64>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<isize>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<u8>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<u16>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<u32>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<u64>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<usize>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<f32>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<f64>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<char>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<String>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<&str>();
+        match_registry_type_ids(&het_map);
+        het_map.insert_type::<Box<dyn any::Any>>();
+        match_registry_type_ids(&het_map);
+    }
+
+    #[test]
+    fn test_remove_type_map_type_ids() {
+        let mut het_map = HeterogeneousHashMap::new();
+
+        het_map.insert_type::<()>();
+        het_map.insert_type::<bool>();
+        het_map.insert_type::<i8>();
+        het_map.insert_type::<i16>();
+        het_map.insert_type::<i32>();
+        het_map.insert_type::<i64>();
+        het_map.insert_type::<isize>();
+        het_map.insert_type::<u8>();
+        het_map.insert_type::<u16>();
+        het_map.insert_type::<u32>();
+        het_map.insert_type::<u64>();
+        het_map.insert_type::<usize>();
+        het_map.insert_type::<f32>();
+        het_map.insert_type::<f64>();
+        het_map.insert_type::<char>();
+        het_map.insert_type::<String>();
+        het_map.insert_type::<&str>();
+        het_map.insert_type::<Box<dyn any::Any>>();
+
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<()>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<bool>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<i8>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<i16>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<i32>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<i64>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<isize>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<u8>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<u16>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<u32>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<u64>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<usize>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<f32>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<f64>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<char>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<String>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<&str>();
+        match_map_type_ids(&het_map);
+        het_map.remove_type::<Box<dyn any::Any>>();
+        match_map_type_ids(&het_map);
+    }
+
+    #[test]
+    fn test_remove_type_registry_type_ids() {
+        let mut het_map = HeterogeneousHashMap::new();
+
+        het_map.insert_type::<()>();
+        het_map.insert_type::<bool>();
+        het_map.insert_type::<i8>();
+        het_map.insert_type::<i16>();
+        het_map.insert_type::<i32>();
+        het_map.insert_type::<i64>();
+        het_map.insert_type::<isize>();
+        het_map.insert_type::<u8>();
+        het_map.insert_type::<u16>();
+        het_map.insert_type::<u32>();
+        het_map.insert_type::<u64>();
+        het_map.insert_type::<usize>();
+        het_map.insert_type::<f32>();
+        het_map.insert_type::<f64>();
+        het_map.insert_type::<char>();
+        het_map.insert_type::<String>();
+        het_map.insert_type::<&str>();
+        het_map.insert_type::<Box<dyn any::Any>>();
+
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<()>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<bool>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<i8>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<i16>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<i32>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<i64>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<isize>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<u8>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<u16>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<u32>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<u64>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<usize>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<f32>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<f64>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<char>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<String>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<&str>();
+        match_registry_type_ids(&het_map);
+        het_map.remove_type::<Box<dyn any::Any>>();
+        match_registry_type_ids(&het_map);
     }
 }
