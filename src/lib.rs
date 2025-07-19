@@ -2045,11 +2045,12 @@ impl TypeMetadata {
 /// data types. This way, mutating elements of one type is guaranteed not to affect any other
 /// types in the hash map.
 ///
-/// The heterogeneous hash map also stores type metadata for each data type stored in the collection
-/// at any given time by keeping a [`TypeMetadata`] entry inside the map for each type stored in the
-/// map. Rust is a systems language, so it does not have runtime reflection baked in, so the user of
-/// the hash map has to have some way of knowing a priori what types are stored in the map. The
-/// [`TypeMetadata`] feature provides limited type introspection abilities to facilitate this task.
+/// The heterogeneous hash map also stores type metadata for each data type stored in the
+/// collection at any given time by keeping a [`TypeMetadata`] entry inside the map for each type
+/// stored in the map. Rust is a systems language, so it does not have runtime reflection baked
+/// in, so the user of the hash map has to have some way of knowing a priori what types are stored
+/// in the map. The [`TypeMetadata`] feature provides limited type introspection abilities to
+/// facilitate this task.
 ///
 /// # Limitations
 ///
