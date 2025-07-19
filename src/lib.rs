@@ -393,9 +393,9 @@ impl<'a, T> Default for Keys<'a, T> {
     }
 }
 
-/// An iterator over the values of the hash map.
+/// An immutable iterator over the values of the hash map.
 ///
-/// Key iterators are created using the [`Map::values`] method.
+/// Value iterators are created using the [`Map::values`] method.
 ///
 /// # Examples
 ///
@@ -474,6 +474,86 @@ where
 }
 
 impl<'a, T> Default for Values<'a, T> {
+    fn default() -> Self {
+        Self::new(Default::default())
+    }
+}
+
+/// A mutable iterator over the values of the hash map.
+///
+/// Mutable value iterators are created using the [`Map::values_mut`] method.
+///
+/// # Examples
+///
+/// ```
+/// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+/// #
+/// let mut het_map = HeterogeneousHashMap::new();
+/// het_map.extend([
+///     (Key::new(2), 'b'),
+///     (Key::new(3), 'c'),
+///     (Key::new(5), 'e'),
+///     (Key::new(7), 'g'),
+/// ]);
+/// let expected = vec!['b', 'c', 'e', 'g'];
+/// let result = {
+///     let map = het_map.get_map_mut::<char>().unwrap();
+///     let mut _result = Vec::from_iter(map.values_mut().map(|v| v.clone()));
+///     _result.sort();
+///     _result
+/// };
+///
+/// assert_eq!(result.len(), expected.len());
+/// assert_eq!(result, expected);
+/// ```
+pub struct ValuesMut<'a, T> {
+    iter: opaque::index_map::map::ValuesMut<'a, Key<T>, T>,
+}
+
+impl<'a, T> ValuesMut<'a, T> {
+    /// Constructs a new mutable value iterator.
+    #[inline]
+    const fn new(iter: opaque::index_map::map::ValuesMut<'a, Key<T>, T>) -> Self {
+        Self { iter }
+    }
+}
+
+impl<'a, T> Iterator for ValuesMut<'a, T> {
+    type Item = &'a mut T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+impl<'a, T> DoubleEndedIterator for ValuesMut<'a, T> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.iter.next_back()
+    }
+
+    fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
+        self.iter.nth_back(n)
+    }
+}
+
+impl<'a, T> ExactSizeIterator for ValuesMut<'a, T> {
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<'a, T> iter::FusedIterator for ValuesMut<'a, T> {}
+
+impl<'a, T> fmt::Debug for ValuesMut<'a, T>
+where
+    T: fmt::Debug,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(&self.iter, formatter)
+    }
+}
+
+impl<'a, T> Default for ValuesMut<'a, T> {
     fn default() -> Self {
         Self::new(Default::default())
     }
@@ -1504,6 +1584,33 @@ where
     /// ```
     pub fn values(&self) -> Values<'_, T> {
         Values::new(self.inner.values())
+    }
+
+    /// Returns a mutable iterator over the values of the hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let keys = vec![Key::new(1), Key::new(2), Key::new(3)];
+    /// let values = vec![String::from("foo"), String::from("bar"), String::from("baz")];
+    /// het_map.extend(keys.iter().cloned().zip(values.iter().cloned()));
+    /// let map = het_map.get_map_mut::<String>().unwrap();
+    ///
+    /// let mut iter = map.values_mut().peekable();
+    /// while iter.peek().is_some() {
+    ///     let value = iter.next().cloned().unwrap();
+    ///     assert!(values.contains(&value));
+    /// }
+    ///
+    /// assert!(iter.next().is_none());
+    /// assert!(iter.next().is_none());
+    /// assert!(iter.next().is_none());
+    /// ```
+    pub fn values_mut(&mut self) -> ValuesMut<'_, T> {
+        ValuesMut::new(self.inner.values_mut())
     }
 
     /// Returns a draining iterator over the entries of the hash map.
