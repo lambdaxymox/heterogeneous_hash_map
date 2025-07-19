@@ -1087,3 +1087,36 @@ fn test_heterogeneous_hash_map_remove_type_repeat2() {
         assert_eq!(het_map.len_types(), 1);
     }
 }
+
+#[test]
+fn test_heterogeneous_hash_map_insert_type_remove_type_repeat() {
+    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 0);
+
+    het_map.insert_type::<i32>();
+
+    assert!(het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 1);
+
+    het_map.remove_type::<i32>();
+
+    assert!(!het_map.contains_type::<i32>());
+    assert_eq!(het_map.len_types(), 0);
+
+    for _ in 0..100 {
+        assert!(!het_map.contains_type::<i32>());
+        assert_eq!(het_map.len_types(), 0);
+
+        het_map.insert_type::<i32>();
+
+        assert!(het_map.contains_type::<i32>());
+        assert_eq!(het_map.len_types(), 1);
+
+        het_map.remove_type::<i32>();
+
+        assert!(!het_map.contains_type::<i32>());
+        assert_eq!(het_map.len_types(), 0);
+    }
+}
