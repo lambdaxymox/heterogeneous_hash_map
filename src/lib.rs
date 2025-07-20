@@ -9,8 +9,14 @@ extern crate alloc as alloc_crate;
 extern crate std;
 
 mod try_reserve_error;
+mod key;
+mod iterator;
+mod metadata;
 
-use crate::try_reserve_error::{TryReserveError, TryReserveErrorKind};
+pub use crate::iterator::*;
+pub use crate::key::Key;
+pub use crate::metadata::*;
+pub use crate::try_reserve_error::*;
 
 use core::any;
 use core::cmp;
@@ -35,7 +41,7 @@ use std::alloc;
 use opaque::allocator_api::alloc;
 
 use hashbrown::hash_map;
-
+/*
 /// A typed key type for heterogeneous hash maps.
 ///
 /// This implements the hierarchical hashing structure of the heterogeneous hash map in a
@@ -191,7 +197,8 @@ where
         write!(formatter, "{id}", id = self.id)
     }
 }
-
+*/
+/*
 /// An immutable iterator over the entries of a hash map.
 ///
 /// Iterators are created by the [`HomogeneousHashMap::iter`] method.
@@ -817,7 +824,7 @@ where
         formatter.debug_struct("ExtractIf").finish_non_exhaustive()
     }
 }
-
+*/
 /// A hash map containing all values of a given type in a heterogeneous hash map.
 ///
 /// This type acts similarly to a standard library [`HashMap`]. This type of hash map can also
@@ -2273,7 +2280,7 @@ where
         HomogeneousHashMap::with_hasher(S::default())
     }
 }
-
+/*
 /// An iterator over the metadata of the types stored in a heterogeneous hash map.
 ///
 /// Type metadata iterators are returned by the [`HeterogeneousHashMap::metadata_iter`] method.
@@ -2304,7 +2311,7 @@ pub struct TypeMetadataIter<'a> {
 impl<'a> TypeMetadataIter<'a> {
     /// Constructs a new type metadata iterator.
     #[inline]
-    const fn new(iter: hash_map::Iter<'a, any::TypeId, TypeMetadata>) -> Self {
+    pub(crate) const fn new(iter: hash_map::Iter<'a, any::TypeId, TypeMetadata>) -> Self {
         Self { iter }
     }
 }
@@ -2336,7 +2343,8 @@ impl<'a> Default for TypeMetadataIter<'a> {
         Self::new(Default::default())
     }
 }
-
+*/
+/*
 /// The metadata for a data type stored inside a [`HeterogeneousHashMap`].
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct TypeMetadata {
@@ -2452,6 +2460,7 @@ impl TypeMetadata {
         self.alignment
     }
 }
+*/
 
 /// A heterogeneous hash map that can store values of more than one data type.
 ///
@@ -4473,7 +4482,7 @@ mod test_internals {
 
     fn match_registry_type_ids(het_map: &HeterogeneousHashMap<hash::RandomState>) {
         for (type_id, metadata) in het_map.registry.iter() {
-            assert_eq!(metadata.type_id, *type_id);
+            assert_eq!(metadata.type_id(), *type_id);
         }
     }
 
