@@ -797,14 +797,95 @@ where
 /// assert_eq!(result, expected);
 /// ```
 #[repr(transparent)]
-pub struct Map<T>
+pub struct Map<T, S = hash::RandomState>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T>,
+    inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>,
 }
 
-impl<T> Map<T>
+impl<T, S> Map<T, S>
+where
+    T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    /// Constructs a new hash map.
+    #[inline]
+    const fn from_inner(inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>) -> Self {
+        Self { inner }
+    }
+
+    /// Constructs a new hash map.
+    #[inline]
+    const fn from_inner_ref(map: &opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>) -> &Self {
+        unsafe { &*(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S> as *const Self) }
+    }
+
+    /// Constructs a new hash map.
+    #[inline]
+    const fn from_inner_ref_mut(map: &mut opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>) -> &mut Self {
+        unsafe { &mut *(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S> as *mut Self) }
+    }
+}
+
+impl<T, S> Map<T, S>
+where
+    T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    /// Constructs a new hash map with the given hash builder.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::Map;
+    /// # use std::hash::RandomState;
+    /// #
+    /// let map: Map<i32> = Map::with_hasher(RandomState::new());
+    ///
+    /// assert!(map.is_empty());
+    /// ```
+    #[inline]
+    pub fn with_hasher(build_hasher: S) -> Self {
+        Self {
+            inner: opaque::index_map::TypeProjectedIndexMap::with_hasher(build_hasher),
+        }
+    }
+
+    /// Constructs a new hash map with at least the given capacity with the given hash builder.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, Map};
+    /// # use std::hash::RandomState;
+    /// #
+    /// let mut map: Map<i32> = Map::with_capacity_and_hasher(3, RandomState::new());
+    ///
+    /// assert_eq!(map.len(), 0);
+    /// assert!(map.capacity() >= 3);
+    /// let old_capacity = map.capacity();
+    ///
+    /// map.insert(Key::new(0), 1_i32);
+    /// map.insert(Key::new(1), 2_i32);
+    /// map.insert(Key::new(2), 3_i32);
+    ///
+    /// assert_eq!(map.len(), 3);
+    /// assert!(map.capacity() >= old_capacity);
+    /// ```
+    #[inline]
+    pub fn with_capacity_and_hasher(capacity: usize, build_hasher: S) -> Self {
+        Self {
+            inner: opaque::index_map::TypeProjectedIndexMap::with_capacity_and_hasher(capacity, build_hasher),
+        }
+    }
+}
+
+impl<T> Map<T, hash::RandomState>
 where
     T: any::Any,
 {
@@ -852,29 +933,13 @@ where
             inner: opaque::index_map::TypeProjectedIndexMap::with_capacity(capacity),
         }
     }
-
-    /// Constructs a new hash map.
-    #[inline]
-    const fn from_inner(inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> Self {
-        Self { inner }
-    }
-
-    /// Constructs a new hash map.
-    #[inline]
-    const fn from_inner_ref(map: &opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> &Self {
-        unsafe { &*(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T> as *const Self) }
-    }
-
-    /// Constructs a new hash map.
-    #[inline]
-    const fn from_inner_ref_mut(map: &mut opaque::index_map::TypeProjectedIndexMap<Key<T>, T>) -> &mut Self {
-        unsafe { &mut *(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T> as *mut Self) }
-    }
 }
 
-impl<T> Map<T>
+impl<T, S> Map<T, S>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     /// Returns the capacity of the hash map.
     ///
@@ -966,11 +1031,29 @@ where
     pub fn is_empty(&self) -> bool {
         self.inner.is_empty()
     }
+
+    /// Returns a reference to the hash map's hash builder.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::Map;
+    /// # use std::hash::RandomState;
+    /// #
+    /// let map: Map<String> = Map::with_hasher(RandomState::new());
+    /// let build_hasher: &RandomState = map.hasher();
+    /// ```
+    #[inline]
+    pub fn hasher(&self) -> &S {
+        self.inner.hasher().get_build_hasher()
+    }
 }
 
-impl<T> Map<T>
+impl<T, S> Map<T, S>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     /// Determines whether a hash map contains an equivalent key to the given key.
     ///
@@ -1813,33 +1896,41 @@ where
     }
 }
 
-impl<T> PartialEq for Map<T>
+impl<T, S> PartialEq for Map<T, S>
 where
     T: any::Any + PartialEq,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn eq(&self, other: &Self) -> bool {
         PartialEq::eq(&self.inner, &other.inner)
     }
 }
 
-impl<T> Eq for Map<T>
+impl<T, S> Eq for Map<T, S>
 where
     T: any::Any + Eq,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
 }
 
-impl<T> fmt::Debug for Map<T>
+impl<T, S> fmt::Debug for Map<T, S>
 where
     T: any::Any + fmt::Debug,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.debug_map().entries(self.iter()).finish()
     }
 }
 
-impl<T> ops::Index<&Key<T>> for Map<T>
+impl<T, S> ops::Index<&Key<T>> for Map<T, S>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     type Output = T;
 
@@ -1848,9 +1939,11 @@ where
     }
 }
 
-impl<T> Extend<(Key<T>, T)> for Map<T>
+impl<T, S> Extend<(Key<T>, T)> for Map<T, S>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn extend<I>(&mut self, iterable: I)
     where
@@ -1860,9 +1953,11 @@ where
     }
 }
 
-impl<'a, T> Extend<(&'a Key<T>, &'a T)> for Map<T>
+impl<'a, T, S> Extend<(&'a Key<T>, &'a T)> for Map<T, S>
 where
     T: any::Any + Copy,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn extend<I>(&mut self, iterable: I)
     where
@@ -1872,33 +1967,39 @@ where
     }
 }
 
-impl<T> FromIterator<(Key<T>, T)> for Map<T>
+impl<T, S> FromIterator<(Key<T>, T)> for Map<T, S>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync + Default,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn from_iter<I>(iterable: I) -> Self
     where
         I: IntoIterator<Item = (Key<T>, T)>,
     {
-        let mut map = Map::new();
+        let mut map = Map::with_hasher(S::default());
         map.extend(iterable);
 
         map
     }
 }
 
-impl<T, const N: usize> From<[(Key<T>, T); N]> for Map<T>
+impl<T, S, const N: usize> From<[(Key<T>, T); N]> for Map<T, S>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync + Default,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn from(array: [(Key<T>, T); N]) -> Self {
         Map::from_iter(array)
     }
 }
 
-impl<T> Clone for Map<T>
+impl<T, S> Clone for Map<T, S>
 where
     T: any::Any + Clone,
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn clone(&self) -> Self {
         let cloned_inner = self.inner.clone();
@@ -1907,12 +2008,14 @@ where
     }
 }
 
-impl<T> Default for Map<T>
+impl<T, S> Default for Map<T, S>
 where
     T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync + Default,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn default() -> Self {
-        Map::new()
+        Map::with_hasher(S::default())
     }
 }
 
@@ -2324,12 +2427,83 @@ impl TypeMetadata {
 ///
 /// assert!(het_map.is_empty_types());
 /// ```
-pub struct HeterogeneousHashMap {
-    map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap>,
-    registry: HashMap<any::TypeId, TypeMetadata>,
+pub struct HeterogeneousHashMap<S = hash::RandomState>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
+    registry: HashMap<any::TypeId, TypeMetadata, S>,
+    build_hasher: S,
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    /// Constructs a new empty heterogeneous hash map with the custom hash builder.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::HeterogeneousHashMap;
+    /// # use std::hash::RandomState;
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::with_hasher(RandomState::new());
+    ///
+    /// assert!(het_map.is_empty_types());
+    /// assert_eq!(het_map.len_types(), 0);
+    /// assert_eq!(het_map.capacity_types(), 0);
+    ///
+    /// het_map.insert_type::<i8>();
+    ///
+    /// assert!(!het_map.is_empty_types());
+    /// assert_eq!(het_map.len_types(), 1);
+    /// assert!(het_map.capacity_types() > 0);
+    /// ```
+    pub fn with_hasher(build_hasher: S) -> Self {
+        Self {
+            map: HashMap::with_hasher(build_hasher.clone()),
+            registry: HashMap::with_hasher(build_hasher.clone()),
+            build_hasher,
+        }
+    }
+
+    /// Constructs a new empty heterogeneous hash map with at least the specified capacity and
+    /// using the custom hash builder.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::HeterogeneousHashMap;
+    /// # use std::hash::RandomState;
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
+    ///
+    /// assert!(het_map.is_empty_types());
+    /// assert_eq!(het_map.len_types(), 0);
+    /// assert!(het_map.capacity_types() >= 3);
+    ///
+    /// let old_capacity = het_map.capacity_types();
+    /// het_map.insert_type::<i8>();
+    /// het_map.insert_type::<i16>();
+    /// het_map.insert_type::<i32>();
+    ///
+    /// assert!(!het_map.is_empty_types());
+    /// assert_eq!(het_map.len_types(), 3);
+    /// assert_eq!(het_map.capacity_types(), old_capacity);
+    /// ```
+    pub fn with_capacity_and_hasher(capacity: usize, build_hasher: S) -> Self {
+        Self {
+            map: HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
+            registry: HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
+            build_hasher,
+        }
+    }
+}
+
+impl HeterogeneousHashMap<hash::RandomState> {
     /// Constructs a new empty heterogeneous hash map.
     ///
     /// # Examples
@@ -2353,6 +2527,7 @@ impl HeterogeneousHashMap {
         Self {
             map: HashMap::new(),
             registry: HashMap::new(),
+            build_hasher: hash::RandomState::new(),
         }
     }
 
@@ -2383,11 +2558,16 @@ impl HeterogeneousHashMap {
         Self {
             map: HashMap::with_capacity(capacity),
             registry: HashMap::with_capacity(capacity),
+            build_hasher: hash::RandomState::new(),
         }
     }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Inserts a new type into the heterogeneous hash map.
     ///
     /// This method registers the type in the heterogeneous hash map, but does not allocate memory
@@ -2543,12 +2723,12 @@ impl HeterogeneousHashMap {
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
-    pub fn get_map_unchecked<T>(&self) -> &Map<T>
+    pub fn get_map_unchecked<T>(&self) -> &Map<T, S>
     where
         T: any::Any,
     {
         let type_id = any::TypeId::of::<T>();
-        let map = self.map[&type_id].as_proj::<Key<T>, T, hash::RandomState, alloc::Global>();
+        let map = self.map[&type_id].as_proj::<Key<T>, T, S, alloc::Global>();
 
         Map::from_inner_ref(map)
     }
@@ -2572,7 +2752,7 @@ impl HeterogeneousHashMap {
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
-    pub fn get_map_mut_unchecked<T>(&mut self) -> &mut Map<T>
+    pub fn get_map_mut_unchecked<T>(&mut self) -> &mut Map<T, S>
     where
         T: any::Any,
     {
@@ -2580,7 +2760,7 @@ impl HeterogeneousHashMap {
         let map = self.map
             .get_mut(&type_id)
             .unwrap()
-            .as_proj_mut::<Key<T>, T, hash::RandomState, alloc::Global>();
+            .as_proj_mut::<Key<T>, T, S, alloc::Global>();
 
         Map::from_inner_ref_mut(map)
     }
@@ -2620,7 +2800,7 @@ impl HeterogeneousHashMap {
     /// assert_eq!(map1.len(), 3);
     /// assert_eq!(map2.len(), 0);
     /// ```
-    pub fn get_map<T>(&self) -> Option<&Map<T>>
+    pub fn get_map<T>(&self) -> Option<&Map<T, S>>
     where
         T: any::Any,
     {
@@ -2631,7 +2811,7 @@ impl HeterogeneousHashMap {
 
         let map = self.map
             .get(&type_id)
-            .map(|m| m.as_proj::<Key<T>, T, hash::RandomState, alloc::Global>())?;
+            .map(|m| m.as_proj::<Key<T>, T, S, alloc::Global>())?;
 
         Some(Map::from_inner_ref(map))
     }
@@ -2677,7 +2857,7 @@ impl HeterogeneousHashMap {
     ///     assert_eq!(map2.len(), 0);
     /// }
     /// ```
-    pub fn get_map_mut<T>(&mut self) -> Option<&mut Map<T>>
+    pub fn get_map_mut<T>(&mut self) -> Option<&mut Map<T, S>>
     where
         T: any::Any,
     {
@@ -2688,7 +2868,7 @@ impl HeterogeneousHashMap {
 
         let map = self.map
             .get_mut(&type_id)
-            .map(|m| m.as_proj_mut::<Key<T>, T, hash::RandomState, alloc::Global>())?;
+            .map(|m| m.as_proj_mut::<Key<T>, T, S, alloc::Global>())?;
 
         Some(Map::from_inner_ref_mut(map))
     }
@@ -2731,7 +2911,7 @@ impl HeterogeneousHashMap {
     ///
     /// assert!(het_map.contains_type::<f64>());
     /// ```
-    pub fn get_or_insert_map_mut<T>(&mut self) -> &mut Map<T>
+    pub fn get_or_insert_map_mut<T>(&mut self) -> &mut Map<T, S>
     where
         T: any::Any,
     {
@@ -2943,7 +3123,7 @@ impl HeterogeneousHashMap {
     ///
     /// assert!(het_map.is_empty_types());
     /// ```
-    pub fn take_type<T>(&mut self) -> Option<Map<T>>
+    pub fn take_type<T>(&mut self) -> Option<Map<T, S>>
     where
         T: any::Any,
     {
@@ -2953,7 +3133,7 @@ impl HeterogeneousHashMap {
 
         debug_assert_eq!(self.registry.len(), self.map.len());
 
-        Some(Map::from_inner(removed_map.into_proj::<Key<T>, T, hash::RandomState, alloc::Global>()))
+        Some(Map::from_inner(removed_map.into_proj::<Key<T>, T, S, alloc::Global>()))
     }
 
     /// Removes all types and all values for each type from the heterogeneous hash map.
@@ -3003,7 +3183,11 @@ impl HeterogeneousHashMap {
     }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Computes the total number of values across all types in the heterogeneous hash map.
     ///
     /// # Examples
@@ -3050,9 +3234,58 @@ impl HeterogeneousHashMap {
 
         len
     }
+
+    /// Returns a reference to the heterogeneous hash map's hash builder.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// # use core::any;
+    /// # use core::hash;
+    /// # use std::hash::RandomState;
+    /// #
+    /// #[derive(Clone)]
+    /// struct WrappingBuildHasher<S> {
+    ///     inner: S,
+    /// }
+    ///
+    /// impl<S> WrappingBuildHasher<S>
+    /// where
+    ///     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    ///     S::Hasher: any::Any + hash::Hasher + Send + Sync,
+    /// {
+    ///     fn new(inner: S) -> Self {
+    ///         Self { inner }
+    ///     }
+    /// }
+    ///
+    /// impl<S> hash::BuildHasher for WrappingBuildHasher<S>
+    /// where
+    ///     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    ///     S::Hasher: any::Any + hash::Hasher + Send + Sync,
+    /// {
+    ///     type Hasher = S::Hasher;
+    ///
+    ///     fn build_hasher(&self) -> S::Hasher {
+    ///         self.inner.build_hasher()
+    ///     }
+    /// }
+    ///
+    /// let mut het_map = HeterogeneousHashMap::with_hasher(WrappingBuildHasher::new(RandomState::new()));
+    /// let build_hasher: &WrappingBuildHasher<RandomState> = het_map.hasher();
+    /// ```
+    #[inline]
+    pub const fn hasher(&self) -> &S {
+        &self.build_hasher
+    }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Returns the number of types stored in the heterogeneous hash map.
     ///
     /// # Examples
@@ -3171,7 +3404,11 @@ impl HeterogeneousHashMap {
     }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Returns the capacity the heterogeneous hash map has for the given type.
     ///
     /// The **capacity** for a given type is the maximum number of values of the given type the
@@ -3280,7 +3517,11 @@ impl HeterogeneousHashMap {
     }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Returns the type metadata for a given type in the heterogeneous hash map.
     ///
     /// This method returns `Some(metadata)` where `metadata` is the metadata describing the given
@@ -3389,7 +3630,11 @@ impl HeterogeneousHashMap {
     }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Determines whether a heterogeneous hash map contains a value of the given type with the given key.
     ///
     /// This method returns `true` if the key-value pair with the given type and the given key
@@ -3717,7 +3962,11 @@ impl HeterogeneousHashMap {
     }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Returns a reference to the value of the given type with the given key, if it exists
     /// in the heterogeneous hash map.
     ///
@@ -3779,7 +4028,11 @@ impl HeterogeneousHashMap {
     }
 }
 
-impl HeterogeneousHashMap {
+impl<S> HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     /// Inserts one or more values of the given type to the heterogeneous hash map from an
     /// iterable.
     ///
@@ -3849,7 +4102,11 @@ struct TypeEntry<'a> {
     length: usize,
 }
 
-impl fmt::Debug for HeterogeneousHashMap {
+impl<S> fmt::Debug for HeterogeneousHashMap<S>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let entries: Vec<TypeEntry> = self.map.iter().map(|(type_id, map)| {
             let metadata = self.registry.get(type_id)
@@ -3875,14 +4132,14 @@ mod test_internals {
     use super::*;
 
     #[track_caller]
-    fn match_map_type_ids(het_map: &HeterogeneousHashMap) {
+    fn match_map_type_ids(het_map: &HeterogeneousHashMap<hash::RandomState>) {
         for (type_id, map) in het_map.map.iter() {
             assert_eq!(map.value_type_id(), *type_id);
         }
     }
 
     #[track_caller]
-    fn match_registry_type_ids(het_map: &HeterogeneousHashMap) {
+    fn match_registry_type_ids(het_map: &HeterogeneousHashMap<hash::RandomState>) {
         for (type_id, metadata) in het_map.registry.iter() {
             assert_eq!(metadata.type_id, *type_id);
         }
