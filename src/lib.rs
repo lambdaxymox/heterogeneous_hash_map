@@ -3,18 +3,24 @@
 #![deny(private_interfaces)]
 #![cfg_attr(feature = "nightly", feature(allocator_api))]
 #![no_std]
+extern crate alloc as alloc_crate;
+
+#[cfg(feature = "std")]
 extern crate std;
 
+mod try_reserve_error;
+
+use crate::try_reserve_error::{TryReserveError, TryReserveErrorKind};
+
 use core::any;
+use core::cmp;
 use core::fmt;
 use core::iter;
+use core::marker;
 use core::mem;
 use core::ops;
 use core::borrow::Borrow;
-
-use std::collections::HashMap;
-use std::collections::hash_map;
-use std::vec::Vec;
+use alloc_crate::vec::Vec;
 
 #[cfg(feature = "std")]
 use std::hash;
@@ -27,7 +33,8 @@ use std::alloc;
 
 #[cfg(not(feature = "nightly"))]
 use opaque::allocator_api::alloc;
-use opaque::index_map::TypeProjectedIndexMap;
+
+use hashbrown::hash_map;
 
 /// A typed key type for heterogeneous hash maps.
 ///
@@ -60,7 +67,7 @@ use opaque::index_map::TypeProjectedIndexMap;
 #[derive(Debug)]
 pub struct Key<T> {
     id: usize,
-    _marker: std::marker::PhantomData<T>,
+    _marker: marker::PhantomData<T>,
 }
 
 impl<T> Key<T> {
@@ -78,7 +85,7 @@ impl<T> Key<T> {
     pub const fn new(id: usize) -> Self {
         Self {
             id,
-            _marker: std::marker::PhantomData,
+            _marker: marker::PhantomData,
         }
     }
 
@@ -138,13 +145,13 @@ impl<T> PartialEq for Key<T> {
 impl<T> Eq for Key<T> {}
 
 impl<T> PartialOrd for Key<T> {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
         Some(self.id.cmp(&other.id))
     }
 }
 
 impl<T> Ord for Key<T> {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
         self.id.cmp(&other.id)
     }
 }
@@ -921,9 +928,7 @@ where
     /// ```
     #[inline]
     pub fn new() -> Self {
-        Self {
-            inner: opaque::index_map::TypeProjectedIndexMap::new(),
-        }
+        Self::with_hasher(hash::RandomState::new())
     }
 
     /// Constructs a new hash map with at least the given capacity.
@@ -948,9 +953,7 @@ where
     /// ```
     #[inline]
     pub fn with_capacity(capacity: usize) -> Self {
-        Self {
-            inner: opaque::index_map::TypeProjectedIndexMap::with_capacity(capacity),
-        }
+        Self::with_capacity_and_hasher(capacity, hash::RandomState::new())
     }
 }
 
@@ -1963,6 +1966,59 @@ where
         self.inner.reserve(additional)
     }
 
+    /// Attempts to reserve capacity for **at least** `additional` more elements to be inserted
+    /// in the given hash map.
+    ///
+    /// The collection may reserve more space to speculatively avoid frequent reallocations.
+    /// After calling this method, the capacity will be greater than or equal to
+    /// `self.len() + additional` if it returns `Ok(())`. This method does nothing if the collection
+    /// capacity is already sufficient. This method preserves the contents even if an error occurs.
+    ///
+    /// # Errors
+    ///
+    /// This method returns an error if the capacity overflows, or the allocator reports a failure.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let map = het_map.get_or_insert_map_mut();
+    /// map.extend([
+    ///     (Key::new(0), 1_i32),
+    ///     (Key::new(1), 2_i32),
+    ///     (Key::new(2), 3_i32),
+    ///     (Key::new(3), 4_i32),
+    ///     (Key::new(4), 5_i32),
+    ///     (Key::new(5), 6_i32),
+    /// ]);
+    /// let result = map.try_reserve(10);
+    ///
+    /// assert!(result.is_ok());
+    /// assert!(map.capacity() >= map.len() + 10);
+    ///
+    /// let old_capacity = map.capacity();
+    /// map.extend([
+    ///     (Key::new(6), 7_i32),
+    ///     (Key::new(7), 8_i32),
+    ///     (Key::new(8), 9_i32),
+    ///     (Key::new(9), 10_i32),
+    /// ]);
+    ///
+    /// assert_eq!(map.capacity(), old_capacity);
+    /// ```
+    pub fn try_reserve(&mut self, additional: usize) -> Result<(), TryReserveError> {
+        fn from_opaque_try_reserve_error(error: opaque::error::TryReserveError) -> TryReserveError {
+            TryReserveError::from(match error.kind() {
+                opaque::error::TryReserveErrorKind::CapacityOverflow => TryReserveErrorKind::CapacityOverflow,
+                opaque::error::TryReserveErrorKind::AllocError { layout } => TryReserveErrorKind::AllocError { layout },
+            })
+        }
+
+        self.inner.try_reserve(additional).map_err(from_opaque_try_reserve_error)
+    }
+
     /// Shrinks the capacity of the hash map as much as possible.
     ///
     /// The resulting hash map might still have some excess capacity, just as is the case for
@@ -2568,8 +2624,8 @@ where
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
-    registry: HashMap<any::TypeId, TypeMetadata, S>,
+    map: hash_map::HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
+    registry: hash_map::HashMap<any::TypeId, TypeMetadata, S>,
     build_hasher: S,
 }
 
@@ -2579,8 +2635,8 @@ where
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
-    registry: HashMap<any::TypeId, TypeMetadata, S>,
+    map: hash_map::HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
+    registry: hash_map::HashMap<any::TypeId, TypeMetadata, S>,
     build_hasher: S,
 }
 
@@ -2611,8 +2667,8 @@ where
     /// ```
     pub fn with_hasher(build_hasher: S) -> Self {
         Self {
-            map: HashMap::with_hasher(build_hasher.clone()),
-            registry: HashMap::with_hasher(build_hasher.clone()),
+            map: hash_map::HashMap::with_hasher(build_hasher.clone()),
+            registry: hash_map::HashMap::with_hasher(build_hasher.clone()),
             build_hasher,
         }
     }
@@ -2643,13 +2699,14 @@ where
     /// ```
     pub fn with_capacity_and_hasher(capacity: usize, build_hasher: S) -> Self {
         Self {
-            map: HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
-            registry: HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
+            map: hash_map::HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
+            registry: hash_map::HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
             build_hasher,
         }
     }
 }
 
+#[cfg(feature = "std")]
 impl HeterogeneousHashMap<hash::RandomState> {
     /// Constructs a new empty heterogeneous hash map.
     ///
@@ -2671,11 +2728,7 @@ impl HeterogeneousHashMap<hash::RandomState> {
     /// assert!(het_map.capacity_types() > 0);
     /// ```
     pub fn new() -> Self {
-        Self {
-            map: HashMap::new(),
-            registry: HashMap::new(),
-            build_hasher: hash::RandomState::new(),
-        }
+        Self::with_hasher(hash::RandomState::new())
     }
 
     /// Constructs a new empty heterogeneous hash map with a minimum type capacity of `capacity`.
@@ -2702,11 +2755,7 @@ impl HeterogeneousHashMap<hash::RandomState> {
     /// assert!(het_map.capacity_types() >= old_capacity);
     /// ```
     pub fn with_capacity(capacity: usize) -> Self {
-        Self {
-            map: HashMap::with_capacity(capacity),
-            registry: HashMap::with_capacity(capacity),
-            build_hasher: hash::RandomState::new(),
-        }
+        Self::with_capacity_and_hasher(capacity, hash::RandomState::new())
     }
 }
 
@@ -3374,8 +3423,8 @@ where
     pub fn clear(&mut self) {
         let type_ids = Vec::from_iter(self.map.keys().cloned());
         for type_id in type_ids.iter() {
-            let _ = self.map.remove(&type_id);
-            let _ = self.registry.remove(&type_id);
+            let _ = self.map.remove(type_id);
+            let _ = self.registry.remove(type_id);
         }
 
         debug_assert_eq!(self.registry.len(), 0);
@@ -3881,7 +3930,7 @@ where
         let type_id = any::TypeId::of::<T>();
         match self.map.get(&type_id) {
             Some(opaque_map) => {
-                let proj_map = opaque_map.as_proj::<Key<T>, T, hash::RandomState, alloc::Global>();
+                let proj_map = opaque_map.as_proj::<Key<T>, T, S, alloc::Global>();
                 proj_map.contains_key(key)
             }
             None => false,

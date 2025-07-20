@@ -13,3 +13,6 @@ nightly = ["opaque/nightly"]
 [dependencies.opaque]
 version = "1.2.0"
 git = "https://github.com/lambdaxymox/opaque"
+
+[dependencies.hashbrown]
+version = "0.15.4"
