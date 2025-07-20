@@ -50,7 +50,7 @@ use hashbrown::hash_map;
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.insert_type::<i32>();
 ///
-/// let key: Key<i32> = Key::new(1);
+/// let key: Key<usize, i32> = Key::new(1);
 ///
 /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
 /// assert!(!het_map.contains_key::<char, _>(&Key::new(1)));
@@ -64,13 +64,14 @@ use hashbrown::hash_map;
 /// assert_eq!(het_map.get::<i32, _>(&Key::new(1)),  Some(&3_i32));
 /// assert_eq!(het_map.get::<char, _>(&Key::new(1)), None);
 /// ```
+#[repr(transparent)]
 #[derive(Debug)]
-pub struct Key<T> {
-    id: usize,
+pub struct Key<K, T> {
+    id: K,
     _marker: marker::PhantomData<T>,
 }
 
-impl<T> Key<T> {
+impl<K, T> Key<K, T> {
     /// Constructs a new typed key.
     ///
     /// # Examples
@@ -79,10 +80,10 @@ impl<T> Key<T> {
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
     /// # use core::any::Any;
     /// #
-    /// let key: Key<Box<dyn Any>> = Key::new(usize::MAX);
+    /// let key: Key<usize, Box<dyn Any>> = Key::new(usize::MAX);
     /// ```
     #[inline]
-    pub const fn new(id: usize) -> Self {
+    pub const fn new(id: K) -> Self {
         Self {
             id,
             _marker: marker::PhantomData,
@@ -97,37 +98,50 @@ impl<T> Key<T> {
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
     /// # use core::any::Any;
     /// #
-    /// let key: Key<Box<dyn Any>> = Key::new(usize::MAX);
+    /// let key: Key<usize, Box<dyn Any>> = Key::new(usize::MAX);
     ///
-    /// assert_eq!(key.id(), usize::MAX);
+    /// assert_eq!(key.id(), &usize::MAX);
     /// ```
     #[inline]
-    pub const fn id(self) -> usize {
-        self.id
+    pub const fn id(&self) -> &K {
+        &self.id
     }
 }
 
-impl<T> From<usize> for Key<T> {
-    fn from(id: usize) -> Self {
+impl<K, T> From<K> for Key<K, T> {
+    fn from(id: K) -> Self {
         Self::new(id)
     }
 }
 
-impl<T> Default for Key<T> {
+impl<K, T> Default for Key<K, T>
+where
+    K: Default,
+{
     fn default() -> Self {
-        Self::new(usize::default())
+        Self::new(K::default())
     }
 }
 
-impl<T> Clone for Key<T> {
+impl<K, T> Clone for Key<K, T>
+where
+    K: Clone,
+{
     fn clone(&self) -> Self {
-        Self::new(self.id)
+        Self::new(self.id.clone())
     }
 }
 
-impl<T> Copy for Key<T> {}
+impl<K, T> Copy for Key<K, T>
+where
+    K: Copy,
+{
+}
 
-impl<T> hash::Hash for Key<T> {
+impl<K, T> hash::Hash for Key<K, T>
+where
+    K: hash::Hash,
+{
     fn hash<H>(&self, state: &mut H)
     where
         H: hash::Hasher,
@@ -136,27 +150,43 @@ impl<T> hash::Hash for Key<T> {
     }
 }
 
-impl<T> PartialEq for Key<T> {
+impl<K, T> PartialEq for Key<K, T>
+where
+    K: PartialEq,
+{
     fn eq(&self, other: &Self) -> bool {
         self.id == other.id
     }
 }
 
-impl<T> Eq for Key<T> {}
+impl<K, T> Eq for Key<K, T>
+where
+    K: Eq,
+{
+}
 
-impl<T> PartialOrd for Key<T> {
+impl<K, T> PartialOrd for Key<K, T>
+where
+    K: PartialOrd,
+{
     fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
-        Some(self.id.cmp(&other.id))
+        PartialOrd::partial_cmp(&self.id, &other.id)
     }
 }
 
-impl<T> Ord for Key<T> {
+impl<K, T> Ord for Key<K, T>
+where
+    K: Ord,
+{
     fn cmp(&self, other: &Self) -> cmp::Ordering {
-        self.id.cmp(&other.id)
+        Ord::cmp(&self.id, &other.id)
     }
 }
 
-impl<T> fmt::Display for Key<T> {
+impl<K, T> fmt::Display for Key<K, T>
+where
+    K: fmt::Display,
+{
     fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         write!(formatter, "{id}", id = self.id)
     }
@@ -188,27 +218,27 @@ impl<T> fmt::Display for Key<T> {
 /// assert_eq!(result.len(), expected.len());
 /// assert_eq!(result, expected);
 /// ```
-pub struct Iter<'a, T> {
-    iter: opaque::index_map::map::Iter<'a, Key<T>, T>,
+pub struct Iter<'a, K, T> {
+    iter: opaque::index_map::map::Iter<'a, Key<K, T>, T>,
 }
 
-impl<'a, T> Iter<'a, T> {
+impl<'a, K, T> Iter<'a, K, T> {
     /// Constructs a new immutable iterator.
     #[inline]
-    const fn new(iter: opaque::index_map::map::Iter<'a, Key<T>, T>) -> Self {
+    const fn new(iter: opaque::index_map::map::Iter<'a, Key<K, T>, T>) -> Self {
         Self { iter }
     }
 }
 
-impl<'a, T> Iterator for Iter<'a, T> {
-    type Item = (&'a Key<T>, &'a T);
+impl<'a, K, T> Iterator for Iter<'a, K, T> {
+    type Item = (&'a Key<K, T>, &'a T);
 
     fn next(&mut self) -> Option<Self::Item> {
         self.iter.next()
     }
 }
 
-impl<'a, T> DoubleEndedIterator for Iter<'a, T> {
+impl<'a, K, T> DoubleEndedIterator for Iter<'a, K, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
         self.iter.next_back()
     }
@@ -218,21 +248,21 @@ impl<'a, T> DoubleEndedIterator for Iter<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for Iter<'a, T> {
+impl<'a, K, T> ExactSizeIterator for Iter<'a, K, T> {
     fn len(&self) -> usize {
         self.iter.len()
     }
 }
 
-impl<T> iter::FusedIterator for Iter<'_, T> {}
+impl<K, T> iter::FusedIterator for Iter<'_, K, T> {}
 
-impl<'a, T> Clone for Iter<'a, T> {
+impl<'a, K, T> Clone for Iter<'a, K, T> {
     fn clone(&self) -> Self {
         Iter { iter: self.iter.clone() }
     }
 }
 
-impl<'a, T> Default for Iter<'a, T> {
+impl<'a, K, T> Default for Iter<'a, K, T> {
     fn default() -> Self {
         Self {
             iter: Default::default(),
@@ -266,27 +296,27 @@ impl<'a, T> Default for Iter<'a, T> {
 /// assert_eq!(result.len(), expected.len());
 /// assert_eq!(result, expected);
 /// ```
-pub struct IterMut<'a, T> {
-    iter: opaque::index_map::map::IterMut<'a, Key<T>, T>,
+pub struct IterMut<'a, K, T> {
+    iter: opaque::index_map::map::IterMut<'a, Key<K, T>, T>,
 }
 
-impl<'a, T> IterMut<'a, T> {
+impl<'a, K, T> IterMut<'a, K, T> {
     /// Constructs a new mutable iterator.
     #[inline]
-    const fn new(iter: opaque::index_map::map::IterMut<'a, Key<T>, T>) -> Self {
+    const fn new(iter: opaque::index_map::map::IterMut<'a, Key<K, T>, T>) -> Self {
         Self { iter }
     }
 }
 
-impl<'a, T> Iterator for IterMut<'a, T> {
-    type Item = (&'a Key<T>, &'a mut T);
+impl<'a, K, T> Iterator for IterMut<'a, K, T> {
+    type Item = (&'a Key<K, T>, &'a mut T);
 
     fn next(&mut self) -> Option<Self::Item> {
         self.iter.next()
     }
 }
 
-impl<'a, T> DoubleEndedIterator for IterMut<'a, T> {
+impl<'a, K, T> DoubleEndedIterator for IterMut<'a, K, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
         self.iter.next_back()
     }
@@ -296,16 +326,17 @@ impl<'a, T> DoubleEndedIterator for IterMut<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for IterMut<'a, T> {
+impl<'a, K, T> ExactSizeIterator for IterMut<'a, K, T> {
     fn len(&self) -> usize {
         self.iter.len()
     }
 }
 
-impl<'a, T> iter::FusedIterator for IterMut<'a, T> {}
+impl<'a, K, T> iter::FusedIterator for IterMut<'a, K, T> {}
 
-impl<'a, T> fmt::Debug for IterMut<'a, T>
+impl<'a, K, T> fmt::Debug for IterMut<'a, K, T>
 where
+    K: fmt::Debug,
     T: fmt::Debug,
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -313,7 +344,7 @@ where
     }
 }
 
-impl<'a, T> Default for IterMut<'a, T> {
+impl<'a, K, T> Default for IterMut<'a, K, T> {
     fn default() -> Self {
         Self {
             iter: Default::default(),
@@ -348,33 +379,33 @@ impl<'a, T> Default for IterMut<'a, T> {
 /// assert_eq!(result.len(), expected.len());
 /// assert_eq!(result, expected);
 /// ```
-pub struct Keys<'a, T> {
-    iter: opaque::index_map::map::Keys<'a, Key<T>, T>,
+pub struct Keys<'a, K, T> {
+    iter: opaque::index_map::map::Keys<'a, Key<K, T>, T>,
 }
 
-impl<'a, T> Keys<'a, T> {
+impl<'a, K, T> Keys<'a, K, T> {
     /// Constructs a new key iterator.
     #[inline]
-    const fn new(iter: opaque::index_map::map::Keys<'a, Key<T>, T>) -> Self {
+    const fn new(iter: opaque::index_map::map::Keys<'a, Key<K, T>, T>) -> Self {
         Self { iter }
     }
 }
 
-impl<'a, T> Clone for Keys<'a, T> {
+impl<'a, K, T> Clone for Keys<'a, K, T> {
     fn clone(&self) -> Self {
         Keys { iter: self.iter.clone() }
     }
 }
 
-impl<'a, T> Iterator for Keys<'a, T> {
-    type Item = &'a Key<T>;
+impl<'a, K, T> Iterator for Keys<'a, K, T> {
+    type Item = &'a Key<K, T>;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.iter.next()
     }
 }
 
-impl<'a, T> DoubleEndedIterator for Keys<'a, T> {
+impl<'a, K, T> DoubleEndedIterator for Keys<'a, K, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
         self.iter.next_back()
     }
@@ -384,16 +415,17 @@ impl<'a, T> DoubleEndedIterator for Keys<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for Keys<'a, T> {
+impl<'a, K, T> ExactSizeIterator for Keys<'a, K, T> {
     fn len(&self) -> usize {
         self.iter.len()
     }
 }
 
-impl<'a, T> iter::FusedIterator for Keys<'a, T> {}
+impl<'a, K, T> iter::FusedIterator for Keys<'a, K, T> {}
 
-impl<'a, T> fmt::Debug for Keys<'a, T>
+impl<'a, K, T> fmt::Debug for Keys<'a, K, T>
 where
+    K: fmt::Debug,
     T: fmt::Debug,
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -401,7 +433,7 @@ where
     }
 }
 
-impl<'a, T> Default for Keys<'a, T> {
+impl<'a, K, T> Default for Keys<'a, K, T> {
     fn default() -> Self {
         Self::new(Default::default())
     }
@@ -434,19 +466,19 @@ impl<'a, T> Default for Keys<'a, T> {
 /// assert_eq!(result.len(), expected.len());
 /// assert_eq!(result, expected);
 /// ```
-pub struct Values<'a, T> {
-    iter: opaque::index_map::map::Values<'a, Key<T>, T>,
+pub struct Values<'a, K, T> {
+    iter: opaque::index_map::map::Values<'a, Key<K, T>, T>,
 }
 
-impl<'a, T> Values<'a, T> {
+impl<'a, K, T> Values<'a, K, T> {
     /// Constructs a new immutable value iterator.
     #[inline]
-    const fn new(iter: opaque::index_map::map::Values<'a, Key<T>, T>) -> Self {
+    const fn new(iter: opaque::index_map::map::Values<'a, Key<K, T>, T>) -> Self {
         Self { iter }
     }
 }
 
-impl<'a, T> Iterator for Values<'a, T> {
+impl<'a, K, T> Iterator for Values<'a, K, T> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -454,7 +486,7 @@ impl<'a, T> Iterator for Values<'a, T> {
     }
 }
 
-impl<'a, T> DoubleEndedIterator for Values<'a, T> {
+impl<'a, K, T> DoubleEndedIterator for Values<'a, K, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
         self.iter.next_back()
     }
@@ -464,21 +496,21 @@ impl<'a, T> DoubleEndedIterator for Values<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for Values<'a, T> {
+impl<'a, K, T> ExactSizeIterator for Values<'a, K, T> {
     fn len(&self) -> usize {
         self.iter.len()
     }
 }
 
-impl<'a, T> iter::FusedIterator for Values<'a, T> {}
+impl<'a, K, T> iter::FusedIterator for Values<'a, K, T> {}
 
-impl<'a, T> Clone for Values<'a, T> {
+impl<'a, K, T> Clone for Values<'a, K, T> {
     fn clone(&self) -> Self {
         Values { iter: self.iter.clone() }
     }
 }
 
-impl<'a, T> fmt::Debug for Values<'a, T>
+impl<'a, K, T> fmt::Debug for Values<'a, K, T>
 where
     T: fmt::Debug,
 {
@@ -487,7 +519,7 @@ where
     }
 }
 
-impl<'a, T> Default for Values<'a, T> {
+impl<'a, K, T> Default for Values<'a, K, T> {
     fn default() -> Self {
         Self::new(Default::default())
     }
@@ -520,19 +552,19 @@ impl<'a, T> Default for Values<'a, T> {
 /// assert_eq!(result.len(), expected.len());
 /// assert_eq!(result, expected);
 /// ```
-pub struct ValuesMut<'a, T> {
-    iter: opaque::index_map::map::ValuesMut<'a, Key<T>, T>,
+pub struct ValuesMut<'a, K, T> {
+    iter: opaque::index_map::map::ValuesMut<'a, Key<K, T>, T>,
 }
 
-impl<'a, T> ValuesMut<'a, T> {
+impl<'a, K, T> ValuesMut<'a, K, T> {
     /// Constructs a new mutable value iterator.
     #[inline]
-    const fn new(iter: opaque::index_map::map::ValuesMut<'a, Key<T>, T>) -> Self {
+    const fn new(iter: opaque::index_map::map::ValuesMut<'a, Key<K, T>, T>) -> Self {
         Self { iter }
     }
 }
 
-impl<'a, T> Iterator for ValuesMut<'a, T> {
+impl<'a, K, T> Iterator for ValuesMut<'a, K, T> {
     type Item = &'a mut T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -540,7 +572,7 @@ impl<'a, T> Iterator for ValuesMut<'a, T> {
     }
 }
 
-impl<'a, T> DoubleEndedIterator for ValuesMut<'a, T> {
+impl<'a, K, T> DoubleEndedIterator for ValuesMut<'a, K, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
         self.iter.next_back()
     }
@@ -550,15 +582,15 @@ impl<'a, T> DoubleEndedIterator for ValuesMut<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for ValuesMut<'a, T> {
+impl<'a, K, T> ExactSizeIterator for ValuesMut<'a, K, T> {
     fn len(&self) -> usize {
         self.iter.len()
     }
 }
 
-impl<'a, T> iter::FusedIterator for ValuesMut<'a, T> {}
+impl<'a, K, T> iter::FusedIterator for ValuesMut<'a, K, T> {}
 
-impl<'a, T> fmt::Debug for ValuesMut<'a, T>
+impl<'a, K, T> fmt::Debug for ValuesMut<'a, K, T>
 where
     T: fmt::Debug,
 {
@@ -567,7 +599,7 @@ where
     }
 }
 
-impl<'a, T> Default for ValuesMut<'a, T> {
+impl<'a, K, T> Default for ValuesMut<'a, K, T> {
     fn default() -> Self {
         Self::new(Default::default())
     }
@@ -607,37 +639,41 @@ impl<'a, T> Default for ValuesMut<'a, T> {
 /// assert_eq!(result.len(), expected.len());
 /// assert_eq!(result, expected);
 /// ```
-pub struct Drain<'a, T>
+pub struct Drain<'a, K, T>
 where
+    K: any::Any,
     T: any::Any,
 {
-    iter: opaque::index_map::map::Drain<'a, Key<T>, T>,
+    iter: opaque::index_map::map::Drain<'a, Key<K, T>, T>,
 }
 
-impl<'a, T> Drain<'a, T>
+impl<'a, K, T> Drain<'a, K, T>
 where
+    K: any::Any,
     T: any::Any,
 {
     /// Constructs a new draining iterator.
     #[inline]
-    const fn new(iter: opaque::index_map::map::Drain<'a, Key<T>, T>) -> Self {
+    const fn new(iter: opaque::index_map::map::Drain<'a, Key<K, T>, T>) -> Self {
         Self { iter }
     }
 }
 
-impl<'a, T> Iterator for Drain<'a, T>
+impl<'a, K, T> Iterator for Drain<'a, K, T>
 where
+    K: any::Any,
     T: any::Any,
 {
-    type Item = (Key<T>, T);
+    type Item = (Key<K, T>, T);
 
     fn next(&mut self) -> Option<Self::Item> {
         self.iter.next()
     }
 }
 
-impl<'a, T> DoubleEndedIterator for Drain<'a, T>
+impl<'a, K, T> DoubleEndedIterator for Drain<'a, K, T>
 where
+    K: any::Any,
     T: any::Any,
 {
     fn next_back(&mut self) -> Option<Self::Item> {
@@ -649,8 +685,9 @@ where
     }
 }
 
-impl<'a, T> ExactSizeIterator for Drain<'a, T>
+impl<'a, K, T> ExactSizeIterator for Drain<'a, K, T>
 where
+    K: any::Any,
     T: any::Any,
 {
     fn len(&self) -> usize {
@@ -658,14 +695,16 @@ where
     }
 }
 
-impl<'a, T> iter::FusedIterator for Drain<'a, T>
+impl<'a, K, T> iter::FusedIterator for Drain<'a, K, T>
 where
+    K: any::Any,
     T: any::Any,
 {
 }
 
-impl<'a, T> fmt::Debug for Drain<'a, T>
+impl<'a, K, T> fmt::Debug for Drain<'a, K, T>
 where
+    K: any::Any + fmt::Debug,
     T: any::Any + fmt::Debug,
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -721,32 +760,35 @@ where
 ///     assert!(is_prime(*i));
 /// }
 /// ```
-pub struct ExtractIf<'a, T, F>
+pub struct ExtractIf<'a, K, T, F>
 where
+    K: any::Any,
     T: any::Any,
-    F: FnMut(&Key<T>, &mut T) -> bool,
+    F: FnMut(&Key<K, T>, &mut T) -> bool,
 {
-    iter: opaque::index_map::map::ExtractIf<'a, Key<T>, T, F>,
+    iter: opaque::index_map::map::ExtractIf<'a, Key<K, T>, T, F>,
 }
 
-impl<'a, T, F> ExtractIf<'a, T, F>
+impl<'a, K, T, F> ExtractIf<'a, K, T, F>
 where
+    K: any::Any,
     T: any::Any,
-    F: FnMut(&Key<T>, &mut T) -> bool,
+    F: FnMut(&Key<K, T>, &mut T) -> bool,
 {
     /// Constructs a new extracting iterator.
     #[inline]
-    const fn new(iter: opaque::index_map::map::ExtractIf<'a, Key<T>, T, F>) -> ExtractIf<'a, T, F> {
+    const fn new(iter: opaque::index_map::map::ExtractIf<'a, Key<K, T>, T, F>) -> ExtractIf<'a, K, T, F> {
         ExtractIf { iter }
     }
 }
 
-impl<'a, T, F> Iterator for ExtractIf<'a, T, F>
+impl<'a, K, T, F> Iterator for ExtractIf<'a, K, T, F>
 where
+    K: any::Any,
     T: any::Any,
-    F: FnMut(&Key<T>, &mut T) -> bool,
+    F: FnMut(&Key<K, T>, &mut T) -> bool,
 {
-    type Item = (Key<T>, T);
+    type Item = (Key<K, T>, T);
 
     fn next(&mut self) -> Option<Self::Item> {
         self.iter.next()
@@ -757,17 +799,19 @@ where
     }
 }
 
-impl<T, F> iter::FusedIterator for ExtractIf<'_, T, F>
+impl<K, T, F> iter::FusedIterator for ExtractIf<'_, K, T, F>
 where
+    K: any::Any,
     T: any::Any,
-    F: FnMut(&Key<T>, &mut T) -> bool,
+    F: FnMut(&Key<K, T>, &mut T) -> bool,
 {
 }
 
-impl<'a, T, F> fmt::Debug for ExtractIf<'a, T, F>
+impl<'a, K, T, F> fmt::Debug for ExtractIf<'a, K, T, F>
 where
+    K: any::Any + fmt::Debug,
     T: any::Any + fmt::Debug,
-    F: FnMut(&Key<T>, &mut T) -> bool,
+    F: FnMut(&Key<K, T>, &mut T) -> bool,
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.debug_struct("ExtractIf").finish_non_exhaustive()
@@ -811,53 +855,57 @@ where
 /// ```
 #[cfg(feature = "std")]
 #[repr(transparent)]
-pub struct HomogeneousHashMap<T, S = hash::RandomState>
+pub struct HomogeneousHashMap<K, T, S = hash::RandomState>
 where
+    K: any::Any,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>,
+    inner: opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>,
 }
 
 #[cfg(not(feature = "std"))]
 #[repr(transparent)]
-pub struct HomogeneousHashMap<T, S>
+pub struct HomogeneousHashMap<K, T, S>
 where
+    K: any::Any,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>,
+    inner: opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>,
 }
 
-impl<T, S> HomogeneousHashMap<T, S>
+impl<K, T, S> HomogeneousHashMap<K, T, S>
 where
+    K: any::Any,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     /// Constructs a new hash map.
     #[inline]
-    const fn from_inner(inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>) -> Self {
+    const fn from_inner(inner: opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>) -> Self {
         Self { inner }
     }
 
     /// Constructs a new hash map.
     #[inline]
-    const fn from_inner_ref(map: &opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>) -> &Self {
-        unsafe { &*(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S> as *const Self) }
+    const fn from_inner_ref(map: &opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>) -> &Self {
+        unsafe { &*(map as *const opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S> as *const Self) }
     }
 
     /// Constructs a new hash map.
     #[inline]
-    const fn from_inner_ref_mut(map: &mut opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>) -> &mut Self {
-        unsafe { &mut *(map as *const opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S> as *mut Self) }
+    const fn from_inner_ref_mut(map: &mut opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>) -> &mut Self {
+        unsafe { &mut *(map as *const opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S> as *mut Self) }
     }
 }
 
-impl<T, S> HomogeneousHashMap<T, S>
+impl<K, T, S> HomogeneousHashMap<K, T, S>
 where
+    K: any::Any,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
@@ -870,7 +918,7 @@ where
     /// # use heterogeneous_hash_map::HomogeneousHashMap;
     /// # use std::hash::RandomState;
     /// #
-    /// let map: HomogeneousHashMap<i32> = HomogeneousHashMap::with_hasher(RandomState::new());
+    /// let map: HomogeneousHashMap<usize, i32> = HomogeneousHashMap::with_hasher(RandomState::new());
     ///
     /// assert!(map.is_empty());
     /// ```
@@ -889,7 +937,7 @@ where
     /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
     /// # use std::hash::RandomState;
     /// #
-    /// let mut map: HomogeneousHashMap<i32> = HomogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
+    /// let mut map: HomogeneousHashMap<usize, i32> = HomogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
     ///
     /// assert_eq!(map.len(), 0);
     /// assert!(map.capacity() >= 3);
@@ -911,8 +959,9 @@ where
 }
 
 #[cfg(feature = "std")]
-impl<T> HomogeneousHashMap<T, hash::RandomState>
+impl<K, T> HomogeneousHashMap<K, T, hash::RandomState>
 where
+    K: any::Any,
     T: any::Any,
 {
     /// Constructs a new hash map.
@@ -922,7 +971,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::HomogeneousHashMap;
     /// #
-    /// let map: HomogeneousHashMap<i32> = HomogeneousHashMap::new();
+    /// let map: HomogeneousHashMap<usize, i32> = HomogeneousHashMap::new();
     ///
     /// assert!(map.is_empty());
     /// ```
@@ -938,7 +987,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
     /// #
-    /// let mut map: HomogeneousHashMap<i32> = HomogeneousHashMap::with_capacity(3);
+    /// let mut map: HomogeneousHashMap<usize, i32> = HomogeneousHashMap::with_capacity(3);
     ///
     /// assert_eq!(map.len(), 0);
     /// assert!(map.capacity() >= 3);
@@ -957,8 +1006,9 @@ where
     }
 }
 
-impl<T, S> HomogeneousHashMap<T, S>
+impl<K, T, S> HomogeneousHashMap<K, T, S>
 where
+    K: any::Any,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
@@ -1062,7 +1112,7 @@ where
     /// # use heterogeneous_hash_map::HomogeneousHashMap;
     /// # use std::hash::RandomState;
     /// #
-    /// let map: HomogeneousHashMap<String> = HomogeneousHashMap::with_hasher(RandomState::new());
+    /// let map: HomogeneousHashMap<usize, String> = HomogeneousHashMap::with_hasher(RandomState::new());
     /// let build_hasher: &RandomState = map.hasher();
     /// ```
     #[inline]
@@ -1071,8 +1121,9 @@ where
     }
 }
 
-impl<T, S> HomogeneousHashMap<T, S>
+impl<K, T, S> HomogeneousHashMap<K, T, S>
 where
+    K: any::Any,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
@@ -1104,7 +1155,7 @@ where
     /// ```
     pub fn contains_key<Q>(&self, key: &Q) -> bool
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.contains_key(key)
@@ -1138,7 +1189,7 @@ where
     /// ```
     pub fn get<Q>(&self, key: &Q) -> Option<&T>
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.get(key)
@@ -1170,9 +1221,9 @@ where
     /// assert_eq!(map.get_key_value(&Key::new(3)), Some((&Key::new(3), &4_f64)));
     /// assert_eq!(map.get_key_value(&Key::new(4)), None);
     /// ```
-    pub fn get_key_value<Q>(&self, key: &Q) -> Option<(&Key<T>, &T)>
+    pub fn get_key_value<Q>(&self, key: &Q) -> Option<(&Key<K, T>, &T)>
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.get_key_value(key)
@@ -1224,7 +1275,7 @@ where
     /// ```
     pub fn get_mut<Q>(&mut self, key: &Q) -> Option<&mut T>
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.get_mut(key)
@@ -1257,7 +1308,7 @@ where
     #[track_caller]
     pub fn get_unchecked<Q>(&self, key: &Q) -> &T
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         &self.inner[key]
@@ -1306,7 +1357,7 @@ where
     #[track_caller]
     pub fn get_mut_unchecked<Q>(&mut self, key: &Q) -> &mut T
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         &mut self.inner[key]
@@ -1356,7 +1407,7 @@ where
     #[track_caller]
     pub fn get_disjoint_mut<Q, const N: usize>(&mut self, ks: [&Q; N]) -> [Option<&'_ mut T>; N]
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.get_disjoint_mut(ks)
@@ -1437,7 +1488,10 @@ where
     ///     assert_eq!(map.get(&Key::new(4)), None);
     /// }
     /// ```
-    pub fn insert(&mut self, key: Key<T>, value: T) -> Option<T> {
+    pub fn insert(&mut self, key: Key<K, T>, value: T) -> Option<T>
+    where
+        K: hash::Hash + Eq,
+    {
         self.inner.insert(key, value)
     }
 
@@ -1522,7 +1576,7 @@ where
     /// ```
     pub fn remove<Q>(&mut self, key: &Q) -> Option<T>
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.swap_remove(key)
@@ -1608,9 +1662,9 @@ where
     ///     assert_eq!(map.get_key_value(&Key::new(4)), None);
     /// }
     /// ```
-    pub fn remove_entry<Q>(&mut self, key: &Q) -> Option<(Key<T>, T)>
+    pub fn remove_entry<Q>(&mut self, key: &Q) -> Option<(Key<K, T>, T)>
     where
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.swap_remove_entry(key)
@@ -1642,7 +1696,7 @@ where
     /// assert!(iter.next().is_none());
     /// assert!(iter.next().is_none());
     /// ```
-    pub fn iter(&self) -> Iter<'_, T> {
+    pub fn iter(&self) -> Iter<'_, K, T> {
         Iter::new(self.inner.iter())
     }
 
@@ -1672,7 +1726,7 @@ where
     /// assert!(iter.next().is_none());
     /// assert!(iter.next().is_none());
     /// ```
-    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
+    pub fn iter_mut(&mut self) -> IterMut<'_, K, T> {
         IterMut::new(self.inner.iter_mut())
     }
 
@@ -1699,7 +1753,7 @@ where
     /// assert!(iter.next().is_none());
     /// assert!(iter.next().is_none());
     /// ```
-    pub fn keys(&self) -> Keys<'_, T> {
+    pub fn keys(&self) -> Keys<'_, K, T> {
         Keys::new(self.inner.keys())
     }
 
@@ -1726,7 +1780,7 @@ where
     /// assert!(iter.next().is_none());
     /// assert!(iter.next().is_none());
     /// ```
-    pub fn values(&self) -> Values<'_, T> {
+    pub fn values(&self) -> Values<'_, K, T> {
         Values::new(self.inner.values())
     }
 
@@ -1753,7 +1807,7 @@ where
     /// assert!(iter.next().is_none());
     /// assert!(iter.next().is_none());
     /// ```
-    pub fn values_mut(&mut self) -> ValuesMut<'_, T> {
+    pub fn values_mut(&mut self) -> ValuesMut<'_, K, T> {
         ValuesMut::new(self.inner.values_mut())
     }
 
@@ -1790,7 +1844,7 @@ where
     /// }
     /// assert_eq!(het_map.len::<String>(), Some(0));
     /// ```
-    pub fn drain(&mut self) -> Drain<'_, T> {
+    pub fn drain(&mut self) -> Drain<'_, K, T> {
         Drain::new(self.inner.drain(..))
     }
 
@@ -1823,15 +1877,15 @@ where
     /// ]);
     /// let result = {
     ///     let map = het_map.get_map_mut::<String>().unwrap();
-    ///     let extracted: HomogeneousHashMap<String> = map.extract_if(|k, v| v.contains("Dark Souls")).collect();
+    ///     let extracted: HomogeneousHashMap<usize, String> = map.extract_if(|k, v| v.contains("Dark Souls")).collect();
     ///     extracted
     /// };
     ///
     /// assert_eq!(result, expected);
     /// ```
-    pub fn extract_if<F>(&mut self, keep: F) -> ExtractIf<'_, T, F>
+    pub fn extract_if<F>(&mut self, keep: F) -> ExtractIf<'_, K, T, F>
     where
-        F: FnMut(&Key<T>, &mut T) -> bool,
+        F: FnMut(&Key<K, T>, &mut T) -> bool,
     {
         ExtractIf::new(self.inner.extract_if(.., keep))
     }
@@ -1879,7 +1933,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
     /// #
-    /// fn len_is_odd(k: &Key<&str>, v: &mut &str) -> bool { v.len() % 2 != 0 }
+    /// fn len_is_odd(k: &Key<usize, &str>, v: &mut &str) -> bool { v.len() % 2 != 0 }
     ///
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
@@ -1912,7 +1966,7 @@ where
     /// ```
     pub fn retain<F>(&mut self, keep: F)
     where
-        F: FnMut(&Key<T>, &mut T) -> bool,
+        F: FnMut(&Key<K, T>, &mut T) -> bool,
     {
         self.inner.retain(keep)
     }
@@ -2087,8 +2141,9 @@ where
     }
 }
 
-impl<T, S> PartialEq for HomogeneousHashMap<T, S>
+impl<K, T, S> PartialEq for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + hash::Hash + Eq,
     T: any::Any + PartialEq,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
@@ -2098,16 +2153,18 @@ where
     }
 }
 
-impl<T, S> Eq for HomogeneousHashMap<T, S>
+impl<K, T, S> Eq for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + hash::Hash + Eq,
     T: any::Any + Eq,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
 }
 
-impl<T, S> fmt::Debug for HomogeneousHashMap<T, S>
+impl<K, T, S> fmt::Debug for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + fmt::Debug,
     T: any::Any + fmt::Debug,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
@@ -2117,56 +2174,60 @@ where
     }
 }
 
-impl<T, S> ops::Index<&Key<T>> for HomogeneousHashMap<T, S>
+impl<K, T, S> ops::Index<&Key<K, T>> for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + hash::Hash + Eq,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     type Output = T;
 
-    fn index(&self, key: &Key<T>) -> &Self::Output {
+    fn index(&self, key: &Key<K, T>) -> &Self::Output {
         &self.inner[key]
     }
 }
 
-impl<T, S> Extend<(Key<T>, T)> for HomogeneousHashMap<T, S>
+impl<K, T, S> Extend<(Key<K, T>, T)> for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + hash::Hash + Eq,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn extend<I>(&mut self, iterable: I)
     where
-        I: IntoIterator<Item = (Key<T>, T)>,
+        I: IntoIterator<Item = (Key<K, T>, T)>,
     {
         self.inner.extend(iterable);
     }
 }
 
-impl<'a, T, S> Extend<(&'a Key<T>, &'a T)> for HomogeneousHashMap<T, S>
+impl<'a, K, T, S> Extend<(&'a Key<K, T>, &'a T)> for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + hash::Hash + Eq + Copy,
     T: any::Any + Copy,
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn extend<I>(&mut self, iterable: I)
     where
-        I: IntoIterator<Item = (&'a Key<T>, &'a T)>,
+        I: IntoIterator<Item = (&'a Key<K, T>, &'a T)>,
     {
         self.inner.extend(iterable);
     }
 }
 
-impl<T, S> FromIterator<(Key<T>, T)> for HomogeneousHashMap<T, S>
+impl<K, T, S> FromIterator<(Key<K, T>, T)> for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + hash::Hash + Eq,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Default,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn from_iter<I>(iterable: I) -> Self
     where
-        I: IntoIterator<Item = (Key<T>, T)>,
+        I: IntoIterator<Item = (Key<K, T>, T)>,
     {
         let mut map = HomogeneousHashMap::with_hasher(S::default());
         map.extend(iterable);
@@ -2175,19 +2236,21 @@ where
     }
 }
 
-impl<T, S, const N: usize> From<[(Key<T>, T); N]> for HomogeneousHashMap<T, S>
+impl<K, T, S, const N: usize> From<[(Key<K, T>, T); N]> for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + hash::Hash + Eq,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Default,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    fn from(array: [(Key<T>, T); N]) -> Self {
+    fn from(array: [(Key<K, T>, T); N]) -> Self {
         HomogeneousHashMap::from_iter(array)
     }
 }
 
-impl<T, S> Clone for HomogeneousHashMap<T, S>
+impl<K, T, S> Clone for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any + Clone,
     T: any::Any + Clone,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
@@ -2199,8 +2262,9 @@ where
     }
 }
 
-impl<T, S> Default for HomogeneousHashMap<T, S>
+impl<K, T, S> Default for HomogeneousHashMap<K, T, S>
 where
+    K: any::Any,
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Default,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
@@ -2220,7 +2284,7 @@ where
 /// # use heterogeneous_hash_map::HeterogeneousHashMap;
 /// # use core::any::TypeId;
 /// #
-/// let mut het_map = HeterogeneousHashMap::new();
+/// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 /// het_map.insert_type::<u16>();
 /// het_map.insert_type::<i32>();
 /// het_map.insert_type::<f64>();
@@ -2400,7 +2464,7 @@ impl TypeMetadata {
 /// # Data Structure Organization
 ///
 /// This hash map is a hierarchical two level hash map with both a type key, and value key,
-/// given by the [`Key<T>`] data type. In particular, this hashmap is different from an ordinary
+/// given by the [`Key<K, T>`] data type. In particular, this hashmap is different from an ordinary
 /// [`HashMap`] in that it can store vales of multiple unrelated data types in the same collection.
 /// This type accomplishes this by keying against the [`TypeId`] of each type stored in it.
 /// This has one caveat that the heterogeneous hash map can only store types with the [`Any`]
@@ -2619,29 +2683,34 @@ impl TypeMetadata {
 /// assert!(het_map.is_empty_types());
 /// ```
 #[cfg(feature = "std")]
-pub struct HeterogeneousHashMap<S = hash::RandomState>
+pub struct HeterogeneousHashMap<K, S = hash::RandomState>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     map: hash_map::HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
     registry: hash_map::HashMap<any::TypeId, TypeMetadata, S>,
     build_hasher: S,
+    _marker: marker::PhantomData<K>,
 }
 
 #[cfg(not(feature = "std"))]
-pub struct HeterogeneousHashMap<S>
+pub struct HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     map: hash_map::HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
     registry: hash_map::HashMap<any::TypeId, TypeMetadata, S>,
     build_hasher: S,
+    _marker: marker::PhantomData<K>,
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -2653,7 +2722,7 @@ where
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// # use std::hash::RandomState;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::with_hasher(RandomState::new());
+    /// let mut het_map: HeterogeneousHashMap<usize, RandomState> = HeterogeneousHashMap::with_hasher(RandomState::new());
     ///
     /// assert!(het_map.is_empty_types());
     /// assert_eq!(het_map.len_types(), 0);
@@ -2670,6 +2739,7 @@ where
             map: hash_map::HashMap::with_hasher(build_hasher.clone()),
             registry: hash_map::HashMap::with_hasher(build_hasher.clone()),
             build_hasher,
+            _marker: marker::PhantomData,
         }
     }
 
@@ -2682,7 +2752,7 @@ where
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// # use std::hash::RandomState;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
+    /// let mut het_map: HeterogeneousHashMap<usize, RandomState> = HeterogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
     ///
     /// assert!(het_map.is_empty_types());
     /// assert_eq!(het_map.len_types(), 0);
@@ -2702,12 +2772,16 @@ where
             map: hash_map::HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
             registry: hash_map::HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
             build_hasher,
+            _marker: marker::PhantomData,
         }
     }
 }
 
 #[cfg(feature = "std")]
-impl HeterogeneousHashMap<hash::RandomState> {
+impl<K> HeterogeneousHashMap<K, hash::RandomState>
+where
+    K: any::Any,
+{
     /// Constructs a new empty heterogeneous hash map.
     ///
     /// # Examples
@@ -2715,7 +2789,7 @@ impl HeterogeneousHashMap<hash::RandomState> {
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert!(het_map.is_empty_types());
     /// assert_eq!(het_map.len_types(), 0);
@@ -2741,7 +2815,7 @@ impl HeterogeneousHashMap<hash::RandomState> {
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::with_capacity(3);
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::with_capacity(3);
     ///
     /// assert!(het_map.is_empty_types());
     /// assert_eq!(het_map.len_map(), 0);
@@ -2759,8 +2833,9 @@ impl HeterogeneousHashMap<hash::RandomState> {
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -2800,7 +2875,7 @@ where
         }
 
         let type_metadata = TypeMetadata::of::<T>();
-        let map = opaque::index_map::TypeErasedIndexMap::new::<Key<T>, T>();
+        let map = opaque::index_map::TypeErasedIndexMap::new::<Key<K, T>, T>();
 
         self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
@@ -2848,7 +2923,7 @@ where
         }
 
         let type_metadata = TypeMetadata::of::<T>();
-        let map = opaque::index_map::TypeErasedIndexMap::with_capacity::<Key<T>, T>(capacity);
+        let map = opaque::index_map::TypeErasedIndexMap::with_capacity::<Key<K, T>, T>(capacity);
 
         self.registry.insert(type_id, type_metadata);
         self.map.insert(type_id, map);
@@ -2866,7 +2941,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert!(!het_map.contains_type::<i32>());
     /// assert!(!het_map.contains_type::<u64>());
@@ -2912,19 +2987,19 @@ where
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     ///
     /// let map = het_map.get_map_unchecked::<i32>();
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
-    pub fn get_map_unchecked<T>(&self) -> &HomogeneousHashMap<T, S>
+    pub fn get_map_unchecked<T>(&self) -> &HomogeneousHashMap<K, T, S>
     where
         T: any::Any,
     {
         let type_id = any::TypeId::of::<T>();
-        let map = self.map[&type_id].as_proj::<Key<T>, T, S, alloc::Global>();
+        let map = self.map[&type_id].as_proj::<Key<K, T>, T, S, alloc::Global>();
 
         HomogeneousHashMap::from_inner_ref(map)
     }
@@ -2941,14 +3016,14 @@ where
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     ///
     /// let map = het_map.get_map_mut_unchecked::<i32>();
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
-    pub fn get_map_mut_unchecked<T>(&mut self) -> &mut HomogeneousHashMap<T, S>
+    pub fn get_map_mut_unchecked<T>(&mut self) -> &mut HomogeneousHashMap<K, T, S>
     where
         T: any::Any,
     {
@@ -2956,7 +3031,7 @@ where
         let map = self.map
             .get_mut(&type_id)
             .unwrap()
-            .as_proj_mut::<Key<T>, T, S, alloc::Global>();
+            .as_proj_mut::<Key<K, T>, T, S, alloc::Global>();
 
         HomogeneousHashMap::from_inner_ref_mut(map)
     }
@@ -2996,7 +3071,7 @@ where
     /// assert_eq!(map1.len(), 3);
     /// assert_eq!(map2.len(), 0);
     /// ```
-    pub fn get_map<T>(&self) -> Option<&HomogeneousHashMap<T, S>>
+    pub fn get_map<T>(&self) -> Option<&HomogeneousHashMap<K, T, S>>
     where
         T: any::Any,
     {
@@ -3007,7 +3082,7 @@ where
 
         let map = self.map
             .get(&type_id)
-            .map(|m| m.as_proj::<Key<T>, T, S, alloc::Global>())?;
+            .map(|m| m.as_proj::<Key<K, T>, T, S, alloc::Global>())?;
 
         Some(HomogeneousHashMap::from_inner_ref(map))
     }
@@ -3053,7 +3128,7 @@ where
     ///     assert_eq!(map2.len(), 0);
     /// }
     /// ```
-    pub fn get_map_mut<T>(&mut self) -> Option<&mut HomogeneousHashMap<T, S>>
+    pub fn get_map_mut<T>(&mut self) -> Option<&mut HomogeneousHashMap<K, T, S>>
     where
         T: any::Any,
     {
@@ -3064,7 +3139,7 @@ where
 
         let map = self.map
             .get_mut(&type_id)
-            .map(|m| m.as_proj_mut::<Key<T>, T, S, alloc::Global>())?;
+            .map(|m| m.as_proj_mut::<Key<K, T>, T, S, alloc::Global>())?;
 
         Some(HomogeneousHashMap::from_inner_ref_mut(map))
     }
@@ -3107,7 +3182,7 @@ where
     ///
     /// assert!(het_map.contains_type::<f64>());
     /// ```
-    pub fn get_or_insert_map_mut<T>(&mut self) -> &mut HomogeneousHashMap<T, S>
+    pub fn get_or_insert_map_mut<T>(&mut self) -> &mut HomogeneousHashMap<K, T, S>
     where
         T: any::Any,
     {
@@ -3160,7 +3235,7 @@ where
     ///
     /// assert!(het_map.contains_type::<f64>());
     /// ```
-    pub fn get_or_insert_with_capacity_map_mut<T>(&mut self, capacity: usize) -> &mut HomogeneousHashMap<T, S>
+    pub fn get_or_insert_with_capacity_map_mut<T>(&mut self, capacity: usize) -> &mut HomogeneousHashMap<K, T, S>
     where
         T: any::Any,
     {
@@ -3372,7 +3447,7 @@ where
     ///
     /// assert!(het_map.is_empty_types());
     /// ```
-    pub fn take_type<T>(&mut self) -> Option<HomogeneousHashMap<T, S>>
+    pub fn take_type<T>(&mut self) -> Option<HomogeneousHashMap<K, T, S>>
     where
         T: any::Any,
     {
@@ -3382,7 +3457,7 @@ where
 
         debug_assert_eq!(self.registry.len(), self.map.len());
 
-        Some(HomogeneousHashMap::from_inner(removed_map.into_proj::<Key<T>, T, S, alloc::Global>()))
+        Some(HomogeneousHashMap::from_inner(removed_map.into_proj::<Key<K, T>, T, S, alloc::Global>()))
     }
 
     /// Removes all types and all values for each type from the heterogeneous hash map.
@@ -3432,8 +3507,9 @@ where
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<S, K> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -3521,7 +3597,9 @@ where
     ///     }
     /// }
     ///
-    /// let mut het_map = HeterogeneousHashMap::with_hasher(WrappingBuildHasher::new(RandomState::new()));
+    /// let mut het_map: HeterogeneousHashMap<usize, WrappingBuildHasher<RandomState>> = HeterogeneousHashMap::with_hasher(
+    ///     WrappingBuildHasher::new(RandomState::new()),
+    /// );
     /// let build_hasher: &WrappingBuildHasher<RandomState> = het_map.hasher();
     /// ```
     #[inline]
@@ -3530,8 +3608,9 @@ where
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -3544,7 +3623,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
-    /// let het_map = HeterogeneousHashMap::new();
+    /// let het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert_eq!(het_map.len_types(), 0);
     /// ```
@@ -3555,7 +3634,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::any::Any;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     /// het_map.insert_type::<u64>();
     /// het_map.insert_type::<f64>();
@@ -3570,7 +3649,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::any::Any;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert_eq!(het_map.len_types(), 0);
     ///
@@ -3592,7 +3671,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::any::Any;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::with_capacity(10);
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::with_capacity(10);
     ///
     /// assert!(het_map.capacity_types() >= 10);
     /// let old_capacity = het_map.capacity_types();
@@ -3628,7 +3707,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
-    /// let het_map = HeterogeneousHashMap::new();
+    /// let het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert!(het_map.is_empty_types());
     /// ```
@@ -3639,7 +3718,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::any::Any;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     /// het_map.insert_type::<u64>();
     /// het_map.insert_type::<f64>();
@@ -3653,8 +3732,9 @@ where
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -3671,7 +3751,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     /// het_map.insert_type_with_capacity::<f64>(10);
     ///
@@ -3702,7 +3782,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::f64;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     /// het_map.insert_type_with_capacity::<f64>(10);
     /// het_map.extend([
@@ -3743,7 +3823,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::f64;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     /// het_map.insert_type_with_capacity::<f64>(10);
     /// het_map.extend([
@@ -3766,8 +3846,9 @@ where
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -3782,7 +3863,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert!(het_map.get_metadata::<i32>().is_none());
     /// assert!(het_map.get_metadata::<String>().is_none());
@@ -3819,7 +3900,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::any::TypeId;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert!(het_map.get_metadata_by_id(TypeId::of::<i32>()).is_none());
     /// assert!(het_map.get_metadata_by_id(TypeId::of::<String>()).is_none());
@@ -3848,7 +3929,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
-    /// let het_map = HeterogeneousHashMap::new();
+    /// let het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// let mut iter = het_map.metadata_iter();
     ///
     /// assert!(iter.next().is_none());
@@ -3863,7 +3944,7 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// # use core::any::Any;
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
     /// het_map.insert_type::<String>();
     /// het_map.insert_type::<Box<dyn Any>>();
@@ -3879,8 +3960,9 @@ where
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -3896,7 +3978,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert!(!het_map.contains_key::<i32, _>(&Key::new(0)));
     /// ```
@@ -3906,7 +3988,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
-    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     ///
     /// assert!(!het_map.contains_key::<i32, _>(&Key::new(0)));
     /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
@@ -3924,13 +4006,13 @@ where
     pub fn contains_key<T, Q>(&self, key: &Q) -> bool
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let type_id = any::TypeId::of::<T>();
         match self.map.get(&type_id) {
             Some(opaque_map) => {
-                let proj_map = opaque_map.as_proj::<Key<T>, T, S, alloc::Global>();
+                let proj_map = opaque_map.as_proj::<Key<K, T>, T, S, alloc::Global>();
                 proj_map.contains_key(key)
             }
             None => false,
@@ -3967,7 +4049,7 @@ where
     pub fn get<T, Q>(&self, key: &Q) -> Option<&T>
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map::<T>()?;
@@ -4003,10 +4085,10 @@ where
     /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(0)), Some((&Key::new(0), &i32::MAX)));
     /// assert_eq!(het_map.get_key_value::<i32, _>(&Key::new(1)), None);
     /// ```
-    pub fn get_key_value<T, Q>(&self, key: &Q) -> Option<(&Key<T>, &T)>
+    pub fn get_key_value<T, Q>(&self, key: &Q) -> Option<(&Key<K, T>, &T)>
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map::<T>()?;
@@ -4044,7 +4126,7 @@ where
     pub fn get_mut<T, Q>(&mut self, key: &Q) -> Option<&mut T>
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>()?;
@@ -4098,7 +4180,7 @@ where
     pub fn get_disjoint_mut<T, Q, const N: usize>(&mut self, ks: [&Q; N]) -> [Option<&'_ mut T>; N]
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>().unwrap();
@@ -4122,8 +4204,9 @@ where
     ///
     /// assert!(het_map.contains_key::<i32, _>(&Key::new(1)));
     /// ```
-    pub fn insert<T>(&mut self, key: Key<T>, value: T) -> Option<T>
+    pub fn insert<T>(&mut self, key: Key<K, T>, value: T) -> Option<T>
     where
+        K: hash::Hash + Eq,
         T: any::Any,
     {
         let map = self.get_or_insert_map_mut::<T>();
@@ -4162,7 +4245,7 @@ where
     pub fn remove<T, Q>(&mut self, key: &Q) -> Option<T>
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>()?;
@@ -4199,10 +4282,10 @@ where
     /// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
     /// assert!(het_map.contains_key::<i32, _>(&Key::new(2)));
     /// ```
-    pub fn remove_entry<T, Q>(&mut self, key: &Q) -> Option<(Key<T>, T)>
+    pub fn remove_entry<T, Q>(&mut self, key: &Q) -> Option<(Key<K, T>, T)>
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut::<T>()?;
@@ -4211,8 +4294,9 @@ where
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -4238,7 +4322,7 @@ where
     pub fn get_unchecked<T, Q>(&self, key: &Q) -> &T
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_unchecked::<T>();
@@ -4268,7 +4352,7 @@ where
     pub fn get_mut_unchecked<T, Q>(&mut self, key: &Q) -> &mut T
     where
         T: any::Any,
-        Key<T>: Borrow<Q>,
+        Key<K, T>: Borrow<Q>,
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         let map = self.get_map_mut_unchecked::<T>();
@@ -4277,8 +4361,9 @@ where
     }
 }
 
-impl<S> HeterogeneousHashMap<S>
+impl<K, S> HeterogeneousHashMap<K, S>
 where
+    K: any::Any + hash::Hash + Eq,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
@@ -4335,7 +4420,7 @@ where
     pub fn extend<I, T>(&mut self, iterable: I)
     where
         T: any::Any,
-        I: IntoIterator<Item = (Key<T>, T)>,
+        I: IntoIterator<Item = (Key<K, T>, T)>,
     {
         let map = self.get_or_insert_map_mut::<T>();
 

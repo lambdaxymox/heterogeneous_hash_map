@@ -15,7 +15,7 @@ use std::string::String;
 
 #[test]
 fn test_heterogeneous_hash_map_contains_type_empty() {
-    let het_map = HeterogeneousHashMap::new();
+    let het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<()>());
     assert!(!het_map.contains_type::<bool>());
@@ -39,7 +39,7 @@ fn test_heterogeneous_hash_map_contains_type_empty() {
 
 #[test]
 fn test_heterogeneous_hash_map_contains_type() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     het_map.insert_type::<()>();
     het_map.insert_type::<bool>();
@@ -82,7 +82,7 @@ fn test_heterogeneous_hash_map_contains_type() {
 
 #[test]
 fn test_heterogeneous_hash_map_get_map_empty() {
-    let het_map = HeterogeneousHashMap::new();
+    let het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     assert!(het_map.get_map::<()>().is_none());
     assert!(het_map.get_map::<bool>().is_none());
@@ -106,7 +106,7 @@ fn test_heterogeneous_hash_map_get_map_empty() {
 
 #[test]
 fn test_heterogeneous_hash_map_get_map() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     het_map.insert_type::<()>();
     het_map.insert_type::<bool>();
@@ -149,7 +149,7 @@ fn test_heterogeneous_hash_map_get_map() {
 
 #[test]
 fn test_heterogeneous_hash_map_remove_type_contains_type() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     het_map.insert_type::<()>();
     het_map.insert_type::<bool>();
@@ -570,7 +570,7 @@ fn test_heterogeneous_hash_map_remove_type_contains_type() {
 
 #[test]
 fn test_heterogeneous_hash_map_remove_type_get_map() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     het_map.insert_type::<()>();
     het_map.insert_type::<bool>();
@@ -991,7 +991,7 @@ fn test_heterogeneous_hash_map_remove_type_get_map() {
 
 #[test]
 fn test_heterogeneous_hash_map_insert_type_repeat1() {
-    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<i32>());
     assert_eq!(het_map.len_types(), 0);
@@ -1011,7 +1011,7 @@ fn test_heterogeneous_hash_map_insert_type_repeat1() {
 
 #[test]
 fn test_heterogeneous_hash_map_insert_type_repeat2() {
-    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<i32>());
     assert!(!het_map.contains_type::<u64>());
@@ -1035,7 +1035,7 @@ fn test_heterogeneous_hash_map_insert_type_repeat2() {
 
 #[test]
 fn test_heterogeneous_hash_map_remove_type_repeat1() {
-    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<i32>());
     assert_eq!(het_map.len_types(), 0);
@@ -1060,7 +1060,7 @@ fn test_heterogeneous_hash_map_remove_type_repeat1() {
 
 #[test]
 fn test_heterogeneous_hash_map_remove_type_repeat2() {
-    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<i32>());
     assert!(!het_map.contains_type::<u64>());
@@ -1090,7 +1090,7 @@ fn test_heterogeneous_hash_map_remove_type_repeat2() {
 
 #[test]
 fn test_heterogeneous_hash_map_insert_type_remove_type_repeat() {
-    let mut het_map: HeterogeneousHashMap = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
 
     assert!(!het_map.contains_type::<i32>());
     assert_eq!(het_map.len_types(), 0);

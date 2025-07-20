@@ -1522,7 +1522,7 @@ fn test_heterogeneous_hash_map_two_types_iter3() {
     het_map.extend::<_, String>(entries2);
 
     let map = het_map.get_map::<i32>().unwrap();
-    let result: Vec<(Key<i32>, i32)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+    let result: Vec<(Key<usize, i32>, i32)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
 
     assert_eq!(result, expected);
 }
@@ -1548,14 +1548,14 @@ fn test_heterogeneous_hash_map_two_types_iter4() {
     het_map.extend::<_, String>(entries2);
 
     let map = het_map.get_map::<String>().unwrap();
-    let result: Vec<(Key<String>, String)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+    let result: Vec<(Key<usize, String>, String)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
 
     assert_eq!(result, expected);
 }
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_iter5() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1570,7 +1570,7 @@ fn test_heterogeneous_hash_map_two_types_iter5() {
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_iter6() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1591,7 +1591,7 @@ fn test_heterogeneous_hash_map_two_types_iter7() {
     het_map.insert_type::<String>();
 
     let map = het_map.get_map::<i32>().unwrap();
-    let result: Vec<(Key<i32>, i32)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+    let result: Vec<(Key<usize, i32>, i32)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
 
     assert_eq!(result, expected);
 }
@@ -1604,7 +1604,7 @@ fn test_heterogeneous_hash_map_two_types_iter8() {
     het_map.insert_type::<String>();
 
     let map = het_map.get_map::<String>().unwrap();
-    let result: Vec<(Key<String>, String)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+    let result: Vec<(Key<usize, String>, String)> = map.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
 
     assert_eq!(result, expected);
 }
@@ -1652,14 +1652,14 @@ fn test_heterogeneous_hash_map_two_types_keys3() {
         (Key::new(3_usize), String::from("baz")),
         (Key::new(4_usize), String::from("quux")),
     ];
-    let expected: Vec<Key<String>> = entries2.iter().map(|(k, _v)| k).cloned().collect();
+    let expected: Vec<Key<usize, String>> = entries2.iter().map(|(k, _v)| k).cloned().collect();
 
     let mut het_map = HeterogeneousHashMap::new();
     het_map.extend::<_, i32>(entries1);
     het_map.extend::<_, String>(entries2);
 
     let map = het_map.get_map::<String>().unwrap();
-    let result: Vec<Key<String>> = map.keys().cloned().collect();
+    let result: Vec<Key<usize, String>> = map.keys().cloned().collect();
 
     assert_eq!(result, expected);
 }
@@ -1678,21 +1678,21 @@ fn test_heterogeneous_hash_map_two_types_keys4() {
         (Key::new(3_usize), String::from("baz")),
         (Key::new(4_usize), String::from("quux")),
     ];
-    let expected: Vec<Key<String>> = entries2.iter().map(|(k, _v)| k).cloned().collect();
+    let expected: Vec<Key<usize, String>> = entries2.iter().map(|(k, _v)| k).cloned().collect();
 
     let mut het_map = HeterogeneousHashMap::new();
     het_map.extend::<_, i32>(entries1);
     het_map.extend::<_, String>(entries2);
 
     let map = het_map.get_map::<String>().unwrap();
-    let result: Vec<Key<String>> = map.keys().cloned().collect();
+    let result: Vec<Key<usize, String>> = map.keys().cloned().collect();
 
     assert_eq!(result, expected);
 }
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_keys5() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1707,7 +1707,7 @@ fn test_heterogeneous_hash_map_two_types_keys5() {
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_keys6() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1728,7 +1728,7 @@ fn test_heterogeneous_hash_map_two_types_keys7() {
     het_map.insert_type::<String>();
 
     let map = het_map.get_map::<i32>().unwrap();
-    let result: Vec<Key<i32>> = map.keys().cloned().collect();
+    let result: Vec<Key<usize, i32>> = map.keys().cloned().collect();
 
     assert_eq!(result, expected);
 }
@@ -1741,7 +1741,7 @@ fn test_heterogeneous_hash_map_two_types_keys8() {
     het_map.insert_type::<String>();
 
     let map = het_map.get_map::<String>().unwrap();
-    let result: Vec<Key<String>> = map.keys().cloned().collect();
+    let result: Vec<Key<usize, String>> = map.keys().cloned().collect();
 
     assert_eq!(result, expected);
 }
@@ -1858,7 +1858,7 @@ fn test_heterogeneous_hash_map_two_types_values4() {
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_values5() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1873,7 +1873,7 @@ fn test_heterogeneous_hash_map_two_types_values5() {
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_values6() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1889,7 +1889,7 @@ fn test_heterogeneous_hash_map_two_types_values6() {
 #[test]
 fn test_heterogeneous_hash_map_two_types_values7() {
     let expected: Vec<i32> = std::vec![];
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1902,7 +1902,7 @@ fn test_heterogeneous_hash_map_two_types_values7() {
 #[test]
 fn test_heterogeneous_hash_map_two_types_values8() {
     let expected: Vec<String> = std::vec![];
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
 
@@ -1914,7 +1914,7 @@ fn test_heterogeneous_hash_map_two_types_values8() {
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_clear1() {
-    let mut het_map = HeterogeneousHashMap::new();
+    let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<Box<dyn any::Any>>();
     {
