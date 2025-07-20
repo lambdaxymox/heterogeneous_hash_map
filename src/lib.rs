@@ -164,7 +164,7 @@ impl<T> fmt::Display for Key<T> {
 
 /// An immutable iterator over the entries of a hash map.
 ///
-/// Iterators are created by the [`Map::iter`] method.
+/// Iterators are created by the [`HomogeneousHashMap::iter`] method.
 ///
 /// # Examples
 ///
@@ -242,7 +242,7 @@ impl<'a, T> Default for Iter<'a, T> {
 
 /// A mutable iterator over the entries of a hash map.
 ///
-/// Mutable iterators are created by the [`Map::iter_mut`] method.
+/// Mutable iterators are created by the [`HomogeneousHashMap::iter_mut`] method.
 ///
 /// # Examples
 ///
@@ -323,7 +323,7 @@ impl<'a, T> Default for IterMut<'a, T> {
 
 /// An iterator over the keys of the hash map.
 ///
-/// Key iterators are created using the [`Map::keys`] method.
+/// Key iterators are created using the [`HomogeneousHashMap::keys`] method.
 ///
 /// # Examples
 ///
@@ -409,7 +409,7 @@ impl<'a, T> Default for Keys<'a, T> {
 
 /// An immutable iterator over the values of the hash map.
 ///
-/// Value iterators are created using the [`Map::values`] method.
+/// Value iterators are created using the [`HomogeneousHashMap::values`] method.
 ///
 /// # Examples
 ///
@@ -495,7 +495,7 @@ impl<'a, T> Default for Values<'a, T> {
 
 /// A mutable iterator over the values of the hash map.
 ///
-/// Mutable value iterators are created using the [`Map::values_mut`] method.
+/// Mutable value iterators are created using the [`HomogeneousHashMap::values_mut`] method.
 ///
 /// # Examples
 ///
@@ -575,7 +575,7 @@ impl<'a, T> Default for ValuesMut<'a, T> {
 
 /// A draining iterator over the entries of a hash map.
 ///
-/// Draining iterators are created by the [`Map::drain`] method.
+/// Draining iterators are created by the [`HomogeneousHashMap::drain`] method.
 ///
 /// # Examples
 ///
@@ -675,7 +675,7 @@ where
 
 /// An extracting iterator over the entries of a hash map.
 ///
-/// Extracting iterators are created by the [`Map::extract_if`] method.
+/// Extracting iterators are created by the [`HomogeneousHashMap::extract_if`] method.
 ///
 /// # Examples
 ///
@@ -811,7 +811,7 @@ where
 /// ```
 #[cfg(feature = "std")]
 #[repr(transparent)]
-pub struct Map<T, S = hash::RandomState>
+pub struct HomogeneousHashMap<T, S = hash::RandomState>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -822,7 +822,7 @@ where
 
 #[cfg(not(feature = "std"))]
 #[repr(transparent)]
-pub struct Map<T, S>
+pub struct HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -831,7 +831,7 @@ where
     inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>,
 }
 
-impl<T, S> Map<T, S>
+impl<T, S> HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -856,7 +856,7 @@ where
     }
 }
 
-impl<T, S> Map<T, S>
+impl<T, S> HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -867,10 +867,10 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use heterogeneous_hash_map::Map;
+    /// # use heterogeneous_hash_map::HomogeneousHashMap;
     /// # use std::hash::RandomState;
     /// #
-    /// let map: Map<i32> = Map::with_hasher(RandomState::new());
+    /// let map: HomogeneousHashMap<i32> = HomogeneousHashMap::with_hasher(RandomState::new());
     ///
     /// assert!(map.is_empty());
     /// ```
@@ -886,10 +886,10 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use heterogeneous_hash_map::{Key, Map};
+    /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
     /// # use std::hash::RandomState;
     /// #
-    /// let mut map: Map<i32> = Map::with_capacity_and_hasher(3, RandomState::new());
+    /// let mut map: HomogeneousHashMap<i32> = HomogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
     ///
     /// assert_eq!(map.len(), 0);
     /// assert!(map.capacity() >= 3);
@@ -911,7 +911,7 @@ where
 }
 
 #[cfg(feature = "std")]
-impl<T> Map<T, hash::RandomState>
+impl<T> HomogeneousHashMap<T, hash::RandomState>
 where
     T: any::Any,
 {
@@ -920,9 +920,9 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use heterogeneous_hash_map::Map;
+    /// # use heterogeneous_hash_map::HomogeneousHashMap;
     /// #
-    /// let map: Map<i32> = Map::new();
+    /// let map: HomogeneousHashMap<i32> = HomogeneousHashMap::new();
     ///
     /// assert!(map.is_empty());
     /// ```
@@ -936,9 +936,9 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use heterogeneous_hash_map::{Key, Map};
+    /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
     /// #
-    /// let mut map: Map<i32> = Map::with_capacity(3);
+    /// let mut map: HomogeneousHashMap<i32> = HomogeneousHashMap::with_capacity(3);
     ///
     /// assert_eq!(map.len(), 0);
     /// assert!(map.capacity() >= 3);
@@ -957,7 +957,7 @@ where
     }
 }
 
-impl<T, S> Map<T, S>
+impl<T, S> HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -1059,10 +1059,10 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use heterogeneous_hash_map::Map;
+    /// # use heterogeneous_hash_map::HomogeneousHashMap;
     /// # use std::hash::RandomState;
     /// #
-    /// let map: Map<String> = Map::with_hasher(RandomState::new());
+    /// let map: HomogeneousHashMap<String> = HomogeneousHashMap::with_hasher(RandomState::new());
     /// let build_hasher: &RandomState = map.hasher();
     /// ```
     #[inline]
@@ -1071,7 +1071,7 @@ where
     }
 }
 
-impl<T, S> Map<T, S>
+impl<T, S> HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -1803,7 +1803,7 @@ where
     /// # Examples
     ///
     /// ```
-    /// # use heterogeneous_hash_map::{Key, Map, HeterogeneousHashMap};
+    /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap, HeterogeneousHashMap};
     /// # use std::collections::HashMap;
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
@@ -1816,14 +1816,14 @@ where
     ///     (Key::new(6), String::from("Elden Ring")),
     ///     (Key::new(7), String::from("Nioh")),
     /// ]);
-    /// let expected = Map::from([
+    /// let expected = HomogeneousHashMap::from([
     ///     (Key::new(1), String::from("Dark Souls")),
     ///     (Key::new(2), String::from("Dark Souls II")),
     ///     (Key::new(3), String::from("Dark Souls III")),
     /// ]);
     /// let result = {
     ///     let map = het_map.get_map_mut::<String>().unwrap();
-    ///     let extracted: Map<String> = map.extract_if(|k, v| v.contains("Dark Souls")).collect();
+    ///     let extracted: HomogeneousHashMap<String> = map.extract_if(|k, v| v.contains("Dark Souls")).collect();
     ///     extracted
     /// };
     ///
@@ -2024,7 +2024,7 @@ where
     /// The resulting hash map might still have some excess capacity, just as is the case for
     /// [`with_capacity`]. This depends on the resize policy for the internal structure.
     ///
-    /// [`with_capacity`]: Map::with_capacity
+    /// [`with_capacity`]: HomogeneousHashMap::with_capacity
     ///
     /// # Examples
     ///
@@ -2087,7 +2087,7 @@ where
     }
 }
 
-impl<T, S> PartialEq for Map<T, S>
+impl<T, S> PartialEq for HomogeneousHashMap<T, S>
 where
     T: any::Any + PartialEq,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -2098,7 +2098,7 @@ where
     }
 }
 
-impl<T, S> Eq for Map<T, S>
+impl<T, S> Eq for HomogeneousHashMap<T, S>
 where
     T: any::Any + Eq,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -2106,7 +2106,7 @@ where
 {
 }
 
-impl<T, S> fmt::Debug for Map<T, S>
+impl<T, S> fmt::Debug for HomogeneousHashMap<T, S>
 where
     T: any::Any + fmt::Debug,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -2117,7 +2117,7 @@ where
     }
 }
 
-impl<T, S> ops::Index<&Key<T>> for Map<T, S>
+impl<T, S> ops::Index<&Key<T>> for HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -2130,7 +2130,7 @@ where
     }
 }
 
-impl<T, S> Extend<(Key<T>, T)> for Map<T, S>
+impl<T, S> Extend<(Key<T>, T)> for HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -2144,7 +2144,7 @@ where
     }
 }
 
-impl<'a, T, S> Extend<(&'a Key<T>, &'a T)> for Map<T, S>
+impl<'a, T, S> Extend<(&'a Key<T>, &'a T)> for HomogeneousHashMap<T, S>
 where
     T: any::Any + Copy,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -2158,7 +2158,7 @@ where
     }
 }
 
-impl<T, S> FromIterator<(Key<T>, T)> for Map<T, S>
+impl<T, S> FromIterator<(Key<T>, T)> for HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Default,
@@ -2168,25 +2168,25 @@ where
     where
         I: IntoIterator<Item = (Key<T>, T)>,
     {
-        let mut map = Map::with_hasher(S::default());
+        let mut map = HomogeneousHashMap::with_hasher(S::default());
         map.extend(iterable);
 
         map
     }
 }
 
-impl<T, S, const N: usize> From<[(Key<T>, T); N]> for Map<T, S>
+impl<T, S, const N: usize> From<[(Key<T>, T); N]> for HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Default,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn from(array: [(Key<T>, T); N]) -> Self {
-        Map::from_iter(array)
+        HomogeneousHashMap::from_iter(array)
     }
 }
 
-impl<T, S> Clone for Map<T, S>
+impl<T, S> Clone for HomogeneousHashMap<T, S>
 where
     T: any::Any + Clone,
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
@@ -2195,18 +2195,18 @@ where
     fn clone(&self) -> Self {
         let cloned_inner = self.inner.clone();
 
-        Map::from_inner(cloned_inner)
+        HomogeneousHashMap::from_inner(cloned_inner)
     }
 }
 
-impl<T, S> Default for Map<T, S>
+impl<T, S> Default for HomogeneousHashMap<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync + Default,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn default() -> Self {
-        Map::with_hasher(S::default())
+        HomogeneousHashMap::with_hasher(S::default())
     }
 }
 
@@ -2919,14 +2919,14 @@ where
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
-    pub fn get_map_unchecked<T>(&self) -> &Map<T, S>
+    pub fn get_map_unchecked<T>(&self) -> &HomogeneousHashMap<T, S>
     where
         T: any::Any,
     {
         let type_id = any::TypeId::of::<T>();
         let map = self.map[&type_id].as_proj::<Key<T>, T, S, alloc::Global>();
 
-        Map::from_inner_ref(map)
+        HomogeneousHashMap::from_inner_ref(map)
     }
 
     /// Returns a mutable reference to the hash map containing all values of a given type from the
@@ -2948,7 +2948,7 @@ where
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
-    pub fn get_map_mut_unchecked<T>(&mut self) -> &mut Map<T, S>
+    pub fn get_map_mut_unchecked<T>(&mut self) -> &mut HomogeneousHashMap<T, S>
     where
         T: any::Any,
     {
@@ -2958,7 +2958,7 @@ where
             .unwrap()
             .as_proj_mut::<Key<T>, T, S, alloc::Global>();
 
-        Map::from_inner_ref_mut(map)
+        HomogeneousHashMap::from_inner_ref_mut(map)
     }
 
     /// Returns a reference to the hash map containing all values of a given type from the
@@ -2996,7 +2996,7 @@ where
     /// assert_eq!(map1.len(), 3);
     /// assert_eq!(map2.len(), 0);
     /// ```
-    pub fn get_map<T>(&self) -> Option<&Map<T, S>>
+    pub fn get_map<T>(&self) -> Option<&HomogeneousHashMap<T, S>>
     where
         T: any::Any,
     {
@@ -3009,7 +3009,7 @@ where
             .get(&type_id)
             .map(|m| m.as_proj::<Key<T>, T, S, alloc::Global>())?;
 
-        Some(Map::from_inner_ref(map))
+        Some(HomogeneousHashMap::from_inner_ref(map))
     }
 
     /// Returns a mutable reference to the hash map containing all values of a given type from the
@@ -3053,7 +3053,7 @@ where
     ///     assert_eq!(map2.len(), 0);
     /// }
     /// ```
-    pub fn get_map_mut<T>(&mut self) -> Option<&mut Map<T, S>>
+    pub fn get_map_mut<T>(&mut self) -> Option<&mut HomogeneousHashMap<T, S>>
     where
         T: any::Any,
     {
@@ -3066,7 +3066,7 @@ where
             .get_mut(&type_id)
             .map(|m| m.as_proj_mut::<Key<T>, T, S, alloc::Global>())?;
 
-        Some(Map::from_inner_ref_mut(map))
+        Some(HomogeneousHashMap::from_inner_ref_mut(map))
     }
 
     /// Returns a mutable reference to the hash map containing all values of a given type from the
@@ -3107,7 +3107,7 @@ where
     ///
     /// assert!(het_map.contains_type::<f64>());
     /// ```
-    pub fn get_or_insert_map_mut<T>(&mut self) -> &mut Map<T, S>
+    pub fn get_or_insert_map_mut<T>(&mut self) -> &mut HomogeneousHashMap<T, S>
     where
         T: any::Any,
     {
@@ -3160,7 +3160,7 @@ where
     ///
     /// assert!(het_map.contains_type::<f64>());
     /// ```
-    pub fn get_or_insert_with_capacity_map_mut<T>(&mut self, capacity: usize) -> &mut Map<T, S>
+    pub fn get_or_insert_with_capacity_map_mut<T>(&mut self, capacity: usize) -> &mut HomogeneousHashMap<T, S>
     where
         T: any::Any,
     {
@@ -3372,7 +3372,7 @@ where
     ///
     /// assert!(het_map.is_empty_types());
     /// ```
-    pub fn take_type<T>(&mut self) -> Option<Map<T, S>>
+    pub fn take_type<T>(&mut self) -> Option<HomogeneousHashMap<T, S>>
     where
         T: any::Any,
     {
@@ -3382,7 +3382,7 @@ where
 
         debug_assert_eq!(self.registry.len(), self.map.len());
 
-        Some(Map::from_inner(removed_map.into_proj::<Key<T>, T, S, alloc::Global>()))
+        Some(HomogeneousHashMap::from_inner(removed_map.into_proj::<Key<T>, T, S, alloc::Global>()))
     }
 
     /// Removes all types and all values for each type from the heterogeneous hash map.
