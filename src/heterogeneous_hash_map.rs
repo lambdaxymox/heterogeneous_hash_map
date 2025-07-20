@@ -1,35 +1,11 @@
-#![doc = include_str!("../README.md")]
-#![deny(unsafe_op_in_unsafe_fn)]
-#![deny(private_interfaces)]
-#![cfg_attr(feature = "nightly", feature(allocator_api))]
-#![no_std]
-extern crate alloc as alloc_crate;
+use crate::homogeneous_hash_map::HomogeneousHashMap;
+use crate::iterator::TypeMetadataIter;
+use crate::key::Key;
+use crate::metadata::TypeMetadata;
 
-#[cfg(feature = "std")]
-extern crate std;
-
-mod error;
-mod key;
-mod iterator;
-mod metadata;
-mod homogeneous_hash_map;
-mod heterogeneous_hash_map;
-
-pub use crate::heterogeneous_hash_map::*;
-pub use crate::homogeneous_hash_map::*;
-pub use crate::iterator::*;
-pub use crate::key::Key;
-pub use crate::metadata::*;
-pub use crate::error::*;
-
-/*
 use core::any;
-use core::cmp;
 use core::fmt;
-use core::iter;
 use core::marker;
-use core::mem;
-use core::ops;
 use core::borrow::Borrow;
 use alloc_crate::vec::Vec;
 
@@ -46,8 +22,7 @@ use std::alloc;
 use opaque::allocator_api::alloc;
 
 use hashbrown::hash_map;
-*/
-/*
+
 /// A heterogeneous hash map that can store values of more than one data type.
 ///
 /// This collection is a useful container for situations where you want to store and retrieve
@@ -2282,4 +2257,3 @@ mod test_internals {
         match_registry_type_ids(&het_map);
     }
 }
-*/
