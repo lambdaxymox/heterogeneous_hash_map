@@ -27,6 +27,7 @@ use std::alloc;
 
 #[cfg(not(feature = "nightly"))]
 use opaque::allocator_api::alloc;
+use opaque::index_map::TypeProjectedIndexMap;
 
 /// A typed key type for heterogeneous hash maps.
 ///
@@ -1912,6 +1913,122 @@ where
     {
         self.inner.retain(keep)
     }
+
+    /// Attempts to reserve capacity for **at least** `additional` more elements to be inserted
+    /// in the given hash map.
+    ///
+    /// The collection may reserve more space to speculatively avoid frequent reallocations.
+    /// After calling this method, the capacity will be greater than or equal to
+    /// `self.len() + additional` if it returns. This method does nothing if the collection
+    /// capacity is already sufficient. This method preserves the contents even if a panic occurs.
+    ///
+    /// # Panics
+    ///
+    /// This method panics if one of the following conditions occurs:
+    ///
+    /// * If the capacity of the hash map overflows.
+    /// * If the allocator reports a failure.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let map = het_map.get_or_insert_map_mut::<i32>();
+    /// map.extend([
+    ///     (Key::new(0), 1_i32),
+    ///     (Key::new(1), 2_i32),
+    ///     (Key::new(2), 3_i32),
+    ///     (Key::new(3), 4_i32),
+    ///     (Key::new(4), 5_i32),
+    ///     (Key::new(5), 6_i32),
+    /// ]);
+    /// map.reserve(10);
+    ///
+    /// assert!(map.capacity() >= map.len() + 10);
+    ///
+    /// let old_capacity = map.capacity();
+    /// map.extend([
+    ///     (Key::new(6), 7_i32),
+    ///     (Key::new(7), 8_i32),
+    ///     (Key::new(8), 9_i32),
+    ///     (Key::new(9), 10_i32),
+    /// ]);
+    ///
+    /// assert_eq!(map.capacity(), old_capacity);
+    /// ```
+    #[inline]
+    pub fn reserve(&mut self, additional: usize) {
+        self.inner.reserve(additional)
+    }
+
+    /// Shrinks the capacity of the hash map as much as possible.
+    ///
+    /// The resulting hash map might still have some excess capacity, just as is the case for
+    /// [`with_capacity`]. This depends on the resize policy for the internal structure.
+    ///
+    /// [`with_capacity`]: Map::with_capacity
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let map = het_map.get_or_insert_with_capacity_map_mut::<i32>(10);
+    /// map.extend([(Key::new(0), 1_i32), (Key::new(1), 2_i32), (Key::new(2), 3_i32)]);
+    ///
+    /// assert!(map.capacity() >= 10);
+    ///
+    /// map.shrink_to_fit();
+    ///
+    /// assert!(map.capacity() >= 3);
+    /// ```
+    pub fn shrink_to_fit(&mut self) {
+        self.inner.shrink_to_fit();
+    }
+
+    /// Shrinks the capacity of the hash map to a lower bound.
+    ///
+    /// The resulting hash map might still have some excess capacity, just as is the case for
+    /// [`with_capacity`]. This depends on the resize policy for the internal structure.
+    ///
+    /// The capacity will remain at least as large as both the length
+    /// and the supplied capacity `min_capacity`. In particular, after calling this method,
+    /// the capacity of `self` satisfies
+    ///
+    /// ```text
+    /// self.capacity() >= max(self.len(), min_capacity).
+    /// ```
+    ///
+    /// If the current capacity of the hash map is less than the lower bound, the method does
+    /// nothing.
+    ///
+    /// [`with_capacity`]: TypeProjectedIndexMap::with_capacity
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// let map = het_map.get_or_insert_with_capacity_map_mut::<i32>(10);
+    /// map.extend([(Key::new(0), 1_i32), (Key::new(1), 2_i32), (Key::new(2), 3_i32)]);
+    ///
+    /// assert!(map.capacity() >= 10);
+    ///
+    /// map.shrink_to(4);
+    ///
+    /// assert!(map.capacity() >= 4);
+    ///
+    /// map.shrink_to(0);
+    ///
+    /// assert!(map.capacity() >= 3);
+    /// ```
+    pub fn shrink_to(&mut self, min_capacity: usize) {
+        self.inner.shrink_to(min_capacity);
+    }
 }
 
 impl<T, S> PartialEq for Map<T, S>
@@ -2948,6 +3065,59 @@ where
         let type_id = any::TypeId::of::<T>();
         if !self.map.contains_key(&type_id) {
             self.insert_type::<T>();
+        }
+
+        debug_assert_eq!(self.registry.len(), self.map.len());
+
+        self.get_map_mut::<T>().unwrap()
+    }
+
+    /// Returns a mutable reference to the hash map containing all values of a given type from the
+    /// heterogeneous hash map.
+    ///
+    /// If the type `T` does not exist in the heterogeneous hash map, this method inserts the type
+    /// `T` into the map with a minimum capacity specified by `capacity`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<u32>();
+    /// het_map.extend([
+    ///     (Key::new(0), 2_i32),
+    ///     (Key::new(1), 3_i32),
+    ///     (Key::new(2), 5_i32),
+    /// ]);
+    ///
+    /// assert!(het_map.contains_type::<i32>());
+    /// assert!(het_map.contains_type::<u32>());
+    /// assert!(!het_map.contains_type::<f64>());
+    /// {
+    ///     let map1 = het_map.get_or_insert_with_capacity_map_mut::<i32>(10);
+    ///     assert_eq!(map1.len(), 3);
+    /// }
+    /// {
+    ///     let map2 = het_map.get_or_insert_with_capacity_map_mut::<u32>(10);
+    ///     assert_eq!(map2.len(), 0);
+    /// }
+    /// {
+    ///     let map3 = het_map.get_or_insert_with_capacity_map_mut::<f64>(10);
+    ///     assert_eq!(map3.len(), 0);
+    ///     assert!(map3.capacity() >= 10);
+    /// }
+    ///
+    /// assert!(het_map.contains_type::<f64>());
+    /// ```
+    pub fn get_or_insert_with_capacity_map_mut<T>(&mut self, capacity: usize) -> &mut Map<T, S>
+    where
+        T: any::Any,
+    {
+        let type_id = any::TypeId::of::<T>();
+        if !self.map.contains_key(&type_id) {
+            self.insert_type_with_capacity::<T>(capacity);
         }
 
         debug_assert_eq!(self.registry.len(), self.map.len());
@@ -4161,14 +4331,12 @@ mod test_internals {
     use std::string::String;
     use super::*;
 
-    #[track_caller]
     fn match_map_type_ids(het_map: &HeterogeneousHashMap<hash::RandomState>) {
         for (type_id, map) in het_map.map.iter() {
             assert_eq!(map.value_type_id(), *type_id);
         }
     }
 
-    #[track_caller]
     fn match_registry_type_ids(het_map: &HeterogeneousHashMap<hash::RandomState>) {
         for (type_id, metadata) in het_map.registry.iter() {
             assert_eq!(metadata.type_id, *type_id);
