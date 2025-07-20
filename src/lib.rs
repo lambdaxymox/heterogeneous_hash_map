@@ -8,15 +8,17 @@ extern crate alloc as alloc_crate;
 #[cfg(feature = "std")]
 extern crate std;
 
-mod try_reserve_error;
+mod error;
 mod key;
 mod iterator;
 mod metadata;
+mod homogeneous_hash_map;
 
+pub use crate::homogeneous_hash_map::*;
 pub use crate::iterator::*;
 pub use crate::key::Key;
 pub use crate::metadata::*;
-pub use crate::try_reserve_error::*;
+pub use crate::error::*;
 
 use core::any;
 use core::cmp;
@@ -41,7 +43,7 @@ use std::alloc;
 use opaque::allocator_api::alloc;
 
 use hashbrown::hash_map;
-
+/*
 /// A hash map containing all values of a given type in a heterogeneous hash map.
 ///
 /// This type acts similarly to a standard library [`HashMap`]. This type of hash map can also
@@ -1497,6 +1499,7 @@ where
         HomogeneousHashMap::with_hasher(S::default())
     }
 }
+*/
 
 /// A heterogeneous hash map that can store values of more than one data type.
 ///
