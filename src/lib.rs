@@ -13,9 +13,14 @@ use core::ops;
 use core::borrow::Borrow;
 
 use std::collections::HashMap;
-use std::hash;
 use std::collections::hash_map;
 use std::vec::Vec;
+
+#[cfg(feature = "std")]
+use std::hash;
+
+#[cfg(not(feature = "std"))]
+use core::hash;
 
 #[cfg(feature = "nightly")]
 use std::alloc;
@@ -796,8 +801,20 @@ where
 /// assert_eq!(result.len(), expected.len());
 /// assert_eq!(result, expected);
 /// ```
+#[cfg(feature = "std")]
 #[repr(transparent)]
 pub struct Map<T, S = hash::RandomState>
+where
+    T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    inner: opaque::index_map::TypeProjectedIndexMap<Key<T>, T, S>,
+}
+
+#[cfg(not(feature = "std"))]
+#[repr(transparent)]
+pub struct Map<T, S>
 where
     T: any::Any,
     S: any::Any + hash::BuildHasher + Send + Sync,
@@ -885,6 +902,7 @@ where
     }
 }
 
+#[cfg(feature = "std")]
 impl<T> Map<T, hash::RandomState>
 where
     T: any::Any,
@@ -2427,7 +2445,19 @@ impl TypeMetadata {
 ///
 /// assert!(het_map.is_empty_types());
 /// ```
+#[cfg(feature = "std")]
 pub struct HeterogeneousHashMap<S = hash::RandomState>
+where
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    map: HashMap<any::TypeId, opaque::index_map::TypeErasedIndexMap, S>,
+    registry: HashMap<any::TypeId, TypeMetadata, S>,
+    build_hasher: S,
+}
+
+#[cfg(not(feature = "std"))]
+pub struct HeterogeneousHashMap<S>
 where
     S: any::Any + hash::BuildHasher + Send + Sync + Clone,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
