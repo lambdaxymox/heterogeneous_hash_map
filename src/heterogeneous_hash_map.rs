@@ -1397,7 +1397,7 @@ where
     ///   `T`, this method returns `Some(false)`.
     /// * If the heterogeneous hash map does not contain the type `T`, this method returns `None`.
     ///
-    /// In particular, this method returns and [`Option<bool>`] instead of a regular [`bool`] to
+    /// In particular, this method returns an [`Option<bool>`] instead of a regular [`bool`] to
     /// distinguish between the last two cases above.
     ///
     /// # Examples
@@ -2321,6 +2321,18 @@ where
     /// # assert_eq!(count_total_prime_factors(11_i32), 1_u32);
     /// # assert_eq!(count_total_prime_factors(12_i32), 3_u32);
     /// # assert_eq!(count_total_prime_factors(13_i32), 1_u32);
+    /// #
+    /// # for i in 2_i32..=1024_i32 {
+    /// #     if count_total_prime_factors(i) == 1 {
+    /// #         assert!(is_prime(i));
+    /// #     }
+    /// # }
+    /// #
+    /// # for i in 2_i32..=1024_i32 {
+    /// #     if is_prime(i) {
+    /// #         assert_eq!(count_total_prime_factors(i), 1);
+    /// #     }
+    /// # }
     /// #
     ///
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
