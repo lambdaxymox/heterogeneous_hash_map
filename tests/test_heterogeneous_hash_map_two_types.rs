@@ -49,21 +49,21 @@ fn test_heterogeneous_hash_map_two_types_zst1() {
     assert_eq!(het_map.is_empty::<i32>(), Some(true));
     assert_eq!(het_map.len::<i32>(), Some(0));
 
-    het_map.insert(Key::new(0), ());
+    het_map.insert(Key::new(0_i32), ());
 
-    het_map.insert(Key::new(0), i32::MIN);
-    het_map.insert(Key::new(1), i32::MAX);
+    het_map.insert(Key::new(0_i32), i32::MIN);
+    het_map.insert(Key::new(1_i32), i32::MAX);
 
     assert!(het_map.contains_type::<()>());
     assert_eq!(het_map.is_empty::<()>(), Some(false));
     assert_eq!(het_map.len::<()>(), Some(1));
-    assert_eq!(het_map.get::<(), _>(&Key::new(0)), Some(&()));
+    assert_eq!(het_map.get::<(), _>(&Key::new(0_i32)), Some(&()));
 
     assert!(het_map.contains_type::<i32>());
     assert_eq!(het_map.is_empty::<i32>(), Some(false));
     assert_eq!(het_map.len::<i32>(), Some(2));
-    assert_eq!(het_map.get::<i32, _>(&Key::new(0)), Some(&i32::MIN));
-    assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&i32::MAX));
+    assert_eq!(het_map.get::<i32, _>(&Key::new(0_i32)), Some(&i32::MIN));
+    assert_eq!(het_map.get::<i32, _>(&Key::new(1_i32)), Some(&i32::MAX));
 }
 
 #[test]
@@ -88,23 +88,23 @@ fn test_heterogeneous_hash_map_two_types_zst2() {
     assert_eq!(het_map.is_empty::<i32>(), None);
     assert_eq!(het_map.len::<i32>(), None);
 
-    het_map.insert(Key::new(0), ());
-    het_map.insert(Key::new(1), ());
-    het_map.insert(Key::new(2), ());
+    het_map.insert(Key::new(0_i32), ());
+    het_map.insert(Key::new(1_i32), ());
+    het_map.insert(Key::new(2_i32), ());
 
-    het_map.insert(Key::new(0), i32::MIN);
-    het_map.insert(Key::new(1), i32::MAX);
+    het_map.insert(Key::new(0_i32), i32::MIN);
+    het_map.insert(Key::new(1_i32), i32::MAX);
 
     assert!(het_map.contains_type::<()>());
     assert_eq!(het_map.is_empty::<()>(), Some(false));
     assert_eq!(het_map.len::<()>(), Some(3));
-    assert_eq!(het_map.get::<(), _>(&Key::new(0)), Some(&()));
+    assert_eq!(het_map.get::<(), _>(&Key::new(0_i32)), Some(&()));
 
     assert!(het_map.contains_type::<i32>());
     assert_eq!(het_map.is_empty::<i32>(), Some(false));
     assert_eq!(het_map.len::<i32>(), Some(2));
-    assert_eq!(het_map.get::<i32, _>(&Key::new(0)), Some(&i32::MIN));
-    assert_eq!(het_map.get::<i32, _>(&Key::new(1)), Some(&i32::MAX));
+    assert_eq!(het_map.get::<i32, _>(&Key::new(0_i32)), Some(&i32::MIN));
+    assert_eq!(het_map.get::<i32, _>(&Key::new(1_i32)), Some(&i32::MAX));
 }
 
 #[test]

@@ -28,12 +28,12 @@ fn test_heterogeneous_hash_map_one_type_zst1() {
     assert_eq!(het_map.is_empty::<()>(), Some(true));
     assert_eq!(het_map.len::<()>(), Some(0));
 
-    het_map.insert(Key::new(0), ());
+    het_map.insert(Key::new(0_i32), ());
 
     assert!(het_map.contains_type::<()>());
     assert_eq!(het_map.is_empty::<()>(), Some(false));
     assert_eq!(het_map.len::<()>(), Some(1));
-    assert_eq!(het_map.get(&Key::new(0)), Some(&()));
+    assert_eq!(het_map.get(&Key::new(0_i32)), Some(&()));
 }
 
 #[test]
@@ -50,14 +50,14 @@ fn test_heterogeneous_hash_map_one_type_zst2() {
     assert_eq!(het_map.is_empty::<()>(), Some(true));
     assert_eq!(het_map.len::<()>(), Some(0));
 
-    het_map.insert(Key::new(0), ());
-    het_map.insert(Key::new(1), ());
-    het_map.insert(Key::new(2), ());
+    het_map.insert(Key::new(0_i32), ());
+    het_map.insert(Key::new(1_i32), ());
+    het_map.insert(Key::new(2_i32), ());
 
     assert!(het_map.contains_type::<()>());
     assert_eq!(het_map.is_empty::<()>(), Some(false));
     assert_eq!(het_map.len::<()>(), Some(3));
-    assert_eq!(het_map.get(&Key::new(0)), Some(&()));
+    assert_eq!(het_map.get(&Key::new(0_i32)), Some(&()));
 }
 
 #[test]
