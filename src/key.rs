@@ -1,3 +1,4 @@
+use core::borrow::Borrow;
 use core::cmp;
 use core::fmt;
 use core::hash;
@@ -164,5 +165,11 @@ where
 {
     fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         write!(formatter, "{id}", id = self.id)
+    }
+}
+
+impl<K, T> Borrow<K> for Key<K, T> {
+    fn borrow(&self) -> &K {
+        &self.id
     }
 }

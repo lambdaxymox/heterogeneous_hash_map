@@ -1,5 +1,14 @@
 use crate::homogeneous_hash_map::HomogeneousHashMap;
-use crate::iterator::TypeMetadataIter;
+use crate::iterator::{
+    Iter,
+    IterMut,
+    Keys,
+    Values,
+    ValuesMut,
+    Drain,
+    ExtractIf,
+    TypeMetadataIter,
+};
 use crate::key::Key;
 use crate::metadata::TypeMetadata;
 
@@ -2004,6 +2013,459 @@ where
         let map = self.get_or_insert_map_mut::<T>();
 
         map.extend(iterable)
+    }
+}
+
+impl<K, S> HeterogeneousHashMap<K, S>
+where
+    K: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    /// Returns an iterator over the entries of a given type, if that type exists in
+    /// the heterogeneous hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// # #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+    /// struct Equipment(String);
+    /// # #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+    /// struct Consumable(String);
+    ///
+    /// let equipment = [
+    ///     (Key::new("right_hand"),  Equipment(String::from("Alucard Sword"))),
+    ///     (Key::new("left_hand"),   Equipment(String::from("Alucard Shield"))),
+    ///     (Key::new("body"),        Equipment(String::from("Alucard Mail"))),
+    ///     (Key::new("cloak"),       Equipment(String::from("Twilight Cloak"))),
+    ///     (Key::new("head"),        Equipment(String::from("Dragon Helm"))),
+    ///     (Key::new("accessory_1"), Equipment(String::from("Ring Of Varda"))),
+    ///     (Key::new("accessory_2"), Equipment(String::from("Ring Of Varda"))),
+    /// ];
+    /// let mut het_map: HeterogeneousHashMap<&str> = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<Equipment>();
+    /// het_map.insert_type::<Consumable>();
+    /// het_map.extend(equipment.clone());
+    /// let expected = {
+    ///     let mut _expected = Vec::from_iter(equipment.clone());
+    ///     _expected.sort();
+    ///     _expected
+    /// };
+    /// let result = {
+    ///     let mut _result: Vec<(Key<&str, Equipment>, Equipment)> = het_map
+    ///         .iter::<Equipment>()
+    ///         .unwrap()
+    ///         .map(|(k, v)| (k.clone(), v.clone()))
+    ///         .collect();
+    ///     _result.sort();
+    ///     _result
+    /// };
+    ///
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn iter<T>(&self) -> Option<Iter<'_, K, T>>
+    where
+        T: any::Any,
+    {
+        self.get_map::<T>().map(HomogeneousHashMap::iter)
+    }
+
+    /// Returns a mutable iterator over the entries of a given type, if that type exists in
+    /// the heterogeneous hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// # use core::borrow::Borrow;
+    /// #
+    /// # #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+    /// struct Equipment(String);
+    /// #
+    /// # impl Borrow<String> for Equipment {
+    /// #     fn borrow(&self) -> &String {
+    /// #         &self.0
+    /// #     }
+    /// # }
+    /// #
+    ///
+    /// let equipment = [
+    ///     (Key::new("right_hand"),  Equipment(String::from("Alucard Sword"))),
+    ///     (Key::new("left_hand"),   Equipment(String::from("Alucard Shield"))),
+    ///     (Key::new("body"),        Equipment(String::from("Alucard Mail"))),
+    ///     (Key::new("cloak"),       Equipment(String::from("Twilight Cloak"))),
+    ///     (Key::new("head"),        Equipment(String::from("Dragon Helm"))),
+    ///     (Key::new("accessory_1"), Equipment(String::from("Ring Of Varda"))),
+    ///     (Key::new("accessory_2"), Equipment(String::from("Ring Of Varda"))),
+    /// ];
+    /// let mut het_map: HeterogeneousHashMap<&str> = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<Equipment>();
+    /// het_map.extend(equipment.clone());
+    ///
+    /// // Endgame setup. Who needs Richter anyway?
+    /// assert_eq!(het_map.get::<Equipment, _>(&"right_hand"),  Some(&Equipment(String::from("Alucard Sword"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"left_hand"),   Some(&Equipment(String::from("Alucard Shield"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"body"),        Some(&Equipment(String::from("Alucard Mail"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"cloak"),       Some(&Equipment(String::from("Twilight Cloak"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"head"),        Some(&Equipment(String::from("Dragon Helm"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"accessory_1"), Some(&Equipment(String::from("Ring Of Varda"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"accessory_2"), Some(&Equipment(String::from("Ring Of Varda"))));
+    ///
+    /// // Activate walking simulator mode.
+    /// for (key, value) in het_map.iter_mut::<Equipment>().unwrap() {
+    ///     if (key == &Key::new("right_hand")) || (key == &Key::new("left_hand")) {
+    ///         *value = Equipment(String::from("Crissaegrim"));
+    ///     }
+    /// }
+    ///
+    /// // Walking simulator mode activated. DPS too high for actual gameplay.
+    /// assert_eq!(het_map.get::<Equipment, _>(&"right_hand"),  Some(&Equipment(String::from("Crissaegrim"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"left_hand"),   Some(&Equipment(String::from("Crissaegrim"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"body"),        Some(&Equipment(String::from("Alucard Mail"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"cloak"),       Some(&Equipment(String::from("Twilight Cloak"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"head"),        Some(&Equipment(String::from("Dragon Helm"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"accessory_1"), Some(&Equipment(String::from("Ring Of Varda"))));
+    /// assert_eq!(het_map.get::<Equipment, _>(&"accessory_2"), Some(&Equipment(String::from("Ring Of Varda"))));
+    /// ```
+    pub fn iter_mut<T>(&mut self) -> Option<IterMut<'_, K, T>>
+    where
+        T: any::Any,
+    {
+        self.get_map_mut::<T>().map(HomogeneousHashMap::iter_mut)
+    }
+
+    /// Returns a key iterator over the entries of a given type, if that type exists in
+    /// the heterogeneous hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// # #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+    /// struct Equipment(String);
+    ///
+    /// let equipment = [
+    ///     (Key::new("right_hand"),  Equipment(String::from("Alucard Sword"))),
+    ///     (Key::new("left_hand"),   Equipment(String::from("Alucard Shield"))),
+    ///     (Key::new("body"),        Equipment(String::from("Alucard Mail"))),
+    ///     (Key::new("cloak"),       Equipment(String::from("Twilight Cloak"))),
+    ///     (Key::new("head"),        Equipment(String::from("Dragon Helm"))),
+    ///     (Key::new("accessory_1"), Equipment(String::from("Ring Of Varda"))),
+    ///     (Key::new("accessory_2"), Equipment(String::from("Ring Of Varda"))),
+    /// ];
+    /// let mut het_map: HeterogeneousHashMap<&str> = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<Equipment>();
+    /// het_map.extend(equipment.clone());
+    /// let expected = Vec::from([
+    ///     Key::new("accessory_1"),
+    ///     Key::new("accessory_2"),
+    ///     Key::new("body"),
+    ///     Key::new("cloak"),
+    ///     Key::new("head"),
+    ///     Key::new("left_hand"),
+    ///     Key::new("right_hand"),
+    /// ]);
+    /// let result = {
+    ///     let mut _result: Vec<Key<&str, Equipment>> = het_map
+    ///         .keys::<Equipment>()
+    ///         .unwrap()
+    ///         .cloned()
+    ///         .collect();
+    ///     _result.sort();
+    ///     _result
+    /// };
+    ///
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn keys<T>(&self) -> Option<Keys<'_, K, T>>
+    where
+        T: any::Any,
+    {
+        self.get_map::<T>().map(HomogeneousHashMap::keys)
+    }
+
+    /// Returns a value iterator over the entries of a given type, if that type exists in
+    /// the heterogeneous hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// # #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+    /// struct Equipment(String);
+    ///
+    /// let equipment = [
+    ///     (Key::new("right_hand"),  Equipment(String::from("Alucard Sword"))),
+    ///     (Key::new("left_hand"),   Equipment(String::from("Alucard Shield"))),
+    ///     (Key::new("body"),        Equipment(String::from("Alucard Mail"))),
+    ///     (Key::new("cloak"),       Equipment(String::from("Twilight Cloak"))),
+    ///     (Key::new("head"),        Equipment(String::from("Dragon Helm"))),
+    ///     (Key::new("accessory_1"), Equipment(String::from("Ring Of Varda"))),
+    ///     (Key::new("accessory_2"), Equipment(String::from("Ring Of Varda"))),
+    /// ];
+    /// let mut het_map: HeterogeneousHashMap<&str> = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<Equipment>();
+    /// het_map.extend(equipment.clone());
+    /// let expected = {
+    ///     let mut _expected = Vec::from_iter(equipment.iter().map(|(_k, v)| v).cloned());
+    ///     _expected.sort();
+    ///     _expected
+    /// };
+    /// let result = {
+    ///     let mut _result: Vec<Equipment> = het_map
+    ///         .values::<Equipment>()
+    ///         .unwrap()
+    ///         .cloned()
+    ///         .collect();
+    ///     _result.sort();
+    ///     _result
+    /// };
+    ///
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn values<T>(&self) -> Option<Values<'_, K, T>>
+    where
+        T: any::Any,
+    {
+        self.get_map::<T>().map(HomogeneousHashMap::values)
+    }
+
+    /// Returns a mutable value iterator over the entries of a given type, if that type exists in
+    /// the heterogeneous hash map.
+    ///
+    /// # Examples
+    ///
+    /// Comparing two different ways of determining which numbers in a collection of integers
+    /// are prime numbers.
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// #[derive(Debug)]
+    /// struct PrimeFactors {
+    ///     value: i32,
+    ///     total_prime_factor_count: u32,
+    /// }
+    ///
+    /// impl PrimeFactors {
+    ///     fn new(value: i32, total_prime_factor_count: u32) -> Self {
+    ///         Self { value, total_prime_factor_count }
+    ///     }
+    /// }
+    ///
+    /// // Determines whether an integer is a prime.
+    /// fn is_prime(n: i32) -> bool {
+    ///     if n <= 1 { return false; }
+    ///     if n == 2 { return true; }
+    ///     if n % 2 == 0 { return false; }
+    ///     let sqrt_n = f64::floor(f64::sqrt(n as f64)) as i32;
+    ///     for i in (3..=sqrt_n).step_by(2) {
+    ///         if n % i == 0 { return false; }
+    ///     }
+    ///
+    ///     true
+    /// }
+    /// #
+    /// # assert!(is_prime(2_i32));
+    /// # assert!(is_prime(3_i32));
+    /// # assert!(!is_prime(4_i32));
+    /// # assert!(is_prime(5_i32));
+    /// # assert!(!is_prime(6_i32));
+    /// # assert!(is_prime(7_i32));
+    /// # assert!(!is_prime(8_i32));
+    /// # assert!(!is_prime(9_i32));
+    /// # assert!(!is_prime(10_i32));
+    /// # assert!(is_prime(11_i32));
+    /// # assert!(!is_prime(12_i32));
+    /// # assert!(is_prime(13_i32));
+    /// #
+    ///
+    /// // Counts the total number of prime factors for a given integer. Every integer has a
+    /// // unique prime factorization. The total number of prime factors is the length of this
+    /// // prime factorization.
+    /// fn count_total_prime_factors(value: i32) -> u32 {
+    ///     let mut n = value;
+    ///     let mut count = 0;
+    ///     while n % 2 == 0 {
+    ///         count += 1;
+    ///         n /= 2;
+    ///     }
+    ///     let mut i = 3;
+    ///     while i * i <= n {
+    ///         while n % i == 0 {
+    ///             count += 1;
+    ///             n /= i;
+    ///         }
+    ///         i += 2;
+    ///     }
+    ///     if n > 2 {
+    ///         count += 1;
+    ///     }
+    ///
+    ///     count
+    /// }
+    /// #
+    /// # assert_eq!(count_total_prime_factors(2_i32),  1_u32);
+    /// # assert_eq!(count_total_prime_factors(3_i32),  1_u32);
+    /// # assert_eq!(count_total_prime_factors(4_i32),  2_u32);
+    /// # assert_eq!(count_total_prime_factors(5_i32),  1_u32);
+    /// # assert_eq!(count_total_prime_factors(6_i32),  2_u32);
+    /// # assert_eq!(count_total_prime_factors(7_i32),  1_u32);
+    /// # assert_eq!(count_total_prime_factors(8_i32),  3_u32);
+    /// # assert_eq!(count_total_prime_factors(9_i32),  2_u32);
+    /// # assert_eq!(count_total_prime_factors(10_i32), 2_u32);
+    /// # assert_eq!(count_total_prime_factors(11_i32), 1_u32);
+    /// # assert_eq!(count_total_prime_factors(12_i32), 3_u32);
+    /// # assert_eq!(count_total_prime_factors(13_i32), 1_u32);
+    /// #
+    ///
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
+    /// het_map.extend(
+    ///     (1_usize..1024_usize)
+    ///         .map(Key::new)
+    ///         .zip((2_i32..=1024_i32).map(|v| PrimeFactors::new(v, 1_u32)))
+    /// );
+    ///
+    /// for factor in het_map.values::<PrimeFactors>().unwrap() {
+    ///     assert_eq!(factor.total_prime_factor_count, 1_u32);
+    /// }
+    ///
+    /// // Count the total number of (not necessarily unique) prime factors for every integer value.
+    /// for factor in het_map.values_mut::<PrimeFactors>().unwrap() {
+    ///     factor.total_prime_factor_count = count_total_prime_factors(factor.value);
+    /// }
+    ///
+    /// // Verify that every value for which `count_total_prime_factors` returns 1 for total prime
+    /// // factors is a prime number.
+    /// for factor in het_map.values::<PrimeFactors>().unwrap().filter(|f| f.total_prime_factor_count == 1) {
+    ///     assert!(is_prime(factor.value));
+    /// }
+    ///
+    /// // Verify that every value for which `count_total_prime_factors` does not return 1 for
+    /// // total prime factors is a prime number.
+    /// for factor in het_map.values::<PrimeFactors>().unwrap().filter(|f| f.total_prime_factor_count > 1) {
+    ///     assert!(!is_prime(factor.value));
+    /// }
+    /// ```
+    pub fn values_mut<T>(&mut self) -> Option<ValuesMut<'_, K, T>>
+    where
+        T: any::Any,
+    {
+        self.get_map_mut::<T>().map(HomogeneousHashMap::values_mut)
+    }
+
+    /// Returns a draining iterator over the entries of a given type, if that type exists in
+    /// the heterogeneous hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<u32>();
+    /// het_map.extend([
+    ///     (Key::new(0_usize), 1_i32),
+    ///     (Key::new(1_usize), 2_i32),
+    ///     (Key::new(2_usize), 3_i32),
+    ///     (Key::new(3_usize), 4_i32),
+    /// ]);
+    /// het_map.extend([
+    ///     (Key::new(4_usize), 5_u32),
+    ///     (Key::new(5_usize), 6_u32),
+    ///     (Key::new(6_usize), 7_u32),
+    /// ]);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(4));
+    /// assert_eq!(het_map.len::<u32>(), Some(3));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    ///
+    /// let expected = Vec::from([1_i32, 2_i32, 3_i32, 4_i32]);
+    /// let result = {
+    ///     let mut _result: Vec<i32> = het_map.drain::<i32>().unwrap().map(|(_k, v)| v.clone()).collect();
+    ///     _result.sort();
+    ///     _result
+    /// };
+    ///
+    /// assert_eq!(result, expected);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(0));
+    /// assert_eq!(het_map.len::<u32>(), Some(3));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    /// ```
+    pub fn drain<T>(&mut self) -> Option<Drain<'_, K, T>>
+    where
+        T: any::Any,
+    {
+        self.get_map_mut::<T>().map(HomogeneousHashMap::drain)
+    }
+
+    /// Returns an extracting iterator over the entries of a given type, if that type exists in
+    /// the heterogeneous hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// // Determines whether an integer is prime.
+    /// fn is_prime(n: i32) -> bool {
+    ///     if n <= 1 { return false; }
+    ///     if n == 2 { return true; }
+    ///     if n % 2 == 0 { return false; }
+    ///     let sqrt_n = f64::floor(f64::sqrt(n as f64)) as i32;
+    ///     for i in (3..=sqrt_n).step_by(2) {
+    ///         if n % i == 0 { return false; }
+    ///     }
+    ///
+    ///     true
+    /// }
+    /// #
+    /// # assert!(is_prime(2_i32));
+    /// # assert!(is_prime(3_i32));
+    /// # assert!(!is_prime(4_i32));
+    /// # assert!(is_prime(5_i32));
+    /// # assert!(!is_prime(6_i32));
+    /// # assert!(is_prime(7_i32));
+    /// # assert!(!is_prime(8_i32));
+    /// # assert!(!is_prime(9_i32));
+    /// # assert!(!is_prime(10_i32));
+    /// # assert!(is_prime(11_i32));
+    /// # assert!(!is_prime(12_i32));
+    /// # assert!(is_prime(13_i32));
+    /// #
+    ///
+    /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.extend((1_usize..1024_usize).map(Key::new).zip(2_i32..=1024_i32));
+    ///
+    /// let result: Vec<i32> = het_map
+    ///     .extract_if::<i32, _>(|_k, v| is_prime(*v))
+    ///     .unwrap()
+    ///     .map(|(_k, v)| v)
+    ///     .collect();
+    ///
+    /// // Every extracted integer should be a prime number.
+    /// for i in result.iter().copied() {
+    ///     assert!(is_prime(i));
+    /// }
+    ///
+    /// // Every remaining integer should not be a prime number.
+    /// for i in het_map.values::<i32>().unwrap().copied() {
+    ///     assert!(!is_prime(i));
+    /// }
+    /// ```
+    pub fn extract_if<T, F>(&mut self, keep: F) -> Option<ExtractIf<'_, K, T, F>>
+    where
+        T: any::Any,
+        F: FnMut(&Key<K, T>, &mut T) -> bool,
+    {
+        self.get_map_mut::<T>().map(|m| HomogeneousHashMap::extract_if(m, keep))
     }
 }
 

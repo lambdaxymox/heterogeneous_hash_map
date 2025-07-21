@@ -922,7 +922,7 @@ where
 
 /// A moving iterator over the keys of the entries of the hash map.
 ///
-/// Moving key iterators are created by the [`HomogeneousHashMap::into_keys`] method.
+/// Moving key iterators are created by the [`HomogeneousHashMap::into_values`] method.
 ///
 /// # Examples
 ///
