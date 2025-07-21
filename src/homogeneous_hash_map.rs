@@ -44,12 +44,12 @@ use core::hash;
 /// #
 /// let mut het_map = HeterogeneousHashMap::new();
 /// let expected = vec![
-///     (Key::new(0), 2_u32),
-///     (Key::new(1), 3_u32),
-///     (Key::new(2), 5_u32),
-///     (Key::new(3), 7_u32),
-///     (Key::new(4), 11_u32),
-///     (Key::new(5), 13_u32),
+///     (Key::new(0_usize), 2_u32),
+///     (Key::new(1_usize), 3_u32),
+///     (Key::new(2_usize), 5_u32),
+///     (Key::new(3_usize), 7_u32),
+///     (Key::new(4_usize), 11_u32),
+///     (Key::new(5_usize), 13_u32),
 /// ];
 /// het_map.extend(expected.clone());
 /// let map = het_map.get_map::<u32>().unwrap();
@@ -150,9 +150,9 @@ where
     /// assert!(map.capacity() >= 3);
     /// let old_capacity = map.capacity();
     ///
-    /// map.insert(Key::new(0), 1_i32);
-    /// map.insert(Key::new(1), 2_i32);
-    /// map.insert(Key::new(2), 3_i32);
+    /// map.insert(Key::new(0_usize), 1_i32);
+    /// map.insert(Key::new(1_usize), 2_i32);
+    /// map.insert(Key::new(2_usize), 3_i32);
     ///
     /// assert_eq!(map.len(), 3);
     /// assert!(map.capacity() >= old_capacity);
@@ -200,9 +200,9 @@ where
     /// assert!(map.capacity() >= 3);
     /// let old_capacity = map.capacity();
     ///
-    /// map.insert(Key::new(0), 1_i32);
-    /// map.insert(Key::new(1), 2_i32);
-    /// map.insert(Key::new(2), 3_i32);
+    /// map.insert(Key::new(0_usize), 1_i32);
+    /// map.insert(Key::new(1_usize), 2_i32);
+    /// map.insert(Key::new(2_usize), 3_i32);
     ///
     /// assert_eq!(map.len(), 3);
     /// assert!(map.capacity() >= old_capacity);
@@ -239,15 +239,15 @@ where
     ///     map.capacity()
     /// };
     /// het_map.extend([
-    ///     (Key::new(0), String::from("foo")),
-    ///     (Key::new(1), String::from("bar")),
-    ///     (Key::new(2), String::from("baz")),
+    ///     (Key::new(0_usize), String::from("foo")),
+    ///     (Key::new(1_usize), String::from("bar")),
+    ///     (Key::new(2_usize), String::from("baz")),
     /// ]);
     /// let map = het_map.get_map_mut::<String>().unwrap();
     ///
     /// assert_eq!(map.capacity(), old_capacity);
     ///
-    /// map.insert(Key::new(3), String::from("quux"));
+    /// map.insert(Key::new(3_usize), String::from("quux"));
     ///
     /// assert!(map.capacity() >= old_capacity);
     /// ```
@@ -271,9 +271,9 @@ where
     ///     assert_eq!(map.len(), 0);
     /// }
     /// het_map.extend([
-    ///     (Key::new(0), String::from("foo")),
-    ///     (Key::new(1), String::from("bar")),
-    ///     (Key::new(2), String::from("baz")),
+    ///     (Key::new(0_usize), String::from("foo")),
+    ///     (Key::new(1_usize), String::from("bar")),
+    ///     (Key::new(2_usize), String::from("baz")),
     /// ]);
     /// let map = het_map.get_map::<String>().unwrap();
     ///
@@ -299,9 +299,9 @@ where
     ///     assert!(map.is_empty());
     /// }
     /// het_map.extend([
-    ///     (Key::new(0), String::from("foo")),
-    ///     (Key::new(1), String::from("bar")),
-    ///     (Key::new(2), String::from("baz")),
+    ///     (Key::new(0_usize), String::from("foo")),
+    ///     (Key::new(1_usize), String::from("bar")),
+    ///     (Key::new(2_usize), String::from("baz")),
     /// ]);
     /// let map = het_map.get_map::<String>().unwrap();
     ///
@@ -348,16 +348,16 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), 2_f64),
-    ///     (Key::new(2), 3_f64),
-    ///     (Key::new(3), 4_f64),
+    ///     (Key::new(1_usize), 2_f64),
+    ///     (Key::new(2_usize), 3_f64),
+    ///     (Key::new(3_usize), 4_f64),
     /// ]);
     /// let map = het_map.get_map::<f64>().unwrap();
     ///
-    /// assert!(map.contains_key(&Key::new(1)));
-    /// assert!(map.contains_key(&Key::new(2)));
-    /// assert!(map.contains_key(&Key::new(3)));
-    /// assert!(!map.contains_key(&Key::new(4)));
+    /// assert!(map.contains_key(&Key::new(1_usize)));
+    /// assert!(map.contains_key(&Key::new(2_usize)));
+    /// assert!(map.contains_key(&Key::new(3_usize)));
+    /// assert!(!map.contains_key(&Key::new(4_usize)));
     /// assert!(!map.contains_key(&Key::new(usize::MAX)));
     /// ```
     pub fn contains_key<Q>(&self, key: &Q) -> bool
@@ -383,16 +383,16 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), 2_f64),
-    ///     (Key::new(2), 3_f64),
-    ///     (Key::new(3), 4_f64),
+    ///     (Key::new(1_usize), 2_f64),
+    ///     (Key::new(2_usize), 3_f64),
+    ///     (Key::new(3_usize), 4_f64),
     /// ]);
     /// let map = het_map.get_map::<f64>().unwrap();
     ///
-    /// assert_eq!(map.get(&Key::new(1)), Some(&2_f64));
-    /// assert_eq!(map.get(&Key::new(2)), Some(&3_f64));
-    /// assert_eq!(map.get(&Key::new(3)), Some(&4_f64));
-    /// assert_eq!(map.get(&Key::new(4)), None);
+    /// assert_eq!(map.get(&Key::new(1_usize)), Some(&2_f64));
+    /// assert_eq!(map.get(&Key::new(2_usize)), Some(&3_f64));
+    /// assert_eq!(map.get(&Key::new(3_usize)), Some(&4_f64));
+    /// assert_eq!(map.get(&Key::new(4_usize)), None);
     /// ```
     pub fn get<Q>(&self, key: &Q) -> Option<&T>
     where
@@ -417,16 +417,16 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), 2_f64),
-    ///     (Key::new(2), 3_f64),
-    ///     (Key::new(3), 4_f64),
+    ///     (Key::new(1_usize), 2_f64),
+    ///     (Key::new(2_usize), 3_f64),
+    ///     (Key::new(3_usize), 4_f64),
     /// ]);
     /// let map = het_map.get_map::<f64>().unwrap();
     ///
-    /// assert_eq!(map.get_key_value(&Key::new(1)), Some((&Key::new(1), &2_f64)));
-    /// assert_eq!(map.get_key_value(&Key::new(2)), Some((&Key::new(2), &3_f64)));
-    /// assert_eq!(map.get_key_value(&Key::new(3)), Some((&Key::new(3), &4_f64)));
-    /// assert_eq!(map.get_key_value(&Key::new(4)), None);
+    /// assert_eq!(map.get_key_value(&Key::new(1_usize)), Some((&Key::new(1_usize), &2_f64)));
+    /// assert_eq!(map.get_key_value(&Key::new(2_usize)), Some((&Key::new(2_usize), &3_f64)));
+    /// assert_eq!(map.get_key_value(&Key::new(3_usize)), Some((&Key::new(3_usize), &4_f64)));
+    /// assert_eq!(map.get_key_value(&Key::new(4_usize)), None);
     /// ```
     pub fn get_key_value<Q>(&self, key: &Q) -> Option<(&Key<K, T>, &T)>
     where
@@ -451,33 +451,33 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), 2_f64),
-    ///     (Key::new(2), 3_f64),
-    ///     (Key::new(3), 4_f64),
+    ///     (Key::new(1_usize), 2_f64),
+    ///     (Key::new(2_usize), 3_f64),
+    ///     (Key::new(3_usize), 4_f64),
     /// ]);
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
     ///
-    ///     assert_eq!(map.get_mut(&Key::new(1)), Some(&mut 2_f64));
-    ///     assert_eq!(map.get_mut(&Key::new(2)), Some(&mut 3_f64));
-    ///     assert_eq!(map.get_mut(&Key::new(3)), Some(&mut 4_f64));
-    ///     assert_eq!(map.get_mut(&Key::new(4)), None);
+    ///     assert_eq!(map.get_mut(&Key::new(1_usize)), Some(&mut 2_f64));
+    ///     assert_eq!(map.get_mut(&Key::new(2_usize)), Some(&mut 3_f64));
+    ///     assert_eq!(map.get_mut(&Key::new(3_usize)), Some(&mut 4_f64));
+    ///     assert_eq!(map.get_mut(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
     ///
-    ///     map.get_mut(&Key::new(1)).map(|v| *v *= 2_f64);
-    ///     map.get_mut(&Key::new(2)).map(|v| *v *= 2_f64);
-    ///     map.get_mut(&Key::new(3)).map(|v| *v *= 2_f64);
-    ///     map.get_mut(&Key::new(4)).map(|v| *v *= 2_f64);
+    ///     map.get_mut(&Key::new(1_usize)).map(|v| *v *= 2_f64);
+    ///     map.get_mut(&Key::new(2_usize)).map(|v| *v *= 2_f64);
+    ///     map.get_mut(&Key::new(3_usize)).map(|v| *v *= 2_f64);
+    ///     map.get_mut(&Key::new(4_usize)).map(|v| *v *= 2_f64);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
     ///
-    ///     assert_eq!(map.get_mut(&Key::new(1)), Some(&mut 4_f64));
-    ///     assert_eq!(map.get_mut(&Key::new(2)), Some(&mut 6_f64));
-    ///     assert_eq!(map.get_mut(&Key::new(3)), Some(&mut 8_f64));
-    ///     assert_eq!(map.get_mut(&Key::new(4)), None);
+    ///     assert_eq!(map.get_mut(&Key::new(1_usize)), Some(&mut 4_f64));
+    ///     assert_eq!(map.get_mut(&Key::new(2_usize)), Some(&mut 6_f64));
+    ///     assert_eq!(map.get_mut(&Key::new(3_usize)), Some(&mut 8_f64));
+    ///     assert_eq!(map.get_mut(&Key::new(4_usize)), None);
     /// }
     /// ```
     pub fn get_mut<Q>(&mut self, key: &Q) -> Option<&mut T>
@@ -502,15 +502,15 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), 2_f64),
-    ///     (Key::new(2), 3_f64),
-    ///     (Key::new(3), 4_f64),
+    ///     (Key::new(1_usize), 2_f64),
+    ///     (Key::new(2_usize), 3_f64),
+    ///     (Key::new(3_usize), 4_f64),
     /// ]);
     /// let map = het_map.get_map::<f64>().unwrap();
     ///
-    /// assert_eq!(map.get_unchecked(&Key::new(1)), &2_f64);
-    /// assert_eq!(map.get_unchecked(&Key::new(2)), &3_f64);
-    /// assert_eq!(map.get_unchecked(&Key::new(3)), &4_f64);
+    /// assert_eq!(map.get_unchecked(&Key::new(1_usize)), &2_f64);
+    /// assert_eq!(map.get_unchecked(&Key::new(2_usize)), &3_f64);
+    /// assert_eq!(map.get_unchecked(&Key::new(3_usize)), &4_f64);
     /// ```
     #[track_caller]
     pub fn get_unchecked<Q>(&self, key: &Q) -> &T
@@ -535,30 +535,30 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), 2_f64),
-    ///     (Key::new(2), 3_f64),
-    ///     (Key::new(3), 4_f64),
+    ///     (Key::new(1_usize), 2_f64),
+    ///     (Key::new(2_usize), 3_f64),
+    ///     (Key::new(3_usize), 4_f64),
     /// ]);
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
     ///
-    ///     assert_eq!(map.get_mut_unchecked(&Key::new(1)), &mut 2_f64);
-    ///     assert_eq!(map.get_mut_unchecked(&Key::new(2)), &mut 3_f64);
-    ///     assert_eq!(map.get_mut_unchecked(&Key::new(3)), &mut 4_f64);
+    ///     assert_eq!(map.get_mut_unchecked(&Key::new(1_usize)), &mut 2_f64);
+    ///     assert_eq!(map.get_mut_unchecked(&Key::new(2_usize)), &mut 3_f64);
+    ///     assert_eq!(map.get_mut_unchecked(&Key::new(3_usize)), &mut 4_f64);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
     ///
-    ///     *map.get_mut_unchecked(&Key::new(1)) *= 2_f64;
-    ///     *map.get_mut_unchecked(&Key::new(2)) *= 2_f64;
-    ///     *map.get_mut_unchecked(&Key::new(3)) *= 2_f64;
+    ///     *map.get_mut_unchecked(&Key::new(1_usize)) *= 2_f64;
+    ///     *map.get_mut_unchecked(&Key::new(2_usize)) *= 2_f64;
+    ///     *map.get_mut_unchecked(&Key::new(3_usize)) *= 2_f64;
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
     ///
-    ///     assert_eq!(map.get_mut_unchecked(&Key::new(1)), &mut 4_f64);
-    ///     assert_eq!(map.get_mut_unchecked(&Key::new(2)), &mut 6_f64);
-    ///     assert_eq!(map.get_mut_unchecked(&Key::new(3)), &mut 8_f64);
+    ///     assert_eq!(map.get_mut_unchecked(&Key::new(1_usize)), &mut 4_f64);
+    ///     assert_eq!(map.get_mut_unchecked(&Key::new(2_usize)), &mut 6_f64);
+    ///     assert_eq!(map.get_mut_unchecked(&Key::new(3_usize)), &mut 8_f64);
     /// }
     /// ```
     #[track_caller]
@@ -590,13 +590,13 @@ where
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
-    /// het_map.insert(Key::new(1), String::from("Dark Souls"));
-    /// het_map.insert(Key::new(2), String::from("Dark Souls II"));
-    /// het_map.insert(Key::new(3), String::from("Dark Souls III"));
-    /// het_map.insert(Key::new(4), String::from("Bloodborne"));
-    /// het_map.insert(Key::new(5), String::from("Sekiro: Shadows Die Twice"));
-    /// het_map.insert(Key::new(6), String::from("Elden Ring"));
-    /// het_map.insert(Key::new(7), String::from("Nioh"));
+    /// het_map.insert(Key::new(1_usize), String::from("Dark Souls"));
+    /// het_map.insert(Key::new(2_usize), String::from("Dark Souls II"));
+    /// het_map.insert(Key::new(3_usize), String::from("Dark Souls III"));
+    /// het_map.insert(Key::new(4_usize), String::from("Bloodborne"));
+    /// het_map.insert(Key::new(5_usize), String::from("Sekiro: Shadows Die Twice"));
+    /// het_map.insert(Key::new(6_usize), String::from("Elden Ring"));
+    /// het_map.insert(Key::new(7_usize), String::from("Nioh"));
     ///
     /// let expected = [
     ///     &mut String::from("Bloodborne"),
@@ -604,7 +604,12 @@ where
     ///     &mut String::from("Nioh"),
     /// ];
     /// let map = het_map.get_map_mut::<String>().unwrap();
-    /// let result = map.get_disjoint_mut([&Key::new(4), &Key::new(0), &Key::new(7), &Key::new(6)]);
+    /// let result = map.get_disjoint_mut([
+    ///     &Key::new(4_usize),
+    ///     &Key::new(0_usize),
+    ///     &Key::new(7_usize),
+    ///     &Key::new(6_usize),
+    /// ]);
     ///
     /// assert_eq!(result[0], Some(&mut String::from("Bloodborne")));
     /// assert_eq!(result[1], None);
@@ -642,46 +647,46 @@ where
     ///     assert!(map.is_empty());
     ///     assert_eq!(map.len(), 0);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), None);
-    ///     assert_eq!(map.get(&Key::new(2)), None);
-    ///     assert_eq!(map.get(&Key::new(3)), None);
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(3_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.insert(Key::new(1), 2_f64), None);
+    ///     assert_eq!(map.insert(Key::new(1_usize), 2_f64), None);
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 1);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), Some(&2_f64));
-    ///     assert_eq!(map.get(&Key::new(2)), None);
-    ///     assert_eq!(map.get(&Key::new(3)), None);
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), Some(&2_f64));
+    ///     assert_eq!(map.get(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(3_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.insert(Key::new(2), 3_f64), None);
+    ///     assert_eq!(map.insert(Key::new(2_usize), 3_f64), None);
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 2);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), Some(&2_f64));
-    ///     assert_eq!(map.get(&Key::new(2)), Some(&3_f64));
-    ///     assert_eq!(map.get(&Key::new(3)), None);
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), Some(&2_f64));
+    ///     assert_eq!(map.get(&Key::new(2_usize)), Some(&3_f64));
+    ///     assert_eq!(map.get(&Key::new(3_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.insert(Key::new(3), 4_f64), None);
+    ///     assert_eq!(map.insert(Key::new(3_usize), 4_f64), None);
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 3);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), Some(&2_f64));
-    ///     assert_eq!(map.get(&Key::new(2)), Some(&3_f64));
-    ///     assert_eq!(map.get(&Key::new(3)), Some(&4_f64));
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), Some(&2_f64));
+    ///     assert_eq!(map.get(&Key::new(2_usize)), Some(&3_f64));
+    ///     assert_eq!(map.get(&Key::new(3_usize)), Some(&4_f64));
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map::<f64>().unwrap();
@@ -689,10 +694,10 @@ where
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 3);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), Some(&2_f64));
-    ///     assert_eq!(map.get(&Key::new(2)), Some(&3_f64));
-    ///     assert_eq!(map.get(&Key::new(3)), Some(&4_f64));
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), Some(&2_f64));
+    ///     assert_eq!(map.get(&Key::new(2_usize)), Some(&3_f64));
+    ///     assert_eq!(map.get(&Key::new(3_usize)), Some(&4_f64));
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// ```
     pub fn insert(&mut self, key: Key<K, T>, value: T) -> Option<T>
@@ -725,60 +730,60 @@ where
     ///     assert!(map.is_empty());
     ///     assert_eq!(map.len(), 0);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), None);
-    ///     assert_eq!(map.get(&Key::new(2)), None);
-    ///     assert_eq!(map.get(&Key::new(3)), None);
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(3_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     map.insert(Key::new(1), 2_f64);
-    ///     map.insert(Key::new(2), 3_f64);
-    ///     map.insert(Key::new(3), 4_f64);
+    ///     map.insert(Key::new(1_usize), 2_f64);
+    ///     map.insert(Key::new(2_usize), 3_f64);
+    ///     map.insert(Key::new(3_usize), 4_f64);
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 3);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), Some(&2_f64));
-    ///     assert_eq!(map.get(&Key::new(2)), Some(&3_f64));
-    ///     assert_eq!(map.get(&Key::new(3)), Some(&4_f64));
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), Some(&2_f64));
+    ///     assert_eq!(map.get(&Key::new(2_usize)), Some(&3_f64));
+    ///     assert_eq!(map.get(&Key::new(3_usize)), Some(&4_f64));
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.remove(&Key::new(1)), Some(2_f64));
+    ///     assert_eq!(map.remove(&Key::new(1_usize)), Some(2_f64));
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 2);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), None);
-    ///     assert_eq!(map.get(&Key::new(2)), Some(&3_f64));
-    ///     assert_eq!(map.get(&Key::new(3)), Some(&4_f64));
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(2_usize)), Some(&3_f64));
+    ///     assert_eq!(map.get(&Key::new(3_usize)), Some(&4_f64));
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.remove(&Key::new(2)), Some(3_f64));
+    ///     assert_eq!(map.remove(&Key::new(2_usize)), Some(3_f64));
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 1);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), None);
-    ///     assert_eq!(map.get(&Key::new(2)), None);
-    ///     assert_eq!(map.get(&Key::new(3)), Some(&4_f64));
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(3_usize)), Some(&4_f64));
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.remove(&Key::new(3)), Some(4_f64));
+    ///     assert_eq!(map.remove(&Key::new(3_usize)), Some(4_f64));
     ///
     ///     assert!(map.is_empty());
     ///     assert_eq!(map.len(), 0);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), None);
-    ///     assert_eq!(map.get(&Key::new(2)), None);
-    ///     assert_eq!(map.get(&Key::new(3)), None);
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(3_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// ```
     pub fn remove<Q>(&mut self, key: &Q) -> Option<T>
@@ -813,60 +818,60 @@ where
     ///     assert!(map.is_empty());
     ///     assert_eq!(map.len(), 0);
     ///
-    ///     assert_eq!(map.get(&Key::new(1)), None);
-    ///     assert_eq!(map.get(&Key::new(2)), None);
-    ///     assert_eq!(map.get(&Key::new(3)), None);
-    ///     assert_eq!(map.get(&Key::new(4)), None);
+    ///     assert_eq!(map.get(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(3_usize)), None);
+    ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     map.insert(Key::new(1), 2_f64);
-    ///     map.insert(Key::new(2), 3_f64);
-    ///     map.insert(Key::new(3), 4_f64);
+    ///     map.insert(Key::new(1_usize), 2_f64);
+    ///     map.insert(Key::new(2_usize), 3_f64);
+    ///     map.insert(Key::new(3_usize), 4_f64);
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 3);
     ///
-    ///     assert_eq!(map.get_key_value(&Key::new(1)), Some((&Key::new(1), &2_f64)));
-    ///     assert_eq!(map.get_key_value(&Key::new(2)), Some((&Key::new(2), &3_f64)));
-    ///     assert_eq!(map.get_key_value(&Key::new(3)), Some((&Key::new(3), &4_f64)));
-    ///     assert_eq!(map.get_key_value(&Key::new(4)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(1_usize)), Some((&Key::new(1_usize), &2_f64)));
+    ///     assert_eq!(map.get_key_value(&Key::new(2_usize)), Some((&Key::new(2_usize), &3_f64)));
+    ///     assert_eq!(map.get_key_value(&Key::new(3_usize)), Some((&Key::new(3_usize), &4_f64)));
+    ///     assert_eq!(map.get_key_value(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.remove_entry(&Key::new(1)), Some((Key::new(1), 2_f64)));
+    ///     assert_eq!(map.remove_entry(&Key::new(1_usize)), Some((Key::new(1_usize), 2_f64)));
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 2);
     ///
-    ///     assert_eq!(map.get_key_value(&Key::new(1)), None);
-    ///     assert_eq!(map.get_key_value(&Key::new(2)), Some((&Key::new(2), &3_f64)));
-    ///     assert_eq!(map.get_key_value(&Key::new(3)), Some((&Key::new(3), &4_f64)));
-    ///     assert_eq!(map.get_key_value(&Key::new(4)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(2_usize)), Some((&Key::new(2_usize), &3_f64)));
+    ///     assert_eq!(map.get_key_value(&Key::new(3_usize)), Some((&Key::new(3_usize), &4_f64)));
+    ///     assert_eq!(map.get_key_value(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.remove_entry(&Key::new(2)), Some((Key::new(2), 3_f64)));
+    ///     assert_eq!(map.remove_entry(&Key::new(2_usize)), Some((Key::new(2_usize), 3_f64)));
     ///
     ///     assert!(!map.is_empty());
     ///     assert_eq!(map.len(), 1);
     ///
-    ///     assert_eq!(map.get_key_value(&Key::new(1)), None);
-    ///     assert_eq!(map.get_key_value(&Key::new(2)), None);
-    ///     assert_eq!(map.get_key_value(&Key::new(3)), Some((&Key::new(3), &4_f64)));
-    ///     assert_eq!(map.get_key_value(&Key::new(4)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(3_usize)), Some((&Key::new(3_usize), &4_f64)));
+    ///     assert_eq!(map.get_key_value(&Key::new(4_usize)), None);
     /// }
     /// {
     ///     let map = het_map.get_map_mut::<f64>().unwrap();
-    ///     assert_eq!(map.remove_entry(&Key::new(3)), Some((Key::new(3), 4_f64)));
+    ///     assert_eq!(map.remove_entry(&Key::new(3_usize)), Some((Key::new(3_usize), 4_f64)));
     ///
     ///     assert!(map.is_empty());
     ///     assert_eq!(map.len(), 0);
     ///
-    ///     assert_eq!(map.get_key_value(&Key::new(1)), None);
-    ///     assert_eq!(map.get_key_value(&Key::new(2)), None);
-    ///     assert_eq!(map.get_key_value(&Key::new(3)), None);
-    ///     assert_eq!(map.get_key_value(&Key::new(4)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(1_usize)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(2_usize)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(3_usize)), None);
+    ///     assert_eq!(map.get_key_value(&Key::new(4_usize)), None);
     /// }
     /// ```
     pub fn remove_entry<Q>(&mut self, key: &Q) -> Option<(Key<K, T>, T)>
@@ -886,9 +891,9 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// let entries = vec![
-    ///     (Key::new(1), String::from("foo")),
-    ///     (Key::new(2), String::from("bar")),
-    ///     (Key::new(3), String::from("baz")),
+    ///     (Key::new(1_usize), String::from("foo")),
+    ///     (Key::new(2_usize), String::from("bar")),
+    ///     (Key::new(3_usize), String::from("baz")),
     /// ];
     /// het_map.extend(entries.clone());
     /// let map = het_map.get_map::<String>().unwrap();
@@ -916,9 +921,9 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// let entries = vec![
-    ///     (Key::new(1), String::from("foo")),
-    ///     (Key::new(2), String::from("bar")),
-    ///     (Key::new(3), String::from("baz")),
+    ///     (Key::new(1_usize), String::from("foo")),
+    ///     (Key::new(2_usize), String::from("bar")),
+    ///     (Key::new(3_usize), String::from("baz")),
     /// ];
     /// het_map.extend(entries.clone());
     /// let map = het_map.get_map_mut::<String>().unwrap();
@@ -945,7 +950,7 @@ where
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
-    /// let keys = vec![Key::new(1), Key::new(2), Key::new(3)];
+    /// let keys = vec![Key::new(1_usize), Key::new(2_usize), Key::new(3_usize)];
     /// let values = vec![String::from("foo"), String::from("bar"), String::from("baz")];
     /// het_map.extend(keys.iter().cloned().zip(values.iter().cloned()));
     /// let map = het_map.get_map::<String>().unwrap();
@@ -972,7 +977,7 @@ where
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
-    /// let keys = vec![Key::new(1), Key::new(2), Key::new(3)];
+    /// let keys = vec![Key::new(1_usize), Key::new(2_usize), Key::new(3_usize)];
     /// let values = vec![String::from("foo"), String::from("bar"), String::from("baz")];
     /// het_map.extend(keys.iter().cloned().zip(values.iter().cloned()));
     /// let map = het_map.get_map::<String>().unwrap();
@@ -999,7 +1004,7 @@ where
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
-    /// let keys = vec![Key::new(1), Key::new(2), Key::new(3)];
+    /// let keys = vec![Key::new(1_usize), Key::new(2_usize), Key::new(3_usize)];
     /// let values = vec![String::from("foo"), String::from("bar"), String::from("baz")];
     /// het_map.extend(keys.iter().cloned().zip(values.iter().cloned()));
     /// let map = het_map.get_map_mut::<String>().unwrap();
@@ -1031,13 +1036,13 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), String::from("Dark Souls")),
-    ///     (Key::new(2), String::from("Dark Souls II")),
-    ///     (Key::new(3), String::from("Dark Souls III")),
-    ///     (Key::new(4), String::from("Bloodborne")),
-    ///     (Key::new(5), String::from("Sekiro: Shadows Die Twice")),
-    ///     (Key::new(6), String::from("Elden Ring")),
-    ///     (Key::new(7), String::from("Nioh")),
+    ///     (Key::new(1_usize), String::from("Dark Souls")),
+    ///     (Key::new(2_usize), String::from("Dark Souls II")),
+    ///     (Key::new(3_usize), String::from("Dark Souls III")),
+    ///     (Key::new(4_usize), String::from("Bloodborne")),
+    ///     (Key::new(5_usize), String::from("Sekiro: Shadows Die Twice")),
+    ///     (Key::new(6_usize), String::from("Elden Ring")),
+    ///     (Key::new(7_usize), String::from("Nioh")),
     /// ]);
     /// assert_eq!(het_map.len::<String>(), Some(7));
     /// {
@@ -1068,18 +1073,18 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(1), String::from("Dark Souls")),
-    ///     (Key::new(2), String::from("Dark Souls II")),
-    ///     (Key::new(3), String::from("Dark Souls III")),
-    ///     (Key::new(4), String::from("Bloodborne")),
-    ///     (Key::new(5), String::from("Sekiro: Shadows Die Twice")),
-    ///     (Key::new(6), String::from("Elden Ring")),
-    ///     (Key::new(7), String::from("Nioh")),
+    ///     (Key::new(1_usize), String::from("Dark Souls")),
+    ///     (Key::new(2_usize), String::from("Dark Souls II")),
+    ///     (Key::new(3_usize), String::from("Dark Souls III")),
+    ///     (Key::new(4_usize), String::from("Bloodborne")),
+    ///     (Key::new(5_usize), String::from("Sekiro: Shadows Die Twice")),
+    ///     (Key::new(6_usize), String::from("Elden Ring")),
+    ///     (Key::new(7_usize), String::from("Nioh")),
     /// ]);
     /// let expected = HomogeneousHashMap::from([
-    ///     (Key::new(1), String::from("Dark Souls")),
-    ///     (Key::new(2), String::from("Dark Souls II")),
-    ///     (Key::new(3), String::from("Dark Souls III")),
+    ///     (Key::new(1_usize), String::from("Dark Souls")),
+    ///     (Key::new(2_usize), String::from("Dark Souls II")),
+    ///     (Key::new(3_usize), String::from("Dark Souls III")),
     /// ]);
     /// let result = {
     ///     let map = het_map.get_map_mut::<String>().unwrap();
@@ -1204,9 +1209,9 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(0), String::from("foo")),
-    ///     (Key::new(1), String::from("bar")),
-    ///     (Key::new(2), String::from("baz")),
+    ///     (Key::new(0_usize), String::from("foo")),
+    ///     (Key::new(1_usize), String::from("bar")),
+    ///     (Key::new(2_usize), String::from("baz")),
     /// ]);
     /// let map = het_map.get_map_mut::<String>().unwrap();
     ///
@@ -1239,23 +1244,23 @@ where
     ///
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
-    ///     (Key::new(0), "foo"),
-    ///     (Key::new(1), "bar"),
-    ///     (Key::new(2), "baz"),
-    ///     (Key::new(3), "quux"),
-    ///     (Key::new(4), "quuz"),
-    ///     (Key::new(5), "corge"),
-    ///     (Key::new(6), "grault"),
-    ///     (Key::new(7), "garply"),
-    ///     (Key::new(8), "waldo"),
+    ///     (Key::new(0_usize), "foo"),
+    ///     (Key::new(1_usize), "bar"),
+    ///     (Key::new(2_usize), "baz"),
+    ///     (Key::new(3_usize), "quux"),
+    ///     (Key::new(4_usize), "quuz"),
+    ///     (Key::new(5_usize), "corge"),
+    ///     (Key::new(6_usize), "grault"),
+    ///     (Key::new(7_usize), "garply"),
+    ///     (Key::new(8_usize), "waldo"),
     /// ]);
     /// let mut expected_het_map = HeterogeneousHashMap::new();
     /// expected_het_map.extend(Vec::from([
-    ///     (Key::new(0), "foo"),
-    ///     (Key::new(1), "bar"),
-    ///     (Key::new(2), "baz"),
-    ///     (Key::new(5), "corge"),
-    ///     (Key::new(8), "waldo"),
+    ///     (Key::new(0_usize), "foo"),
+    ///     (Key::new(1_usize), "bar"),
+    ///     (Key::new(2_usize), "baz"),
+    ///     (Key::new(5_usize), "corge"),
+    ///     (Key::new(8_usize), "waldo"),
     /// ]));
     /// {
     ///     let map = het_map.get_map_mut::<&str>().unwrap();
@@ -1296,12 +1301,12 @@ where
     /// let mut het_map = HeterogeneousHashMap::new();
     /// let map = het_map.get_or_insert_map_mut::<i32>();
     /// map.extend([
-    ///     (Key::new(0), 1_i32),
-    ///     (Key::new(1), 2_i32),
-    ///     (Key::new(2), 3_i32),
-    ///     (Key::new(3), 4_i32),
-    ///     (Key::new(4), 5_i32),
-    ///     (Key::new(5), 6_i32),
+    ///     (Key::new(0_usize), 1_i32),
+    ///     (Key::new(1_usize), 2_i32),
+    ///     (Key::new(2_usize), 3_i32),
+    ///     (Key::new(3_usize), 4_i32),
+    ///     (Key::new(4_usize), 5_i32),
+    ///     (Key::new(5_usize), 6_i32),
     /// ]);
     /// map.reserve(10);
     ///
@@ -1309,10 +1314,10 @@ where
     ///
     /// let old_capacity = map.capacity();
     /// map.extend([
-    ///     (Key::new(6), 7_i32),
-    ///     (Key::new(7), 8_i32),
-    ///     (Key::new(8), 9_i32),
-    ///     (Key::new(9), 10_i32),
+    ///     (Key::new(6_usize), 7_i32),
+    ///     (Key::new(7_usize), 8_i32),
+    ///     (Key::new(8_usize), 9_i32),
+    ///     (Key::new(9_usize), 10_i32),
     /// ]);
     ///
     /// assert_eq!(map.capacity(), old_capacity);
@@ -1342,12 +1347,12 @@ where
     /// let mut het_map = HeterogeneousHashMap::new();
     /// let map = het_map.get_or_insert_map_mut();
     /// map.extend([
-    ///     (Key::new(0), 1_i32),
-    ///     (Key::new(1), 2_i32),
-    ///     (Key::new(2), 3_i32),
-    ///     (Key::new(3), 4_i32),
-    ///     (Key::new(4), 5_i32),
-    ///     (Key::new(5), 6_i32),
+    ///     (Key::new(0_usize), 1_i32),
+    ///     (Key::new(1_usize), 2_i32),
+    ///     (Key::new(2_usize), 3_i32),
+    ///     (Key::new(3_usize), 4_i32),
+    ///     (Key::new(4_usize), 5_i32),
+    ///     (Key::new(5_usize), 6_i32),
     /// ]);
     /// let result = map.try_reserve(10);
     ///
@@ -1356,10 +1361,10 @@ where
     ///
     /// let old_capacity = map.capacity();
     /// map.extend([
-    ///     (Key::new(6), 7_i32),
-    ///     (Key::new(7), 8_i32),
-    ///     (Key::new(8), 9_i32),
-    ///     (Key::new(9), 10_i32),
+    ///     (Key::new(6_usize), 7_i32),
+    ///     (Key::new(7_usize), 8_i32),
+    ///     (Key::new(8_usize), 9_i32),
+    ///     (Key::new(9_usize), 10_i32),
     /// ]);
     ///
     /// assert_eq!(map.capacity(), old_capacity);
@@ -1389,7 +1394,7 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// let map = het_map.get_or_insert_with_capacity_map_mut::<i32>(10);
-    /// map.extend([(Key::new(0), 1_i32), (Key::new(1), 2_i32), (Key::new(2), 3_i32)]);
+    /// map.extend([(Key::new(0_usize), 1_i32), (Key::new(1_usize), 2_i32), (Key::new(2_usize), 3_i32)]);
     ///
     /// assert!(map.capacity() >= 10);
     ///
@@ -1426,7 +1431,7 @@ where
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// let map = het_map.get_or_insert_with_capacity_map_mut::<i32>(10);
-    /// map.extend([(Key::new(0), 1_i32), (Key::new(1), 2_i32), (Key::new(2), 3_i32)]);
+    /// map.extend([(Key::new(0_usize), 1_i32), (Key::new(1_usize), 2_i32), (Key::new(2_usize), 3_i32)]);
     ///
     /// assert!(map.capacity() >= 10);
     ///

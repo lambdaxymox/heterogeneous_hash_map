@@ -18,9 +18,9 @@ use hashbrown::hash_map;
 /// #
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.extend([
-///     (Key::new(1), 2_i32),
-///     (Key::new(2), 3_i32),
-///     (Key::new(3), 5_i32),
+///     (Key::new(1_usize), 2_i32),
+///     (Key::new(2_usize), 3_i32),
+///     (Key::new(3_usize), 5_i32),
 /// ]);
 /// let expected = vec![2_i32, 3_i32, 5_i32];
 /// let result = {
@@ -96,9 +96,9 @@ impl<'a, K, T> Default for Iter<'a, K, T> {
 /// #
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.extend([
-///     (Key::new(1), 2_i32),
-///     (Key::new(2), 3_i32),
-///     (Key::new(3), 5_i32),
+///     (Key::new(1_usize), 2_i32),
+///     (Key::new(2_usize), 3_i32),
+///     (Key::new(3_usize), 5_i32),
 /// ]);
 /// let expected = vec![2_i32, 3_i32, 5_i32];
 /// let result = {
@@ -178,12 +178,12 @@ impl<'a, K, T> Default for IterMut<'a, K, T> {
 /// #
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.extend([
-///     (Key::new(2), 'b'),
-///     (Key::new(3), 'c'),
-///     (Key::new(5), 'e'),
-///     (Key::new(7), 'g'),
+///     (Key::new(2_usize), 'b'),
+///     (Key::new(3_usize), 'c'),
+///     (Key::new(5_usize), 'e'),
+///     (Key::new(7_usize), 'g'),
 /// ]);
-/// let expected = vec![Key::new(2), Key::new(3), Key::new(5), Key::new(7)];
+/// let expected = vec![Key::new(2_usize), Key::new(3_usize), Key::new(5_usize), Key::new(7_usize)];
 /// let result = {
 ///     let map = het_map.get_map::<char>().unwrap();
 ///     let mut _result = Vec::from_iter(map.keys().cloned());
@@ -265,10 +265,10 @@ impl<'a, K, T> Default for Keys<'a, K, T> {
 /// #
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.extend([
-///     (Key::new(2), 'b'),
-///     (Key::new(3), 'c'),
-///     (Key::new(5), 'e'),
-///     (Key::new(7), 'g'),
+///     (Key::new(2_usize), 'b'),
+///     (Key::new(3_usize), 'c'),
+///     (Key::new(5_usize), 'e'),
+///     (Key::new(7_usize), 'g'),
 /// ]);
 /// let expected = vec!['b', 'c', 'e', 'g'];
 /// let result = {
@@ -351,10 +351,10 @@ impl<'a, K, T> Default for Values<'a, K, T> {
 /// #
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.extend([
-///     (Key::new(2), 'b'),
-///     (Key::new(3), 'c'),
-///     (Key::new(5), 'e'),
-///     (Key::new(7), 'g'),
+///     (Key::new(2_usize), 'b'),
+///     (Key::new(3_usize), 'c'),
+///     (Key::new(5_usize), 'e'),
+///     (Key::new(7_usize), 'g'),
 /// ]);
 /// let expected = vec!['b', 'c', 'e', 'g'];
 /// let result = {
@@ -431,9 +431,9 @@ impl<'a, K, T> Default for ValuesMut<'a, K, T> {
 /// #
 /// let mut het_map = HeterogeneousHashMap::new();
 /// let expected = vec![
-///     (Key::new(2), String::from("foo")),
-///     (Key::new(3), String::from("bar")),
-///     (Key::new(5), String::from("baz")),
+///     (Key::new(2_usize), String::from("foo")),
+///     (Key::new(3_usize), String::from("bar")),
+///     (Key::new(5_usize), String::from("baz")),
 /// ];
 /// het_map.extend(expected.clone());
 ///
@@ -552,9 +552,10 @@ where
 ///
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.extend([
-///     (Key::new(0), 1_i32), (Key::new(1), 2_i32),  (Key::new(2),  3_i32),  (Key::new(3), 4_i32),
-///     (Key::new(4), 5_i32), (Key::new(5), 6_i32),  (Key::new(6),  7_i32),  (Key::new(7), 8_i32),
-///     (Key::new(8), 9_i32), (Key::new(9), 10_i32), (Key::new(10), 11_i32), (Key::new(11), 12_i32),
+///     (Key::new(0_usize), 1_i32),  (Key::new(1_usize),  2_i32),  (Key::new(2_usize),  3_i32),
+///     (Key::new(3_usize), 4_i32),  (Key::new(4_usize),  5_i32),  (Key::new(5_usize),  6_i32),
+///     (Key::new(6_usize), 7_i32),  (Key::new(7_usize),  8_i32),  (Key::new(8_usize),  9_i32),
+///     (Key::new(9_usize), 10_i32), (Key::new(10_usize), 11_i32), (Key::new(11_usize), 12_i32),
 /// ]);
 /// let expected = vec![2_i32, 3_i32, 5_i32, 7_i32, 11_i32];
 /// let result = {
@@ -811,7 +812,7 @@ where
     }
 }
 
-/// A moving iterator over the keys of the entries of the index map.
+/// A moving iterator over the keys of the entries of the hash map.
 ///
 /// Moving key iterators are created by the [`HomogeneousHashMap::into_keys`] method.
 ///
@@ -919,7 +920,7 @@ where
     }
 }
 
-/// A moving iterator over the keys of the entries of the index map.
+/// A moving iterator over the keys of the entries of the hash map.
 ///
 /// Moving key iterators are created by the [`HomogeneousHashMap::into_keys`] method.
 ///

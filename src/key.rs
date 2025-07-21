@@ -17,19 +17,19 @@ use core::marker;
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.insert_type::<i32>();
 ///
-/// let key: Key<usize, i32> = Key::new(1);
+/// let key: Key<usize, i32> = Key::new(1_usize);
 ///
-/// assert!(!het_map.contains_key::<i32, _>(&Key::new(1)));
-/// assert!(!het_map.contains_key::<char, _>(&Key::new(1)));
-/// assert_eq!(het_map.get::<i32, _>(&Key::new(1)),  None);
-/// assert_eq!(het_map.get::<char, _>(&Key::new(1)), None);
+/// assert!(!het_map.contains_key::<i32, _>(&Key::new(1_usize)));
+/// assert!(!het_map.contains_key::<char, _>(&Key::new(1_usize)));
+/// assert_eq!(het_map.get::<i32, _>(&Key::new(1_usize)),  None);
+/// assert_eq!(het_map.get::<char, _>(&Key::new(1_usize)), None);
 ///
 /// het_map.insert::<i32>(key, 3_i32);
 ///
-/// assert!(het_map.contains_key::<i32, _>(&Key::new(1)));
-/// assert!(!het_map.contains_key::<char, _>(&Key::new(1)));
-/// assert_eq!(het_map.get::<i32, _>(&Key::new(1)),  Some(&3_i32));
-/// assert_eq!(het_map.get::<char, _>(&Key::new(1)), None);
+/// assert!(het_map.contains_key::<i32, _>(&Key::new(1_usize)));
+/// assert!(!het_map.contains_key::<char, _>(&Key::new(1_usize)));
+/// assert_eq!(het_map.get::<i32, _>(&Key::new(1_usize)),  Some(&3_i32));
+/// assert_eq!(het_map.get::<char, _>(&Key::new(1_usize)), None);
 /// ```
 #[repr(transparent)]
 pub struct Key<K, T> {
