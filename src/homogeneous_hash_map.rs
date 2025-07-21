@@ -10,6 +10,9 @@ use crate::iterator::{
     Keys,
     Values,
     ValuesMut,
+    IntoIter,
+    IntoKeys,
+    IntoValues,
 };
 use crate::key::Key;
 
@@ -60,7 +63,6 @@ use core::hash;
 /// assert_eq!(result, expected);
 /// ```
 #[cfg(feature = "std")]
-#[repr(transparent)]
 pub struct HomogeneousHashMap<K, T, S = hash::RandomState>
 where
     K: any::Any,
@@ -72,7 +74,6 @@ where
 }
 
 #[cfg(not(feature = "std"))]
-#[repr(transparent)]
 pub struct HomogeneousHashMap<K, T, S>
 where
     K: any::Any,
@@ -1064,7 +1065,6 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap, HeterogeneousHashMap};
-    /// # use std::collections::HashMap;
     /// #
     /// let mut het_map = HeterogeneousHashMap::new();
     /// het_map.extend([
@@ -1094,6 +1094,102 @@ where
         F: FnMut(&Key<K, T>, &mut T) -> bool,
     {
         ExtractIf::new(self.inner.extract_if(.., keep))
+    }
+
+    /// Returns a moving iterator over the keys of the hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+    /// #
+    /// let mut map: HomogeneousHashMap<String, String> = HomogeneousHashMap::new();
+    /// map.insert(
+    ///     Key::new(String::from("Geralt of Rivia")),
+    ///     String::from("This world doesn't need a hero. It needs a professional."),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Locke Cole")),
+    ///     String::from("I’m a treasure hunter, not a thief!"),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Astarion")),
+    ///     String::from("You're right. I can be better than him, but I'm not above enjoying this."),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Karlach")),
+    ///     String::from("Fine, I guess I’ll just stay here and eat dirt or whatever."),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Beckett")),
+    ///     String::from("I consider myself something of an investigator. A scholar of sorts."),
+    /// );
+    ///
+    /// let expected = Vec::from([
+    ///     String::from("Astarion"),
+    ///     String::from("Beckett"),
+    ///     String::from("Geralt of Rivia"),
+    ///     String::from("Karlach"),
+    ///     String::from("Locke Cole"),
+    /// ]);
+    /// let result = {
+    ///     let mut _result: Vec<String> = map.into_keys().map(|k| k.id().clone()).collect();
+    ///     _result.sort();
+    ///     _result
+    /// };
+    ///
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn into_keys(self) -> IntoKeys<K, T> {
+        IntoKeys::new(self.inner.into_keys())
+    }
+
+    /// Returns a moving iterator over the values of the hash map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+    /// #
+    /// let mut map: HomogeneousHashMap<String, String> = HomogeneousHashMap::new();
+    /// map.insert(
+    ///     Key::new(String::from("Geralt of Rivia")),
+    ///     String::from("This world doesn't need a hero. It needs a professional."),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Locke Cole")),
+    ///     String::from("I’m a treasure hunter, not a thief!"),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Astarion")),
+    ///     String::from("You're right. I can be better than him, but I'm not above enjoying this."),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Karlach")),
+    ///     String::from("Fine, I guess I’ll just stay here and eat dirt or whatever."),
+    /// );
+    /// map.insert(
+    ///     Key::new(String::from("Beckett")),
+    ///     String::from("I consider myself something of an investigator. A scholar of sorts."),
+    /// );
+    ///
+    /// let expected = Vec::from([
+    ///     String::from("Fine, I guess I’ll just stay here and eat dirt or whatever."),
+    ///     String::from("I consider myself something of an investigator. A scholar of sorts."),
+    ///     String::from("I’m a treasure hunter, not a thief!"),
+    ///     String::from("This world doesn't need a hero. It needs a professional."),
+    ///     String::from("You're right. I can be better than him, but I'm not above enjoying this."),
+    /// ]);
+    /// let result = {
+    ///     let mut _result: Vec<String> = map.into_values().collect();
+    ///     _result.sort();
+    ///     _result
+    /// };
+    ///
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn into_values(self) -> IntoValues<K, T> {
+        IntoValues::new(self.inner.into_values())
     }
 
     /// Removes all the entries from the hash map.
@@ -1477,5 +1573,50 @@ where
 {
     fn default() -> Self {
         HomogeneousHashMap::with_hasher(S::default())
+    }
+}
+
+impl<K, T, S> IntoIterator for HomogeneousHashMap<K, T, S>
+where
+    K: any::Any,
+    T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    type Item = (Key<K, T>, T);
+    type IntoIter = IntoIter<Key<K, T>, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIter::new(self.inner.into_iter())
+    }
+}
+
+impl<'a, K, T, S> IntoIterator for &'a HomogeneousHashMap<K, T, S>
+where
+    K: any::Any,
+    T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    type Item = (&'a Key<K, T>, &'a T);
+    type IntoIter = Iter<'a, K, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+impl<'a, K, T, S> IntoIterator for &'a mut HomogeneousHashMap<K, T, S>
+where
+    K: any::Any,
+    T: any::Any,
+    S: any::Any + hash::BuildHasher + Send + Sync + Clone,
+    S::Hasher: any::Any + hash::Hasher + Send + Sync,
+{
+    type Item = (&'a Key<K, T>, &'a mut T);
+    type IntoIter = IterMut<'a, K, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
     }
 }

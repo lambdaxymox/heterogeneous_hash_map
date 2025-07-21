@@ -695,3 +695,334 @@ impl<'a> Default for TypeMetadataIter<'a> {
         Self::new(Default::default())
     }
 }
+
+/// A moving iterator over the entries of a hash map.
+///
+/// Moving iterators are created by the [`HomogeneousHashMap::into_iter`] method.
+///
+/// # Examples
+///
+/// ```
+/// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+/// #
+/// let mut map: HomogeneousHashMap<usize, i32> = HomogeneousHashMap::from([
+///     (Key::new(0_usize), 1_i32),
+///     (Key::new(1_usize), 2_i32),
+///     (Key::new(2_usize), 3_i32),
+///     (Key::new(3_usize), 4_i32),
+/// ]);
+/// let expected = Vec::from([
+///     (Key::new(0_usize), 1_i32),
+///     (Key::new(1_usize), 2_i32),
+///     (Key::new(2_usize), 3_i32),
+///     (Key::new(3_usize), 4_i32),
+/// ]);
+/// let result = {
+///     let mut _result: Vec<(Key<usize, i32>, i32)> = map.into_iter().collect();
+///     _result.sort();
+///     _result
+/// };
+///
+/// assert_eq!(result, expected);
+/// ```
+#[derive(Clone)]
+pub struct IntoIter<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    iter: opaque::index_map::map::IntoIter<K, T>,
+}
+
+impl<K, T> IntoIter<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    /// Constructs new a moving iterator..
+    #[inline]
+    pub(crate) const fn new(iter: opaque::index_map::map::IntoIter<K, T>) -> Self {
+        Self { iter }
+    }
+}
+
+impl<K, T> Iterator for IntoIter<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    type Item = (K, T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+impl<K, T> DoubleEndedIterator for IntoIter<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.iter.next_back()
+    }
+
+    fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
+        self.iter.nth_back(n)
+    }
+}
+
+impl<K, T> ExactSizeIterator for IntoIter<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<K, T> iter::FusedIterator for IntoIter<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+}
+
+impl<K, T> fmt::Debug for IntoIter<K, T>
+where
+    K: any::Any + fmt::Debug,
+    T: any::Any + fmt::Debug,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(&self.iter, formatter)
+    }
+}
+
+impl<K, T> Default for IntoIter<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn default() -> Self {
+        Self {
+            iter: Default::default(),
+        }
+    }
+}
+
+/// A moving iterator over the keys of the entries of the index map.
+///
+/// Moving key iterators are created by the [`HomogeneousHashMap::into_keys`] method.
+///
+/// # Examples
+///
+/// ```
+/// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+/// #
+/// let mut map: HomogeneousHashMap<&str, i32> = HomogeneousHashMap::from([
+///     (Key::new("foo"),  1_i32),
+///     (Key::new("bar"),  2_i32),
+///     (Key::new("baz"),  3_i32),
+///     (Key::new("quux"), 4_i32),
+/// ]);
+/// let expected = Vec::from([Key::new("bar"), Key::new("baz"), Key::new("foo"), Key::new("quux")]);
+/// let result = {
+///     let mut _result: Vec<Key<&str, i32>> = map.into_keys().collect();
+///     _result.sort();
+///     _result
+/// };
+///
+/// assert_eq!(result, expected);
+/// ```
+pub struct IntoKeys<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    iter: opaque::index_map::map::IntoKeys<Key<K, T>, T>,
+}
+
+impl<K, T> IntoKeys<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    /// Constructs a new moving key iterator.
+    pub(crate) const fn new(iter: opaque::index_map::map::IntoKeys<Key<K, T>, T>) -> Self {
+        Self { iter }
+    }
+}
+
+impl<K, T> Iterator for IntoKeys<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    type Item = Key<K, T>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+impl<K, T> DoubleEndedIterator for IntoKeys<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.iter.next_back()
+    }
+
+    fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
+        self.iter.nth_back(n)
+    }
+}
+
+impl<K, T> ExactSizeIterator for IntoKeys<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<K, T> iter::FusedIterator for IntoKeys<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+}
+
+impl<K, T> fmt::Debug for IntoKeys<K, T>
+where
+    K: any::Any + fmt::Debug,
+    T: any::Any,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(&self.iter, formatter)
+    }
+}
+
+impl<K, T> Default for IntoKeys<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn default() -> Self {
+        Self {
+            iter: Default::default(),
+        }
+    }
+}
+
+/// A moving iterator over the keys of the entries of the index map.
+///
+/// Moving key iterators are created by the [`HomogeneousHashMap::into_keys`] method.
+///
+/// # Examples
+///
+/// ```
+/// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+/// #
+/// let mut map: HomogeneousHashMap<&str, i32> = HomogeneousHashMap::from([
+///     (Key::new("foo"),  1_i32),
+///     (Key::new("bar"),  2_i32),
+///     (Key::new("baz"),  3_i32),
+///     (Key::new("quux"), 4_i32),
+/// ]);
+/// let expected = Vec::from([1_i32, 2_i32, 3_i32, 4_i32]);
+/// let result = {
+///     let mut _result: Vec<i32> = map.into_values().collect();
+///     _result.sort();
+///     _result
+/// };
+///
+/// assert_eq!(result, expected);
+/// ```
+pub struct IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    iter: opaque::index_map::map::IntoValues<Key<K, T>, T>,
+}
+
+impl<K, T> IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    /// Constructs a new moving key iterator.
+    pub(crate) const fn new(iter: opaque::index_map::map::IntoValues<Key<K, T>, T>) -> Self {
+        Self { iter }
+    }
+}
+
+impl<K, T> Iterator for IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
+    }
+}
+
+impl<K, T> DoubleEndedIterator for IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.iter.next_back()
+    }
+
+    fn nth_back(&mut self, n: usize) -> Option<Self::Item> {
+        self.iter.nth_back(n)
+    }
+}
+
+impl<K, T> ExactSizeIterator for IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<K, T> iter::FusedIterator for IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+}
+
+impl<K, T> fmt::Debug for IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any + fmt::Debug,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(&self.iter, formatter)
+    }
+}
+
+impl<K, T> Default for IntoValues<K, T>
+where
+    K: any::Any,
+    T: any::Any,
+{
+    fn default() -> Self {
+        Self {
+            iter: Default::default(),
+        }
+    }
+}

@@ -32,7 +32,6 @@ use core::marker;
 /// assert_eq!(het_map.get::<char, _>(&Key::new(1)), None);
 /// ```
 #[repr(transparent)]
-#[derive(Debug)]
 pub struct Key<K, T> {
     id: K,
     _marker: marker::PhantomData<T>,
@@ -147,6 +146,15 @@ where
 {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
         Ord::cmp(&self.id, &other.id)
+    }
+}
+
+impl<K, T> fmt::Debug for Key<K, T>
+where
+    K: fmt::Debug,
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.debug_struct("Key").field("id", &self.id).finish()
     }
 }
 
