@@ -2159,6 +2159,7 @@ where
     /// let mut het_map: HeterogeneousHashMap<&str> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<Equipment>();
     /// het_map.extend(equipment.clone());
+    ///
     /// let expected = Vec::from([
     ///     Key::new("accessory_1"),
     ///     Key::new("accessory_2"),
@@ -2210,6 +2211,7 @@ where
     /// let mut het_map: HeterogeneousHashMap<&str> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<Equipment>();
     /// het_map.extend(equipment.clone());
+    ///
     /// let expected = {
     ///     let mut _expected = Vec::from_iter(equipment.iter().map(|(_k, v)| v).cloned());
     ///     _expected.sort();
