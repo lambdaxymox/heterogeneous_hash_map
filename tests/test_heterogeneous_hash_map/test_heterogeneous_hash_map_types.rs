@@ -1,7 +1,4 @@
-#![no_std]
-extern crate std;
-
-use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+use heterogeneous_hash_map::HeterogeneousHashMap;
 
 #[cfg(feature = "nightly")]
 use std::alloc;

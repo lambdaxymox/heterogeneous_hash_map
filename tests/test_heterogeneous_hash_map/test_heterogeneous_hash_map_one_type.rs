@@ -1,6 +1,3 @@
-#![no_std]
-extern crate std;
-
 use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
 
 #[cfg(feature = "nightly")]
