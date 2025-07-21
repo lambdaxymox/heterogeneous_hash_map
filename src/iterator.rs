@@ -549,6 +549,20 @@ where
 ///     }
 ///     true
 /// }
+/// #
+/// # assert!(is_prime(2_i32));
+/// # assert!(is_prime(3_i32));
+/// # assert!(!is_prime(4_i32));
+/// # assert!(is_prime(5_i32));
+/// # assert!(!is_prime(6_i32));
+/// # assert!(is_prime(7_i32));
+/// # assert!(!is_prime(8_i32));
+/// # assert!(!is_prime(9_i32));
+/// # assert!(!is_prime(10_i32));
+/// # assert!(is_prime(11_i32));
+/// # assert!(!is_prime(12_i32));
+/// # assert!(is_prime(13_i32));
+/// #
 ///
 /// let mut het_map = HeterogeneousHashMap::new();
 /// het_map.extend([
