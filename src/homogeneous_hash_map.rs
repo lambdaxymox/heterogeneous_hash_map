@@ -93,6 +93,7 @@ where
 {
     /// Constructs a new hash map.
     #[inline]
+    #[must_use]
     pub(crate) const fn from_inner(inner: opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>) -> Self {
         Self { inner }
     }
@@ -130,6 +131,7 @@ where
     /// assert!(map.is_empty());
     /// ```
     #[inline]
+    #[must_use]
     pub fn with_hasher(build_hasher: S) -> Self {
         Self {
             inner: opaque::index_map::TypeProjectedIndexMap::with_hasher(build_hasher),
@@ -158,6 +160,7 @@ where
     /// assert!(map.capacity() >= old_capacity);
     /// ```
     #[inline]
+    #[must_use]
     pub fn with_capacity_and_hasher(capacity: usize, build_hasher: S) -> Self {
         Self {
             inner: opaque::index_map::TypeProjectedIndexMap::with_capacity_and_hasher(capacity, build_hasher),
@@ -183,6 +186,7 @@ where
     /// assert!(map.is_empty());
     /// ```
     #[inline]
+    #[must_use]
     pub fn new() -> Self {
         Self::with_hasher(hash::RandomState::new())
     }
@@ -208,6 +212,7 @@ where
     /// assert!(map.capacity() >= old_capacity);
     /// ```
     #[inline]
+    #[must_use]
     pub fn with_capacity(capacity: usize) -> Self {
         Self::with_capacity_and_hasher(capacity, hash::RandomState::new())
     }
@@ -251,6 +256,7 @@ where
     ///
     /// assert!(map.capacity() >= old_capacity);
     /// ```
+    #[inline]
     pub fn capacity(&self) -> usize {
         self.inner.capacity()
     }
@@ -279,6 +285,7 @@ where
     ///
     /// assert_eq!(map.len(), 3);
     /// ```
+    #[inline]
     pub fn len(&self) -> usize {
         self.inner.len()
     }
@@ -307,6 +314,7 @@ where
     ///
     /// assert!(!map.is_empty());
     /// ```
+    #[inline]
     pub fn is_empty(&self) -> bool {
         self.inner.is_empty()
     }
@@ -360,6 +368,7 @@ where
     /// assert!(!map.contains_key(&Key::new(4_usize)));
     /// assert!(!map.contains_key(&Key::new(usize::MAX)));
     /// ```
+    #[inline]
     pub fn contains_key<Q>(&self, key: &Q) -> bool
     where
         Key<K, T>: Borrow<Q>,
@@ -394,6 +403,7 @@ where
     /// assert_eq!(map.get(&Key::new(3_usize)), Some(&4_f64));
     /// assert_eq!(map.get(&Key::new(4_usize)), None);
     /// ```
+    #[inline]
     pub fn get<Q>(&self, key: &Q) -> Option<&T>
     where
         Key<K, T>: Borrow<Q>,
@@ -428,6 +438,7 @@ where
     /// assert_eq!(map.get_key_value(&Key::new(3_usize)), Some((&Key::new(3_usize), &4_f64)));
     /// assert_eq!(map.get_key_value(&Key::new(4_usize)), None);
     /// ```
+    #[inline]
     pub fn get_key_value<Q>(&self, key: &Q) -> Option<(&Key<K, T>, &T)>
     where
         Key<K, T>: Borrow<Q>,
@@ -480,6 +491,7 @@ where
     ///     assert_eq!(map.get_mut(&Key::new(4_usize)), None);
     /// }
     /// ```
+    #[inline]
     pub fn get_mut<Q>(&mut self, key: &Q) -> Option<&mut T>
     where
         Key<K, T>: Borrow<Q>,
@@ -616,6 +628,7 @@ where
     /// assert_eq!(result[2], Some(&mut String::from("Nioh")));
     /// assert_eq!(result[3], Some(&mut String::from("Elden Ring")));
     /// ```
+    #[inline]
     #[track_caller]
     pub fn get_disjoint_mut<Q, const N: usize>(&mut self, ks: [&Q; N]) -> [Option<&'_ mut T>; N]
     where
@@ -700,6 +713,7 @@ where
     ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// ```
+    #[inline]
     pub fn insert(&mut self, key: Key<K, T>, value: T) -> Option<T>
     where
         K: hash::Hash + Eq,
@@ -786,6 +800,7 @@ where
     ///     assert_eq!(map.get(&Key::new(4_usize)), None);
     /// }
     /// ```
+    #[inline]
     pub fn remove<Q>(&mut self, key: &Q) -> Option<T>
     where
         Key<K, T>: Borrow<Q>,
@@ -874,6 +889,7 @@ where
     ///     assert_eq!(map.get_key_value(&Key::new(4_usize)), None);
     /// }
     /// ```
+    #[inline]
     pub fn remove_entry<Q>(&mut self, key: &Q) -> Option<(Key<K, T>, T)>
     where
         Key<K, T>: Borrow<Q>,
@@ -1225,6 +1241,7 @@ where
     /// assert_eq!(map.len(), 0);
     /// assert_eq!(map.capacity(), old_capacity);
     /// ```
+    #[inline]
     pub fn clear(&mut self) {
         self.inner.clear();
     }
@@ -1271,6 +1288,7 @@ where
     ///
     /// assert_eq!(result, expected);
     /// ```
+    #[inline]
     pub fn retain<F>(&mut self, keep: F)
     where
         F: FnMut(&Key<K, T>, &mut T) -> bool,
@@ -1369,6 +1387,7 @@ where
     ///
     /// assert_eq!(map.capacity(), old_capacity);
     /// ```
+    #[inline]
     pub fn try_reserve(&mut self, additional: usize) -> Result<(), TryReserveError> {
         fn from_opaque_try_reserve_error(error: opaque::error::TryReserveError) -> TryReserveError {
             TryReserveError::from(match error.kind() {
@@ -1402,6 +1421,7 @@ where
     ///
     /// assert!(map.capacity() >= 3);
     /// ```
+    #[inline]
     pub fn shrink_to_fit(&mut self) {
         self.inner.shrink_to_fit();
     }
@@ -1443,6 +1463,7 @@ where
     ///
     /// assert!(map.capacity() >= 3);
     /// ```
+    #[inline]
     pub fn shrink_to(&mut self, min_capacity: usize) {
         self.inner.shrink_to(min_capacity);
     }

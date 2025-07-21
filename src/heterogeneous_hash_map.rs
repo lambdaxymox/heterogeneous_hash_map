@@ -304,6 +304,7 @@ where
     /// assert_eq!(het_map.len_types(), 1);
     /// assert!(het_map.capacity_types() > 0);
     /// ```
+    #[must_use]
     pub fn with_hasher(build_hasher: S) -> Self {
         Self {
             map: hash_map::HashMap::with_hasher(build_hasher.clone()),
@@ -337,6 +338,7 @@ where
     /// assert_eq!(het_map.len_types(), 3);
     /// assert_eq!(het_map.capacity_types(), old_capacity);
     /// ```
+    #[must_use]
     pub fn with_capacity_and_hasher(capacity: usize, build_hasher: S) -> Self {
         Self {
             map: hash_map::HashMap::with_capacity_and_hasher(capacity, build_hasher.clone()),
@@ -371,6 +373,7 @@ where
     /// assert_eq!(het_map.len_types(), 1);
     /// assert!(het_map.capacity_types() > 0);
     /// ```
+    #[must_use]
     pub fn new() -> Self {
         Self::with_hasher(hash::RandomState::new())
     }
@@ -398,6 +401,7 @@ where
     ///
     /// assert!(het_map.capacity_types() >= old_capacity);
     /// ```
+    #[must_use]
     pub fn with_capacity(capacity: usize) -> Self {
         Self::with_capacity_and_hasher(capacity, hash::RandomState::new())
     }
