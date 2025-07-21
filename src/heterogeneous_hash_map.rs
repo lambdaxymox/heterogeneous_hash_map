@@ -2427,7 +2427,7 @@ where
     /// ```
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
     /// #
-    /// // Determines whether an integer is prime.
+    /// // Determines whether an integer is a prime number.
     /// fn is_prime(n: i32) -> bool {
     ///     if n <= 1 { return false; }
     ///     if n == 2 { return true; }
