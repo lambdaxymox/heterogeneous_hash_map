@@ -559,8 +559,8 @@ where
         self.map.contains_key(&type_id)
     }
 
-    /// Returns a reference to the hash map containing all values of a given type from the
-    /// heterogeneous hash map.
+    /// Returns a reference to the homogeneous hash map containing all values of a given type
+    /// from the heterogeneous hash map.
     ///
     /// # Panics
     ///
@@ -588,8 +588,8 @@ where
         HomogeneousHashMap::from_inner_ref(map)
     }
 
-    /// Returns a mutable reference to the hash map containing all values of a given type from the
-    /// heterogeneous hash map.
+    /// Returns a mutable reference to the homogeneous hash map containing all values of a given
+    /// type from the heterogeneous hash map.
     ///
     /// # Panics
     ///
@@ -620,12 +620,12 @@ where
         HomogeneousHashMap::from_inner_ref_mut(map)
     }
 
-    /// Returns a reference to the hash map containing all values of a given type from the
-    /// heterogeneous hash map.
+    /// Returns a reference to the homogeneous hash map containing all values of a given
+    /// type from the heterogeneous hash map.
     ///
     /// If `T` exists in the heterogeneous hash map, this method returns `Some(&map)`, where
-    /// `map` is the hash map containing all values of type `T`. If `T` does not exist in the
-    /// heterogeneous map, this method returns `None`.
+    /// `map` is the homogeneous hash map containing all values of type `T`. If `T` does not exist
+    /// in the heterogeneous map, this method returns `None`.
     ///
     /// # Examples
     ///
@@ -671,12 +671,12 @@ where
         Some(HomogeneousHashMap::from_inner_ref(map))
     }
 
-    /// Returns a mutable reference to the hash map containing all values of a given type from the
-    /// heterogeneous hash map.
+    /// Returns a mutable reference to the homogeneous hash map containing all values of a given
+    /// type from the heterogeneous hash map.
     ///
     /// If `T` exists in the heterogeneous hash map, this method returns `Some(&mut map)`, where
-    /// `map` is the hash map containing all values of type `T`. If `T` does not exist in the
-    /// heterogeneous map, this method returns `None`.
+    /// `map` is the homogeneous hash map containing all values of type `T`. If `T` does not exist
+    /// in the heterogeneous map, this method returns `None`.
     ///
     /// # Examples
     ///
@@ -728,8 +728,8 @@ where
         Some(HomogeneousHashMap::from_inner_ref_mut(map))
     }
 
-    /// Returns a mutable reference to the hash map containing all values of a given type from the
-    /// heterogeneous hash map.
+    /// Returns a mutable reference to the homogeneous hash map containing all values of a given
+    /// type from the heterogeneous hash map.
     ///
     /// If the type `T` does not exist in the heterogeneous hash map, this method inserts the type
     /// `T` into the map.
@@ -780,8 +780,8 @@ where
         self.get_map_mut::<T>().unwrap()
     }
 
-    /// Returns a mutable reference to the hash map containing all values of a given type from the
-    /// heterogeneous hash map.
+    /// Returns a mutable reference to the homogeneous hash map containing all values of a given
+    /// type from the heterogeneous hash map.
     ///
     /// If the type `T` does not exist in the heterogeneous hash map, this method inserts the type
     /// `T` into the map with a minimum capacity specified by `capacity`.
@@ -929,14 +929,14 @@ where
         Some(removed_count)
     }
 
-    /// Removes a type from a heterogeneous hash map and returns them as a hash map.
+    /// Removes a type from a heterogeneous hash map and returns them as a homogeneous hash map.
     ///
     /// This method behaves as follows:
     ///
     /// * If the given type `T` exists in the heterogeneous hash map, this method removes every
     ///   value of type `T` from the map, deallocates all memory for values of type `T`, and
-    ///   returns `Some(map)`, where `map` is a hash map containing all the removed entries of
-    ///   type `T` from the heterogeneous hash map.
+    ///   returns `Some(map)`, where `map` is a homogeneous hash map containing all the removed
+    ///   entries of type `T` from the heterogeneous hash map.
     /// * If the given type `T` does not exist in the heterogeneous hash map, this method returns
     ///   `None`.
     ///
