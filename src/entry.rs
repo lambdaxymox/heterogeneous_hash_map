@@ -411,7 +411,7 @@ where
     /// // The `and_modify` method has no effect on vacant entries.
     /// map.entry(Key::new(&"bar")).and_modify(|e| *e = 55_i32).or_insert(44_i32);
     ///
-    /// assert_eq!(map.get(&"bar"), Some(&44));
+    /// assert_eq!(map.get(&"bar"), Some(&44_i32));
     /// ```
     ///
     /// Using this method with a heterogeneous hash map.
@@ -431,7 +431,7 @@ where
     /// // The `and_modify` method has no effect on vacant entries.
     /// het_map.entry_or_insert_type::<i32>(Key::new(&"bar")).and_modify(|e| *e = 55_i32).or_insert(44_i32);
     ///
-    /// assert_eq!(het_map.get::<i32, _>(&"bar"), Some(&44));
+    /// assert_eq!(het_map.get::<i32, _>(&"bar"), Some(&44_i32));
     /// ```
     pub fn and_modify<F>(mut self, f: F) -> Self
     where
