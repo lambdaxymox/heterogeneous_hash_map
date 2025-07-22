@@ -1719,7 +1719,7 @@ fn test_heterogeneous_hash_map_two_types_keys6() {
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_keys7() {
-    let expected = std::vec![];
+    let expected: Vec<Key<usize, i32>> = std::vec![];
     let mut het_map = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();
@@ -1732,7 +1732,7 @@ fn test_heterogeneous_hash_map_two_types_keys7() {
 
 #[test]
 fn test_heterogeneous_hash_map_two_types_keys8() {
-    let expected = std::vec![];
+    let expected: Vec<Key<usize, String>> = std::vec![];
     let mut het_map = HeterogeneousHashMap::new();
     het_map.insert_type::<i32>();
     het_map.insert_type::<String>();

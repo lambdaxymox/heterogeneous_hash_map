@@ -126,6 +126,15 @@ where
     }
 }
 
+impl<K, T> PartialEq<K> for Key<K, T>
+where
+    K: PartialEq,
+{
+    fn eq(&self, other: &K) -> bool {
+        &self.id == other
+    }
+}
+
 impl<K, T> Eq for Key<K, T>
 where
     K: Eq,

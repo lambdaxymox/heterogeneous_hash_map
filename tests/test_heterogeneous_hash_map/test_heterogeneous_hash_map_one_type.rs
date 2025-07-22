@@ -609,7 +609,7 @@ fn test_heterogeneous_hash_map_one_type_keys3() {
 
 #[test]
 fn test_heterogeneous_hash_map_one_type_keys4() {
-    let expected = std::vec![];
+    let expected: Vec<Key<usize, String>> = std::vec![];
     let mut het_map = HeterogeneousHashMap::new();
     het_map.insert_type::<String>();
 

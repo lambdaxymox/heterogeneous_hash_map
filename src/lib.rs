@@ -14,10 +14,12 @@ mod iterator;
 mod metadata;
 mod homogeneous_hash_map;
 mod heterogeneous_hash_map;
+mod entry;
 
 pub use crate::heterogeneous_hash_map::*;
 pub use crate::homogeneous_hash_map::*;
+pub use crate::entry::*;
+pub use crate::error::*;
 pub use crate::iterator::*;
 pub use crate::key::Key;
 pub use crate::metadata::*;
-pub use crate::error::*;

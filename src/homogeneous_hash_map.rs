@@ -2,6 +2,11 @@ use crate::error::{
     TryReserveErrorKind,
     TryReserveError,
 };
+use crate::entry::{
+    Entry,
+    OccupiedEntry,
+    VacantEntry,
+};
 use crate::iterator::{
     Drain,
     ExtractIf,
@@ -32,12 +37,12 @@ use core::hash;
 /// This type acts similarly to a standard library [`HashMap`]. This type of hash map can also
 /// be constructed for testing purposes, but these are primarily accessed by calling the
 /// [`HeterogeneousHashMap::get_map`], [`HeterogeneousHashMap::get_map_mut`],
-/// [`HeterogeneousHashMap::get_map_unchecked`], and [`HeterogeneousHashMap::get_map_mut_unchecked`]
-/// methods.
+/// [`HeterogeneousHashMap::get_map_unchecked`], and
+/// [`HeterogeneousHashMap::get_map_mut_unchecked`] methods.
 ///
 /// # Examples
 ///
-/// Getting a hash map from a heterogeneous hash map.
+/// Getting a homogeneous hash map from a heterogeneous hash map.
 ///
 /// ```
 /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
@@ -53,6 +58,31 @@ use core::hash;
 /// ];
 /// het_map.extend(expected.clone());
 /// let map = het_map.get_map::<u32>().unwrap();
+/// let result = {
+///     let mut _result = Vec::from_iter(map.iter().map(|(k, v)| (k.clone(), v.clone())));
+///     _result.sort();
+///     _result
+/// };
+///
+/// assert_eq!(result.len(), expected.len());
+/// assert_eq!(result, expected);
+/// ```
+///
+/// Working directly with a homogeneous hash map.
+///
+/// ```
+/// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+/// #
+/// let mut map = HomogeneousHashMap::new();
+/// let expected = vec![
+///     (Key::new(0_usize), 2_u32),
+///     (Key::new(1_usize), 3_u32),
+///     (Key::new(2_usize), 5_u32),
+///     (Key::new(3_usize), 7_u32),
+///     (Key::new(4_usize), 11_u32),
+///     (Key::new(5_usize), 13_u32),
+/// ];
+/// map.extend(expected.clone());
 /// let result = {
 ///     let mut _result = Vec::from_iter(map.iter().map(|(k, v)| (k.clone(), v.clone())));
 ///     _result.sort();
@@ -91,20 +121,20 @@ where
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    /// Constructs a new hash map.
+    /// Constructs a new homogeneous hash map.
     #[inline]
     #[must_use]
     pub(crate) const fn from_inner(inner: opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>) -> Self {
         Self { inner }
     }
 
-    /// Constructs a new hash map.
+    /// Constructs a new homogeneous hash map.
     #[inline]
     pub(crate) const fn from_inner_ref(map: &opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>) -> &Self {
         unsafe { &*(map as *const opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S> as *const Self) }
     }
 
-    /// Constructs a new hash map.
+    /// Constructs a new homogeneous hash map.
     #[inline]
     pub(crate) const fn from_inner_ref_mut(map: &mut opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S>) -> &mut Self {
         unsafe { &mut *(map as *const opaque::index_map::TypeProjectedIndexMap<Key<K, T>, T, S> as *mut Self) }
@@ -118,7 +148,7 @@ where
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    /// Constructs a new hash map with the given hash builder.
+    /// Constructs a new homogeneous hash map with the given hash builder.
     ///
     /// # Examples
     ///
@@ -138,7 +168,8 @@ where
         }
     }
 
-    /// Constructs a new hash map with at least the given capacity with the given hash builder.
+    /// Constructs a new homogeneous hash map with at least the given capacity with the given hash
+    /// builder.
     ///
     /// # Examples
     ///
@@ -174,7 +205,7 @@ where
     K: any::Any,
     T: any::Any,
 {
-    /// Constructs a new hash map.
+    /// Constructs a new homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -191,7 +222,7 @@ where
         Self::with_hasher(hash::RandomState::new())
     }
 
-    /// Constructs a new hash map with at least the given capacity.
+    /// Constructs a new homogeneous hash map with at least the given capacity.
     ///
     /// # Examples
     ///
@@ -225,10 +256,10 @@ where
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    /// Returns the capacity of the hash map.
+    /// Returns the capacity of the homogeneous hash map.
     ///
-    /// The **capacity** of a hash map is the maximum number of entries it can contain without
-    /// reallocating memory.
+    /// The **capacity** of a homogeneous hash map is the maximum number of entries it can contain
+    /// without reallocating memory.
     ///
     /// # Examples
     ///
@@ -261,9 +292,9 @@ where
         self.inner.capacity()
     }
 
-    /// Returns the length of the hash map.
+    /// Returns the length of the homogeneous hash map.
     ///
-    /// The **length** of a hash map is the number of entries it currently contains.
+    /// The **length** of a homogeneous hash map is the number of entries it currently contains.
     ///
     /// # Examples
     ///
@@ -290,9 +321,9 @@ where
         self.inner.len()
     }
 
-    /// Determines whether a hash map is empty.
+    /// Determines whether a homogeneous hash map is empty.
     ///
-    /// A hash map is **empty** if it contains no elements, i.e. its length is zero.
+    /// A homogeneous hash map is **empty** if it contains no elements, i.e. its length is zero.
     ///
     /// # Examples
     ///
@@ -319,7 +350,7 @@ where
         self.inner.is_empty()
     }
 
-    /// Returns a reference to the hash map's hash builder.
+    /// Returns a reference to the homogeneous hash map's hash builder.
     ///
     /// # Examples
     ///
@@ -343,11 +374,11 @@ where
     S: any::Any + hash::BuildHasher + Send + Sync,
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
-    /// Determines whether a hash map contains an equivalent key to the given key.
+    /// Determines whether a homogeneous hash map contains an equivalent key to the given key.
     ///
-    /// This method returns `true` if an equivalent key to the key `key` exists in the hash map.
-    /// This method returns `false` if an equivalent key to the key `key` does not exist in the
-    /// hash map.
+    /// This method returns `true` if an equivalent key to the key `key` exists in the homogeneous
+    /// hash map. This method returns `false` if an equivalent key to the key `key` does not exist
+    /// in the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -380,10 +411,10 @@ where
     /// Returns a reference to the value with the equivalent key to the given one, if it
     /// exists.
     ///
-    /// If an equivalent key to the key `key` exists in the hash map, this method returns
-    /// `Some(&value)`, where `value` is the value corresponding to the equivalent key to `key`.
-    /// If an equivalent key to the key `key` does not exist in the hash map, this method returns
-    /// `None`.
+    /// If an equivalent key to the key `key` exists in the homogeneous hash map, this method
+    /// returns `Some(&value)`, where `value` is the value corresponding to the equivalent key to
+    /// `key`. If an equivalent key to the key `key` does not exist in the homogeneous hash map,
+    /// this method returns `None`.
     ///
     /// # Examples
     ///
@@ -415,10 +446,10 @@ where
     /// Returns a reference to the key-value with the equivalent key to the given one, if it
     /// exists.
     ///
-    /// If an equivalent key to the key `key` exists in the hash map, this method returns
-    /// `Some((&eq_key, &value))`, where `eq_key` is the equivalent key to the key `key`, and
-    /// `value` is the value corresponding to `eq_key`. If an equivalent key to the key `key` does
-    /// not exist in the hash map, this method returns `None`.
+    /// If an equivalent key to the key `key` exists in the homogeneous hash map, this method
+    /// returns `Some((&eq_key, &value))`, where `eq_key` is the equivalent key to the key `key`,
+    /// and `value` is the value corresponding to `eq_key`. If an equivalent key to the key `key`
+    /// does not exist in the homogeneous hash map, this method returns `None`.
     ///
     /// # Examples
     ///
@@ -450,10 +481,10 @@ where
     /// Returns a mutable reference to the value with the equivalent key to the given one, if it
     /// exists.
     ///
-    /// If an equivalent key to the key `key` exists in the hash map, this method returns
-    /// `Some(&mut value)`, where `value` is the value corresponding to the equivalent key to
-    /// `key`. If an equivalent key to the key `key` does not exist in the hash map, this method
-    /// returns `None`.
+    /// If an equivalent key to the key `key` exists in the homogeneous hash map, this method
+    /// returns `Some(&mut value)`, where `value` is the value corresponding to the equivalent key
+    /// to `key`. If an equivalent key to the key `key` does not exist in the homogeneous hash map,
+    /// this method returns `None`.
     ///
     /// # Examples
     ///
@@ -505,7 +536,8 @@ where
     ///
     /// # Panics
     ///
-    /// This method panics if an equivalent key to the key `key` does not exist in the hash map.
+    /// This method panics if an equivalent key to the key `key` does not exist in the homogeneous
+    /// hash map.
     ///
     /// # Examples
     ///
@@ -538,7 +570,8 @@ where
     ///
     /// # Panics
     ///
-    /// This method panics if an equivalent key to the key `key` does not exist in the hash map.
+    /// This method panics if an equivalent key to the key `key` does not exist in the homogeneous
+    /// hash map.
     ///
     /// # Examples
     ///
@@ -582,7 +615,7 @@ where
         &mut self.inner[key]
     }
 
-    /// Attempts to get mutable references to multiple values at once in the hash map.
+    /// Attempts to get mutable references to multiple values at once in the homogeneous hash map.
     ///
     /// This method returns an array of length `N` supplied by the query. For each value returned,
     /// this method returns `Some(&mut value_i)`, where `value_i` is the ith value corresponding
@@ -638,14 +671,15 @@ where
         self.inner.get_disjoint_mut(ks)
     }
 
-    /// Inserts a new entry into the hash map.
+    /// Inserts a new entry into the homogeneous hash map.
     ///
     /// This method behaves as follows:
     ///
-    /// * If the equivalent key already exists in the hash map, this method replaces the old value
-    ///   with the new value in the map, and returns the old value as `Some(old_value)`.
+    /// * If the equivalent key already exists in the homogeneous hash map, this method replaces
+    ///   the old value with the new value in the map, and returns the old value as
+    ///   `Some(old_value)`.
     /// * If the entry with the equivalent key does not exist in the map, it is inserted into the
-    ///   hash map and the method returns `None`.
+    ///   homogeneous hash map and the method returns `None`.
     ///
     /// # Examples
     ///
@@ -721,13 +755,13 @@ where
         self.inner.insert(key, value)
     }
 
-    /// Removes an entry with an equivalent key to the given key from the hash map.
+    /// Removes an entry with an equivalent key to the given key from the homogeneous hash map.
     ///
     /// This method behaves as follows:
     ///
-    /// * If the equivalent key already exists in the hash map, this method removes the entry
-    ///   from the hash map and returns `Some(value)`, where `value` is the value corresponding
-    ///   to the equivalent key to `key`.
+    /// * If the equivalent key already exists in the homogeneous hash map, this method removes the
+    ///   entry from the homogeneous hash map and returns `Some(value)`, where `value` is the value
+    ///   corresponding to the equivalent key to `key`.
     /// * If the entry with the equivalent key does not exist in the map, this method does nothing
     ///   and returns `None`.
     ///
@@ -809,14 +843,14 @@ where
         self.inner.swap_remove(key)
     }
 
-    /// Removes an entry with an equivalent key to the given key from the hash map.
+    /// Removes an entry with an equivalent key to the given key from the homogeneous hash map.
     ///
     /// This method behaves as follows:
     ///
-    /// * If the equivalent key already exists in the hash map, this method removes the entry
-    ///   from the hash map and returns `Some((eq_key, value))`, where `eq_key` is the equivalent
-    ///   to key to `key` for the entry, and `value` is the value corresponding to the equivalent
-    ///   key to `key`.
+    /// * If the equivalent key already exists in the homogeneous hash map, this method removes
+    ///   the entry from the homogeneous hash map and returns `Some((eq_key, value))`, where
+    ///   `eq_key` is the equivalent to key to `key` for the entry, and `value` is the value
+    ///   corresponding to the equivalent key to `key`.
     /// * If the entry with the equivalent key does not exist in the map, this method does nothing
     ///   and returns `None`.
     ///
@@ -898,7 +932,52 @@ where
         self.inner.swap_remove_entry(key)
     }
 
-    /// Returns an iterator over the entries of the hash map.
+    /// Returns the entry in the homogeneous hash map corresponding to the given key.
+    ///
+    /// The resulting entry can be queried or manipulated directly, instead of going through the
+    /// homogeneous hash map to do it.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+    /// #
+    /// let mut map: HomogeneousHashMap<&str, i32> = HomogeneousHashMap::from([
+    ///     (Key::new("foo"),  1_i32),
+    ///     (Key::new("bar"),  2_i32),
+    ///     (Key::new("baz"),  4_i32),
+    ///     (Key::new("quux"), 8_i32),
+    /// ]);
+    ///
+    /// assert_eq!(map.len(), 4);
+    ///
+    /// assert_eq!(map.entry(Key::new("foo")).key(), &"foo");
+    /// assert_eq!(map.entry(Key::new("bar")).key(), &"bar");
+    /// assert_eq!(map.entry(Key::new("baz")).key(), &"baz");
+    /// assert_eq!(map.entry(Key::new("quux")).key(), &"quux");
+    ///
+    /// // Vacant entries also return their keys.
+    /// assert_eq!(map.entry(Key::new("quuz")).key(), &"quuz");
+    /// assert_eq!(map.entry(Key::new("garply")).key(), &"garply");
+    ///
+    /// assert_eq!(map.len(), 4);
+    ///
+    /// map.entry(Key::new("quuz")).insert_entry(16_i32);
+    ///
+    /// assert_eq!(map.len(), 5);
+    /// ```
+    #[inline]
+    pub fn entry(&mut self, key: Key<K, T>) -> Entry<'_, K, T>
+    where
+        K: hash::Hash + Eq,
+    {
+        match self.inner.entry(key) {
+            opaque::index_map::map::Entry::Occupied(ent) => Entry::Occupied(OccupiedEntry::new(ent)),
+            opaque::index_map::map::Entry::Vacant(ent) => Entry::Vacant(VacantEntry::new(ent)),
+        }
+    }
+
+    /// Returns an iterator over the entries of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -928,7 +1007,7 @@ where
         Iter::new(self.inner.iter())
     }
 
-    /// Returns a mutable iterator over the entries of the hash map.
+    /// Returns a mutable iterator over the entries of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -958,7 +1037,7 @@ where
         IterMut::new(self.inner.iter_mut())
     }
 
-    /// Returns an iterator over the keys of the hash map.
+    /// Returns an iterator over the keys of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -985,7 +1064,7 @@ where
         Keys::new(self.inner.keys())
     }
 
-    /// Returns an iterator over the values of the hash map.
+    /// Returns an iterator over the values of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -1012,7 +1091,7 @@ where
         Values::new(self.inner.values())
     }
 
-    /// Returns a mutable iterator over the values of the hash map.
+    /// Returns a mutable iterator over the values of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -1039,11 +1118,11 @@ where
         ValuesMut::new(self.inner.values_mut())
     }
 
-    /// Returns a draining iterator over the entries of the hash map.
+    /// Returns a draining iterator over the entries of the homogeneous hash map.
     ///
     /// If the iterator is dropped before being fully consumed, it drops the remaining removed
-    /// elements. The returned iterator keeps a mutable borrow on the hash map to optimize its
-    /// implementation.
+    /// elements. The returned iterator keeps a mutable borrow on the homogeneous hash map to
+    /// optimize its implementation.
     ///
     /// # Examples
     ///
@@ -1079,8 +1158,8 @@ where
     /// Creates an iterator which uses a closure to determine if an element should be removed.
     ///
     /// If the iterator is dropped before being fully consumed, it drops the remaining removed
-    /// elements. The returned iterator keeps a mutable borrow on the hash map to optimize its
-    /// implementation.
+    /// elements. The returned iterator keeps a mutable borrow on the homogeneous hash map to
+    /// optimize its implementation.
     ///
     /// # Examples
     ///
@@ -1117,7 +1196,7 @@ where
         ExtractIf::new(self.inner.extract_if(.., keep))
     }
 
-    /// Returns a moving iterator over the keys of the hash map.
+    /// Returns a moving iterator over the keys of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -1165,7 +1244,7 @@ where
         IntoKeys::new(self.inner.into_keys())
     }
 
-    /// Returns a moving iterator over the values of the hash map.
+    /// Returns a moving iterator over the values of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -1213,10 +1292,10 @@ where
         IntoValues::new(self.inner.into_values())
     }
 
-    /// Removes all the entries from the hash map.
+    /// Removes all the entries from the homogeneous hash map.
     ///
     /// After calling this method, the collection will be empty. This method does not change the
-    /// allocated capacity of the hash map.
+    /// allocated capacity of the homogeneous hash map.
     ///
     /// # Examples
     ///
@@ -1297,7 +1376,7 @@ where
     }
 
     /// Attempts to reserve capacity for **at least** `additional` more elements to be inserted
-    /// in the given hash map.
+    /// in the given homogeneous hash map.
     ///
     /// The collection may reserve more space to speculatively avoid frequent reallocations.
     /// After calling this method, the capacity will be greater than or equal to
@@ -1308,7 +1387,7 @@ where
     ///
     /// This method panics if one of the following conditions occurs:
     ///
-    /// * If the capacity of the hash map overflows.
+    /// * If the capacity of the homogeneous hash map overflows.
     /// * If the allocator reports a failure.
     ///
     /// # Examples
@@ -1346,7 +1425,7 @@ where
     }
 
     /// Attempts to reserve capacity for **at least** `additional` more elements to be inserted
-    /// in the given hash map.
+    /// in the given homogeneous hash map.
     ///
     /// The collection may reserve more space to speculatively avoid frequent reallocations.
     /// After calling this method, the capacity will be greater than or equal to
@@ -1399,10 +1478,10 @@ where
         self.inner.try_reserve(additional).map_err(from_opaque_try_reserve_error)
     }
 
-    /// Shrinks the capacity of the hash map as much as possible.
+    /// Shrinks the capacity of the homogeneous hash map as much as possible.
     ///
-    /// The resulting hash map might still have some excess capacity, just as is the case for
-    /// [`with_capacity`]. This depends on the resize policy for the internal structure.
+    /// The resulting homogeneous hash map might still have some excess capacity, just as is the
+    /// case for [`with_capacity`]. This depends on the resize policy for the internal structure.
     ///
     /// [`with_capacity`]: HomogeneousHashMap::with_capacity
     ///
@@ -1426,10 +1505,10 @@ where
         self.inner.shrink_to_fit();
     }
 
-    /// Shrinks the capacity of the hash map to a lower bound.
+    /// Shrinks the capacity of the homogeneous hash map to a lower bound.
     ///
-    /// The resulting hash map might still have some excess capacity, just as is the case for
-    /// [`with_capacity`]. This depends on the resize policy for the internal structure.
+    /// The resulting homogeneous hash map might still have some excess capacity, just as is the
+    /// case for [`with_capacity`]. This depends on the resize policy for the internal structure.
     ///
     /// The capacity will remain at least as large as both the length
     /// and the supplied capacity `min_capacity`. In particular, after calling this method,
@@ -1439,8 +1518,8 @@ where
     /// self.capacity() >= max(self.len(), min_capacity).
     /// ```
     ///
-    /// If the current capacity of the hash map is less than the lower bound, the method does
-    /// nothing.
+    /// If the current capacity of the homogeneous hash map is less than the lower bound, the
+    /// method does nothing.
     ///
     /// [`with_capacity`]: TypeProjectedIndexMap::with_capacity
     ///

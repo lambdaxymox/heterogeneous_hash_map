@@ -1,4 +1,5 @@
 use crate::homogeneous_hash_map::HomogeneousHashMap;
+use crate::entry::Entry;
 use crate::iterator::{
     Iter,
     IterMut,
@@ -1879,6 +1880,334 @@ where
         let map = self.get_map_mut::<T>()?;
 
         map.remove_entry(key)
+    }
+
+
+    /// Returns the entry in the heterogeneous hash map corresponding to the given key, if it
+    /// exists.
+    ///
+    /// The resulting entry can be queried or manipulated directly, instead of going through the
+    /// heterogeneous hash map to do it.
+    ///
+    /// If the type `T` exists in the heterogeneous hash map, this method returns `Some(entry)`
+    /// where `entry` is an entry of value type `T`. If the type `T` does not exist in the
+    /// heterogeneous hash map, this method returns `None`.
+    ///
+    /// # Examples
+    ///
+    /// Accessing an existing type in a heterogeneous hash map.
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<u32>();
+    /// het_map.insert(Key::new(1_usize), 2_i32);
+    /// het_map.insert(Key::new(2_usize), 3_i32);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), None);
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    /// #
+    ///
+    /// // Accessing existing entries in the heterogeneous hash map.
+    /// assert!(het_map.contains_key::<i32, _>(&1_usize));
+    /// {
+    ///     let maybe_entry = het_map.entry::<i32>(Key::new(1_usize));
+    ///     assert!(maybe_entry.is_some());
+    ///     let entry = maybe_entry.unwrap();
+    ///     assert_eq!(entry.key(), &Key::new(1_usize));
+    ///     assert_eq!(entry.or_default(), &mut 2_i32);
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&1_usize));
+    /// #
+    /// # assert_eq!(het_map.len::<i32>(), Some(2));
+    /// # assert_eq!(het_map.len::<u32>(), Some(0));
+    /// # assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), None);
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    /// #
+    ///
+    /// assert!(het_map.contains_key::<i32, _>(&2_usize));
+    /// {
+    ///     let maybe_entry = het_map.entry::<i32>(Key::new(2_usize));
+    ///     assert!(maybe_entry.is_some());
+    ///     let entry = maybe_entry.unwrap();
+    ///     assert_eq!(entry.key(), &Key::new(2_usize));
+    ///     assert_eq!(entry.or_default(), &mut 3_i32);
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&2_usize));
+    /// #
+    /// # assert_eq!(het_map.len::<i32>(), Some(2));
+    /// # assert_eq!(het_map.len::<u32>(), Some(0));
+    /// # assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), None);
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    ///
+    /// // Creating a new entry if the type exists with `or_default`.
+    /// assert!(!het_map.contains_key::<i32, _>(&3_usize));
+    /// {
+    ///     let maybe_entry = het_map.entry::<i32>(Key::new(3_usize));
+    ///     assert!(maybe_entry.is_some());
+    ///     let entry = maybe_entry.unwrap();
+    ///     assert_eq!(entry.key(), &Key::new(3_usize));
+    ///     assert_eq!(entry.or_default(), &mut i32::default());
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&3_usize));
+    /// #
+    /// # assert_eq!(het_map.len::<i32>(), Some(3));
+    /// # assert_eq!(het_map.len::<u32>(), Some(0));
+    /// # assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), Some(&i32::default()));
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    ///
+    /// // Creating a new entry if the type exists with `or_insert`.
+    /// assert!(!het_map.contains_key::<i32, _>(&4_usize));
+    /// {
+    ///     let maybe_entry = het_map.entry::<i32>(Key::new(4_usize));
+    ///     assert!(maybe_entry.is_some());
+    ///     let entry = maybe_entry.unwrap();
+    ///     assert_eq!(entry.key(), &Key::new(4_usize));
+    ///     assert_eq!(entry.or_insert(5_i32), &mut 5_i32);
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&4_usize));
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(4));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    ///
+    /// assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&3_usize), Some(&i32::default()));
+    /// assert_eq!(het_map.get::<i32, _>(&4_usize), Some(&5_i32));
+    /// ```
+    ///
+    /// Attempting to get values for a type that does not exist in the heterogeneous hash map.
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<u32>();
+    /// het_map.insert(Key::new(1_usize), 2_i32);
+    /// het_map.insert(Key::new(2_usize), 3_i32);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    ///
+    /// assert!(!het_map.contains_type::<f32>());
+    /// assert!(!het_map.contains_key::<f32, _>(&1_usize));
+    ///
+    /// assert!(het_map.entry::<f32>(Key::new(1_usize)).is_none());
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    ///
+    /// assert!(!het_map.contains_type::<f32>());
+    /// assert!(!het_map.contains_key::<f32, _>(&1_usize));
+    /// ```
+    #[inline]
+    pub fn entry<T>(&mut self, key: Key<K, T>) -> Option<Entry<'_, K, T>>
+    where
+        K: hash::Hash + Eq,
+        T: any::Any,
+    {
+        let map = self.get_map_mut::<T>()?;
+
+        Some(map.entry(key))
+    }
+
+    /// Returns the entry in the heterogeneous hash map corresponding to the given key.
+    ///
+    /// The resulting entry can be queried or manipulated directly, instead of going through the
+    /// heterogeneous hash map to do it.
+    ///
+    /// If the type `T` does not exist in the heterogeneous hash map, this method creates an
+    /// entry in the map for the type `T`, and returns a vacant entry for a value of type `T`.
+    ///
+    /// # Examples
+    ///
+    /// Accessing an existing type in the heterogeneous hash map.
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<u32>();
+    /// het_map.insert(Key::new(1_usize), 2_i32);
+    /// het_map.insert(Key::new(2_usize), 3_i32);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), None);
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    /// #
+    ///
+    /// // Accessing existing entries in the heterogeneous hash map.
+    /// assert!(het_map.contains_key::<i32, _>(&1_usize));
+    /// {
+    ///     let entry = het_map.entry_or_insert_type::<i32>(Key::new(1_usize));
+    ///     assert_eq!(entry.key(), &Key::new(1_usize));
+    ///     assert_eq!(entry.or_default(), &mut 2_i32);
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&1_usize));
+    /// #
+    /// # assert_eq!(het_map.len::<i32>(), Some(2));
+    /// # assert_eq!(het_map.len::<u32>(), Some(0));
+    /// # assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), None);
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    /// #
+    ///
+    /// assert!(het_map.contains_key::<i32, _>(&2_usize));
+    /// {
+    ///     let entry = het_map.entry_or_insert_type::<i32>(Key::new(2_usize));
+    ///     assert_eq!(entry.key(), &Key::new(2_usize));
+    ///     assert_eq!(entry.or_default(), &mut 3_i32);
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&2_usize));
+    /// #
+    /// # assert_eq!(het_map.len::<i32>(), Some(2));
+    /// # assert_eq!(het_map.len::<u32>(), Some(0));
+    /// # assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), None);
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    ///
+    /// // Creating a new entry if the type exists with `or_default`.
+    /// assert!(!het_map.contains_key::<i32, _>(&3_usize));
+    /// {
+    ///     let entry = het_map.entry_or_insert_type::<i32>(Key::new(3_usize));
+    ///     assert_eq!(entry.key(), &Key::new(3_usize));
+    ///     assert_eq!(entry.or_default(), &mut i32::default());
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&3_usize));
+    /// #
+    /// # assert_eq!(het_map.len::<i32>(), Some(3));
+    /// # assert_eq!(het_map.len::<u32>(), Some(0));
+    /// # assert_eq!(het_map.len::<f32>(), None);
+    /// #
+    /// # assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// # assert_eq!(het_map.get::<i32, _>(&3_usize), Some(&i32::default()));
+    /// # assert_eq!(het_map.get::<i32, _>(&4_usize), None);
+    ///
+    /// // Creating a new entry if the type exists with `or_insert`.
+    /// assert!(!het_map.contains_key::<i32, _>(&4_usize));
+    /// {
+    ///     let entry = het_map.entry_or_insert_type::<i32>(Key::new(4_usize));
+    ///     assert_eq!(entry.key(), &Key::new(4_usize));
+    ///     assert_eq!(entry.or_insert(5_i32), &mut 5_i32);
+    /// }
+    /// assert!(het_map.contains_key::<i32, _>(&4_usize));
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(4));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    ///
+    /// assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&3_usize), Some(&i32::default()));
+    /// assert_eq!(het_map.get::<i32, _>(&4_usize), Some(&5_i32));
+    /// ```
+    ///
+    /// Accessing a type that does not exist without inserting new entries inserts the new type.
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<u32>();
+    /// het_map.insert(Key::new(1_usize), 2_i32);
+    /// het_map.insert(Key::new(2_usize), 3_i32);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    ///
+    /// assert!(!het_map.contains_type::<f32>());
+    /// assert!(!het_map.contains_key::<f32, _>(&1_usize));
+    /// {
+    ///     let _ = het_map.entry_or_insert_type::<f32>(Key::new(1_usize));
+    /// }
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), Some(0));
+    ///
+    /// assert!(het_map.contains_type::<f32>());
+    /// assert!(!het_map.contains_key::<f32, _>(&1_usize));
+    /// ```
+    ///
+    /// Accessing a type that does not exist and inserting new entries for it.
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.insert_type::<i32>();
+    /// het_map.insert_type::<u32>();
+    /// het_map.insert(Key::new(1_usize), 2_i32);
+    /// het_map.insert(Key::new(2_usize), 3_i32);
+    ///
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), None);
+    ///
+    /// assert!(!het_map.contains_type::<f32>());
+    /// assert!(!het_map.contains_key::<f32, _>(&1_usize));
+    /// {
+    ///     let entry = het_map.entry_or_insert_type::<f32>(Key::new(1_usize));
+    ///     entry.or_insert(f32::MAX);
+    /// }
+    /// assert_eq!(het_map.len::<i32>(), Some(2));
+    /// assert_eq!(het_map.len::<u32>(), Some(0));
+    /// assert_eq!(het_map.len::<f32>(), Some(1));
+    ///
+    /// assert!(het_map.contains_type::<f32>());
+    /// assert!(het_map.contains_key::<f32, _>(&1_usize));
+    ///
+    /// assert_eq!(het_map.get::<i32, _>(&1_usize), Some(&2_i32));
+    /// assert_eq!(het_map.get::<i32, _>(&2_usize), Some(&3_i32));
+    /// assert_eq!(het_map.get::<f32, _>(&1_usize), Some(&f32::MAX));
+    /// ```
+    #[inline]
+    pub fn entry_or_insert_type<T>(&mut self, key: Key<K, T>) -> Entry<'_, K, T>
+    where
+        K: hash::Hash + Eq,
+        T: any::Any,
+    {
+        let map = self.get_or_insert_map_mut::<T>();
+
+        map.entry(key)
     }
 }
 
