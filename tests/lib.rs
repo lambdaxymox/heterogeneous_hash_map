@@ -10,3 +10,4 @@
 extern crate std;
 
 mod test_heterogeneous_hash_map;
+mod test_homogeneous_hash_map;

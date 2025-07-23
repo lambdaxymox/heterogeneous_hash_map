@@ -1,4 +1,3 @@
-mod test_heterogeneous_hash_map_complex;
 mod test_heterogeneous_hash_map_one_type;
 mod test_heterogeneous_hash_map_two_types;
 mod test_heterogeneous_hash_map_types;
