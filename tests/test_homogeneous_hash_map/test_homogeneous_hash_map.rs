@@ -890,24 +890,66 @@ fn test_homogeneous_hash_map_remove2() {
     ]);
 
     assert_eq!(map.len(), 6);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove(&1_usize);
     assert_eq!(map.len(), 5);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove(&2_usize);
     assert_eq!(map.len(), 4);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove(&3_usize);
     assert_eq!(map.len(), 3);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove(&4_usize);
     assert_eq!(map.len(), 2);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove(&5_usize);
     assert_eq!(map.len(), 1);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove(&6_usize);
     assert_eq!(map.len(), 0);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 }
 
 #[rustfmt::skip]
@@ -923,24 +965,66 @@ fn test_homogeneous_hash_map_remove3() {
     ]);
 
     assert_eq!(map.len(), 6);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove(&6_usize);
     assert_eq!(map.len(), 5);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove(&5_usize);
     assert_eq!(map.len(), 4);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove(&4_usize);
     assert_eq!(map.len(), 3);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove(&3_usize);
     assert_eq!(map.len(), 2);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove(&2_usize);
     assert_eq!(map.len(), 1);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove(&1_usize);
     assert_eq!(map.len(), 0);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 }
 
 #[rustfmt::skip]
@@ -996,24 +1080,66 @@ fn test_homogeneous_hash_map_remove_entry2() {
     ]);
 
     assert_eq!(map.len(), 6);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove_entry(&1_usize);
     assert_eq!(map.len(), 5);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove_entry(&2_usize);
     assert_eq!(map.len(), 4);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove_entry(&3_usize);
     assert_eq!(map.len(), 3);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove_entry(&4_usize);
     assert_eq!(map.len(), 2);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove_entry(&5_usize);
     assert_eq!(map.len(), 1);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove_entry(&6_usize);
     assert_eq!(map.len(), 0);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 }
 
 #[rustfmt::skip]
@@ -1029,24 +1155,66 @@ fn test_homogeneous_hash_map_remove_entry3() {
     ]);
 
     assert_eq!(map.len(), 6);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), Some(&5_i32));
 
     let _ = map.remove_entry(&6_usize);
     assert_eq!(map.len(), 5);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), Some(&302_i32));
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove_entry(&5_usize);
     assert_eq!(map.len(), 4);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), Some(&20994_i32));
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove_entry(&4_usize);
     assert_eq!(map.len(), 3);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&4904_i32));
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove_entry(&3_usize);
     assert_eq!(map.len(), 2);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&2043_i32));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove_entry(&2_usize);
     assert_eq!(map.len(), 1);
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&20_i32));
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 
     let _ = map.remove_entry(&1_usize);
     assert_eq!(map.len(), 0);
+    assert_eq!(map.get(&Key::new(1_usize)), None);
+    assert_eq!(map.get(&Key::new(2_usize)), None);
+    assert_eq!(map.get(&Key::new(3_usize)), None);
+    assert_eq!(map.get(&Key::new(4_usize)), None);
+    assert_eq!(map.get(&Key::new(5_usize)), None);
+    assert_eq!(map.get(&Key::new(6_usize)), None);
 }
 
 #[rustfmt::skip]
