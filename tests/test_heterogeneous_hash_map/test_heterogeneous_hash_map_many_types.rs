@@ -278,7 +278,7 @@ fn get_character_map_kazuma() -> HeterogeneousHashMap<usize> {
     character
 }
 
-fn get_character_megumin() -> HeterogeneousHashMap<usize> {
+fn get_character_map_megumin() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Megumin"));
     character.insert::<CharacterName>(Key::new(2_usize), CharacterName::from("Explosion Maniac"));
@@ -321,7 +321,7 @@ fn get_character_megumin() -> HeterogeneousHashMap<usize> {
     character
 }
 
-fn get_character_aqua() -> HeterogeneousHashMap<usize> {
+fn get_character_map_aqua() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Aqua"));
     character.insert::<CharacterName>(Key::new(2_usize), CharacterName::from("Lady Aqua"));
@@ -396,7 +396,7 @@ fn get_character_aqua() -> HeterogeneousHashMap<usize> {
     character
 }
 
-fn get_character_darkness() -> HeterogeneousHashMap<usize> {
+fn get_character_map_darkness() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Darkness"));
     character.insert::<CharacterName>(Key::new(2_usize), CharacterName::from("Lalatina Ford Dustiness"));
@@ -431,7 +431,7 @@ fn get_character_darkness() -> HeterogeneousHashMap<usize> {
     character
 }
 
-fn get_character_yunyun() -> HeterogeneousHashMap<usize> {
+fn get_character_map_yunyun() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Yunyun"));
     character.insert::<Age>(Key::new(1_usize), Age::from(14));
@@ -487,7 +487,7 @@ fn get_character_yunyun() -> HeterogeneousHashMap<usize> {
     character
 }
 
-fn get_character_wiz() -> HeterogeneousHashMap<usize> {
+fn get_character_map_wiz() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Wiz"));
     character.insert::<CharacterName>(Key::new(2_usize), CharacterName::from("Ice Witch"));
@@ -547,7 +547,7 @@ fn get_character_wiz() -> HeterogeneousHashMap<usize> {
     character
 }
 
-fn get_character_chris() -> HeterogeneousHashMap<usize> {
+fn get_character_map_chris() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Chris"));
     character.insert::<CharacterName>(Key::new(2_usize), CharacterName::from("Noble Thief"));
@@ -594,7 +594,7 @@ fn get_character_chris() -> HeterogeneousHashMap<usize> {
     character
 }
 
-fn get_character_mitsurugi() -> HeterogeneousHashMap<usize> {
+fn get_character_map_mitsurugi() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Kyouya Mitsurugi"));
     character.insert::<CharacterName>(Key::new(2_usize), CharacterName::from("Cursed Sword Hero"));
@@ -629,13 +629,13 @@ fn get_character_mitsurugi() -> HeterogeneousHashMap<usize> {
 
 fn get_character_map() -> HomogeneousHashMap<String, HeterogeneousHashMap<usize>> {
     let kazuma = get_character_map_kazuma();
-    let megumin = get_character_megumin();
-    let aqua = get_character_aqua();
-    let darkness = get_character_darkness();
-    let yunyun = get_character_yunyun();
-    let wiz = get_character_wiz();
-    let chris = get_character_chris();
-    let mitsurugi = get_character_mitsurugi();
+    let megumin = get_character_map_megumin();
+    let aqua = get_character_map_aqua();
+    let darkness = get_character_map_darkness();
+    let yunyun = get_character_map_yunyun();
+    let wiz = get_character_map_wiz();
+    let chris = get_character_map_chris();
+    let mitsurugi = get_character_map_mitsurugi();
 
     let mut characters = HomogeneousHashMap::new();
     characters.insert(Key::new(String::from("Kazuma")), kazuma);
@@ -700,7 +700,7 @@ fn test_heterogeneous_hash_map_character_name1() {
 
 #[test]
 fn test_heterogeneous_hash_map_character_name2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
         (Key::new(1_usize), CharacterName::from("Megumin")),
         (Key::new(2_usize), CharacterName::from("Explosion Maniac")),
@@ -723,7 +723,7 @@ fn test_heterogeneous_hash_map_character_name2() {
 
 #[test]
 fn test_heterogeneous_hash_map_character_name3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
         (Key::new(1_usize), CharacterName::from("Aqua")),
         (Key::new(2_usize), CharacterName::from("Lady Aqua")),
@@ -746,7 +746,7 @@ fn test_heterogeneous_hash_map_character_name3() {
 
 #[test]
 fn test_heterogeneous_hash_map_character_name4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
         (Key::new(1_usize), CharacterName::from("Darkness")),
         (Key::new(2_usize), CharacterName::from("Lalatina Ford Dustiness")),
@@ -768,7 +768,7 @@ fn test_heterogeneous_hash_map_character_name4() {
 
 #[test]
 fn test_heterogeneous_hash_map_character_name5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
         (Key::new(1_usize), CharacterName::from("Yunyun")),
     ]);
@@ -789,7 +789,7 @@ fn test_heterogeneous_hash_map_character_name5() {
 
 #[test]
 fn test_heterogeneous_hash_map_character_name6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
         (Key::new(1_usize), CharacterName::from("Wiz")),
         (Key::new(2_usize), CharacterName::from("Ice Witch")),
@@ -812,7 +812,7 @@ fn test_heterogeneous_hash_map_character_name6() {
 
 #[test]
 fn test_heterogeneous_hash_map_character_name7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
         (Key::new(1_usize), CharacterName::from("Chris")),
         (Key::new(2_usize), CharacterName::from("Noble Thief")),
@@ -834,7 +834,7 @@ fn test_heterogeneous_hash_map_character_name7() {
 
 #[test]
 fn test_heterogeneous_hash_map_character_name8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
         (Key::new(1_usize), CharacterName::from("Kyouya Mitsurugi")),
         (Key::new(2_usize), CharacterName::from("Cursed Sword Hero")),
@@ -906,7 +906,7 @@ fn test_heterogeneous_hash_map_player_name1() {
 
 #[test]
 fn test_heterogeneous_hash_map_player_name2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     for key in (0_usize..=1024_usize).map(Key::new) {
         assert_eq!(character.get::<PlayerName, _>(&key), None);
     }
@@ -914,7 +914,7 @@ fn test_heterogeneous_hash_map_player_name2() {
 
 #[test]
 fn test_heterogeneous_hash_map_player_name3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::from([
         (Key::new(1_usize), PlayerName::from("Aqua")),
     ]);
@@ -935,7 +935,7 @@ fn test_heterogeneous_hash_map_player_name3() {
 
 #[test]
 fn test_heterogeneous_hash_map_player_name4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     for key in (0_usize..=1024_usize).map(Key::new) {
         assert_eq!(character.get::<PlayerName, _>(&key), None);
     }
@@ -943,7 +943,7 @@ fn test_heterogeneous_hash_map_player_name4() {
 
 #[test]
 fn test_heterogeneous_hash_map_player_name5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     for key in (0_usize..=1024_usize).map(Key::new) {
         assert_eq!(character.get::<PlayerName, _>(&key), None);
     }
@@ -951,7 +951,7 @@ fn test_heterogeneous_hash_map_player_name5() {
 
 #[test]
 fn test_heterogeneous_hash_map_player_name6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     for key in (0_usize..=1024_usize).map(Key::new) {
         assert_eq!(character.get::<PlayerName, _>(&key), None);
     }
@@ -959,7 +959,7 @@ fn test_heterogeneous_hash_map_player_name6() {
 
 #[test]
 fn test_heterogeneous_hash_map_player_name7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::from([
         (Key::new(1_usize), PlayerName::from("Eris")),
     ]);
@@ -980,7 +980,7 @@ fn test_heterogeneous_hash_map_player_name7() {
 
 #[test]
 fn test_heterogeneous_hash_map_player_name8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::from([
         (Key::new(1_usize), PlayerName::from("Kyouya Mitsurugi")),
     ]);
@@ -1042,7 +1042,7 @@ fn test_heterogeneous_hash_map_age1() {
 
 #[test]
 fn test_heterogeneous_hash_map_age2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
         (Key::new(1_usize), Age::from(14)),
     ]);
@@ -1057,7 +1057,7 @@ fn test_heterogeneous_hash_map_age2() {
 
 #[test]
 fn test_heterogeneous_hash_map_age3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
         (Key::new(1_usize), Age::from(16)),
         (Key::new(2_usize), Age::from(u32::MAX)),
@@ -1073,7 +1073,7 @@ fn test_heterogeneous_hash_map_age3() {
 
 #[test]
 fn test_heterogeneous_hash_map_age4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
         (Key::new(1_usize), Age::from(18)),
     ]);
@@ -1088,7 +1088,7 @@ fn test_heterogeneous_hash_map_age4() {
 
 #[test]
 fn test_heterogeneous_hash_map_age5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
         (Key::new(1_usize), Age::from(14)),
     ]);
@@ -1103,7 +1103,7 @@ fn test_heterogeneous_hash_map_age5() {
 
 #[test]
 fn test_heterogeneous_hash_map_age6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
         (Key::new(1_usize), Age::from(20)),
     ]);
@@ -1118,7 +1118,7 @@ fn test_heterogeneous_hash_map_age6() {
 
 #[test]
 fn test_heterogeneous_hash_map_age7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
         (Key::new(1_usize), Age::from(15)),
         (Key::new(2_usize), Age::from(u32::MAX))
@@ -1134,7 +1134,7 @@ fn test_heterogeneous_hash_map_age7() {
 
 #[test]
 fn test_heterogeneous_hash_map_age8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
         (Key::new(1_usize), Age::from(17)),
     ]);
@@ -1190,7 +1190,7 @@ fn test_heterogeneous_hash_map_race1() {
 
 #[test]
 fn test_heterogeneous_hash_map_race2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("Human")),
         (Key::new(2_usize), Race::from("Crimson Magic Clan")),
@@ -1206,7 +1206,7 @@ fn test_heterogeneous_hash_map_race2() {
 
 #[test]
 fn test_heterogeneous_hash_map_race3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("God")),
     ]);
@@ -1221,7 +1221,7 @@ fn test_heterogeneous_hash_map_race3() {
 
 #[test]
 fn test_heterogeneous_hash_map_race4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("Human")),
     ]);
@@ -1236,7 +1236,7 @@ fn test_heterogeneous_hash_map_race4() {
 
 #[test]
 fn test_heterogeneous_hash_map_race5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("Human")),
         (Key::new(2_usize), Race::from("Crimson Magic Clan")),
@@ -1252,7 +1252,7 @@ fn test_heterogeneous_hash_map_race5() {
 
 #[test]
 fn test_heterogeneous_hash_map_race6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("Lich")),
         (Key::new(2_usize), Race::from("Human")),
@@ -1268,7 +1268,7 @@ fn test_heterogeneous_hash_map_race6() {
 
 #[test]
 fn test_heterogeneous_hash_map_race7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("Human")),
         (Key::new(2_usize), Race::from("God"))
@@ -1284,7 +1284,7 @@ fn test_heterogeneous_hash_map_race7() {
 
 #[test]
 fn test_heterogeneous_hash_map_race8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("Human")),
     ]);
@@ -1340,7 +1340,7 @@ fn test_heterogeneous_hash_map_class1() {
 
 #[test]
 fn test_heterogeneous_hash_map_class2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Class>, Class> = hash_map::HashMap::from([
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
@@ -1355,7 +1355,7 @@ fn test_heterogeneous_hash_map_class2() {
 
 #[test]
 fn test_heterogeneous_hash_map_class3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Class>, Class> = hash_map::HashMap::from([
         (Key::new(1_usize), Class::from("Arch Priest")),
     ]);
@@ -1370,7 +1370,7 @@ fn test_heterogeneous_hash_map_class3() {
 
 #[test]
 fn test_heterogeneous_hash_map_class4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Class>, Class> = hash_map::HashMap::from([
         (Key::new(1_usize), Class::from("Crusader")),
     ]);
@@ -1385,7 +1385,7 @@ fn test_heterogeneous_hash_map_class4() {
 
 #[test]
 fn test_heterogeneous_hash_map_class5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Class>, Class> = hash_map::HashMap::from([
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
@@ -1400,7 +1400,7 @@ fn test_heterogeneous_hash_map_class5() {
 
 #[test]
 fn test_heterogeneous_hash_map_class6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Class>, Class> = hash_map::HashMap::from([
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
@@ -1415,7 +1415,7 @@ fn test_heterogeneous_hash_map_class6() {
 
 #[test]
 fn test_heterogeneous_hash_map_class7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Class>, Class> = hash_map::HashMap::from([
         (Key::new(1_usize), Class::from("Thief")),
     ]);
@@ -1430,7 +1430,7 @@ fn test_heterogeneous_hash_map_class7() {
 
 #[test]
 fn test_heterogeneous_hash_map_class8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Class>, Class> = hash_map::HashMap::from([
         (Key::new(1_usize), Class::from("Swordmaster")),
     ]);
@@ -1488,7 +1488,7 @@ fn test_heterogeneous_hash_map_job1() {
 
 #[test]
 fn test_heterogeneous_hash_map_job2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     for key in (0_usize..=1024_usize).map(Key::new) {
         assert_eq!(character.get::<Job, _>(&key), None);
     }
@@ -1496,7 +1496,7 @@ fn test_heterogeneous_hash_map_job2() {
 
 #[test]
 fn test_heterogeneous_hash_map_job3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::from([
         (Key::new(1_usize), Job::from("Self-Proclaimed Goddess")),
     ]);
@@ -1511,7 +1511,7 @@ fn test_heterogeneous_hash_map_job3() {
 
 #[test]
 fn test_heterogeneous_hash_map_job4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::from([
         (Key::new(1_usize), Job::from("Noble")),
     ]);
@@ -1526,7 +1526,7 @@ fn test_heterogeneous_hash_map_job4() {
 
 #[test]
 fn test_heterogeneous_hash_map_job5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     for key in (0_usize..=1024_usize).map(Key::new) {
         assert_eq!(character.get::<Job, _>(&key), None);
     }
@@ -1534,7 +1534,7 @@ fn test_heterogeneous_hash_map_job5() {
 
 #[test]
 fn test_heterogeneous_hash_map_job6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::from([
         (Key::new(1_usize), Job::from("Devil King's General")),
         (Key::new(2_usize), Job::from("Shopkeeper")),
@@ -1550,7 +1550,7 @@ fn test_heterogeneous_hash_map_job6() {
 
 #[test]
 fn test_heterogeneous_hash_map_job7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::from([
         (Key::new(1_usize), Job::from("Goddess")),
         (Key::new(2_usize), Job::from("Aqua's Janitor")),
@@ -1567,7 +1567,7 @@ fn test_heterogeneous_hash_map_job7() {
 
 #[test]
 fn test_heterogeneous_hash_map_job8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::from([
         (Key::new(1_usize), Job::from("Isekai Protagonist")),
     ]);
@@ -1623,7 +1623,7 @@ fn test_heterogeneous_hash_map_status1() {
 
 #[test]
 fn test_heterogeneous_hash_map_status2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Status>, Status> = hash_map::HashMap::from([
         (Key::new(1_usize), Status::from("Alive")),
     ]);
@@ -1638,7 +1638,7 @@ fn test_heterogeneous_hash_map_status2() {
 
 #[test]
 fn test_heterogeneous_hash_map_status3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Status>, Status> = hash_map::HashMap::from([
         (Key::new(1_usize), Status::from("Alive")),
     ]);
@@ -1653,7 +1653,7 @@ fn test_heterogeneous_hash_map_status3() {
 
 #[test]
 fn test_heterogeneous_hash_map_status4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Status>, Status> = hash_map::HashMap::from([
         (Key::new(1_usize), Status::from("Alive")),
     ]);
@@ -1668,7 +1668,7 @@ fn test_heterogeneous_hash_map_status4() {
 
 #[test]
 fn test_heterogeneous_hash_map_status5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Status>, Status> = hash_map::HashMap::from([
         (Key::new(1_usize), Status::from("Alive")),
     ]);
@@ -1683,7 +1683,7 @@ fn test_heterogeneous_hash_map_status5() {
 
 #[test]
 fn test_heterogeneous_hash_map_status6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Status>, Status> = hash_map::HashMap::from([
         (Key::new(1_usize), Status::from("Undead")),
     ]);
@@ -1698,7 +1698,7 @@ fn test_heterogeneous_hash_map_status6() {
 
 #[test]
 fn test_heterogeneous_hash_map_status7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Status>, Status> = hash_map::HashMap::from([
         (Key::new(1_usize), Status::from("Alive")),
     ]);
@@ -1713,7 +1713,7 @@ fn test_heterogeneous_hash_map_status7() {
 
 #[test]
 fn test_heterogeneous_hash_map_status8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Status>, Status> = hash_map::HashMap::from([
         (Key::new(1_usize), Status::from("Alive")),
     ]);
@@ -1789,7 +1789,7 @@ fn test_heterogeneous_hash_map_description1() {
 
 #[test]
 fn test_heterogeneous_hash_map_description2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
         (Key::new(1_usize), Description::from("I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!")),
         (Key::new(2_usize), Description::from("NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps.")),
@@ -1805,7 +1805,7 @@ fn test_heterogeneous_hash_map_description2() {
 
 #[test]
 fn test_heterogeneous_hash_map_description3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
         (Key::new(1_usize), Description::from("Useless water goddess of the Axis church. Somehow, her followers are even crazier than she is.")),
         (Key::new(2_usize), Description::from("Self-proclaimed goddess who specializes in getting us into trouble and drinking all the party’s funds. Blessings included, probably.")),
@@ -1827,7 +1827,7 @@ fn test_heterogeneous_hash_map_description3() {
 
 #[test]
 fn test_heterogeneous_hash_map_description4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
         (Key::new(1_usize), Description::from("\
             A noble crusader who intercepts every blow with unwavering resolve. None of her attacks ever hit their mark.\
@@ -1844,7 +1844,7 @@ fn test_heterogeneous_hash_map_description4() {
 
 #[test]
 fn test_heterogeneous_hash_map_description5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
         (Key::new(1_usize), Description::from("\
             Crimson Demon honor student. Megumin’s arch rival (not that anyone else is competing). \
@@ -1862,7 +1862,7 @@ fn test_heterogeneous_hash_map_description5() {
 
 #[test]
 fn test_heterogeneous_hash_map_description6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
         (Key::new(1_usize), Description::from("\
             Benevolent lich, retired adventurer, and former Devil King's general. Now fighting her greatest battle: running a small business.\
@@ -1879,7 +1879,7 @@ fn test_heterogeneous_hash_map_description6() {
 
 #[test]
 fn test_heterogeneous_hash_map_description7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
         (Key::new(1_usize), Description::from("\
             She’s got a strong sense of justice and an even stronger sense of when a locked chest needs opening.\
@@ -1896,7 +1896,7 @@ fn test_heterogeneous_hash_map_description7() {
 
 #[test]
 fn test_heterogeneous_hash_map_description8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
         (Key::new(1_usize), Description::from("\
             Textbook case of main character syndrome. He thinks he is the real deal Isekai hero. \
@@ -2027,7 +2027,7 @@ fn test_heterogeneous_hash_map_stats1() {
 
 #[test]
 fn test_heterogeneous_hash_map_stats2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
         (Key::new(1_usize), Stats {
             strength: 14,
@@ -2050,7 +2050,7 @@ fn test_heterogeneous_hash_map_stats2() {
 
 #[test]
 fn test_heterogeneous_hash_map_stats3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
         (Key::new(1_usize), Stats {
             strength: 18,
@@ -2073,7 +2073,7 @@ fn test_heterogeneous_hash_map_stats3() {
 
 #[test]
 fn test_heterogeneous_hash_map_stats4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
         (Key::new(1_usize), Stats {
             strength: 22,
@@ -2096,7 +2096,7 @@ fn test_heterogeneous_hash_map_stats4() {
 
 #[test]
 fn test_heterogeneous_hash_map_stats5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
         (Key::new(1_usize), Stats {
             strength: 10,
@@ -2119,7 +2119,7 @@ fn test_heterogeneous_hash_map_stats5() {
 
 #[test]
 fn test_heterogeneous_hash_map_stats6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
         (Key::new(1_usize), Stats {
             strength: 10,
@@ -2142,7 +2142,7 @@ fn test_heterogeneous_hash_map_stats6() {
 
 #[test]
 fn test_heterogeneous_hash_map_stats7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
         (Key::new(1_usize), Stats {
             strength: 11,
@@ -2165,7 +2165,7 @@ fn test_heterogeneous_hash_map_stats7() {
 
 #[test]
 fn test_heterogeneous_hash_map_stats8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
         (Key::new(1_usize), Stats {
             strength: 25,
@@ -2229,7 +2229,7 @@ fn test_heterogeneous_hash_map_hit_points1() {
 
 #[test]
 fn test_heterogeneous_hash_map_hit_points2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, HitPoints>, HitPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), HitPoints::from(20)),
     ]);
@@ -2244,7 +2244,7 @@ fn test_heterogeneous_hash_map_hit_points2() {
 
 #[test]
 fn test_heterogeneous_hash_map_hit_points3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, HitPoints>, HitPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), HitPoints::from(60)),
     ]);
@@ -2259,7 +2259,7 @@ fn test_heterogeneous_hash_map_hit_points3() {
 
 #[test]
 fn test_heterogeneous_hash_map_hit_points4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, HitPoints>, HitPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), HitPoints::from(150)),
     ]);
@@ -2274,7 +2274,7 @@ fn test_heterogeneous_hash_map_hit_points4() {
 
 #[test]
 fn test_heterogeneous_hash_map_hit_points5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, HitPoints>, HitPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), HitPoints::from(30)),
     ]);
@@ -2289,7 +2289,7 @@ fn test_heterogeneous_hash_map_hit_points5() {
 
 #[test]
 fn test_heterogeneous_hash_map_hit_points6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, HitPoints>, HitPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), HitPoints::from(60)),
     ]);
@@ -2304,7 +2304,7 @@ fn test_heterogeneous_hash_map_hit_points6() {
 
 #[test]
 fn test_heterogeneous_hash_map_hit_points7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, HitPoints>, HitPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), HitPoints::from(100)),
     ]);
@@ -2319,7 +2319,7 @@ fn test_heterogeneous_hash_map_hit_points7() {
 
 #[test]
 fn test_heterogeneous_hash_map_hit_points8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, HitPoints>, HitPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), HitPoints::from(200)),
     ]);
@@ -2375,7 +2375,7 @@ fn test_heterogeneous_hash_map_magic_points1() {
 
 #[test]
 fn test_heterogeneous_hash_map_magic_points2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), MagicPoints::from(999)),
     ]);
@@ -2390,7 +2390,7 @@ fn test_heterogeneous_hash_map_magic_points2() {
 
 #[test]
 fn test_heterogeneous_hash_map_magic_points3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), MagicPoints::from(u32::MAX)),
     ]);
@@ -2405,7 +2405,7 @@ fn test_heterogeneous_hash_map_magic_points3() {
 
 #[test]
 fn test_heterogeneous_hash_map_magic_points4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), MagicPoints::from(0)),
     ]);
@@ -2420,7 +2420,7 @@ fn test_heterogeneous_hash_map_magic_points4() {
 
 #[test]
 fn test_heterogeneous_hash_map_magic_points5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), MagicPoints::from(400)),
     ]);
@@ -2435,7 +2435,7 @@ fn test_heterogeneous_hash_map_magic_points5() {
 
 #[test]
 fn test_heterogeneous_hash_map_magic_points6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), MagicPoints::from(700)),
     ]);
@@ -2450,7 +2450,7 @@ fn test_heterogeneous_hash_map_magic_points6() {
 
 #[test]
 fn test_heterogeneous_hash_map_magic_points7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), MagicPoints::from(0)),
     ]);
@@ -2465,7 +2465,7 @@ fn test_heterogeneous_hash_map_magic_points7() {
 
 #[test]
 fn test_heterogeneous_hash_map_magic_points8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
         (Key::new(1_usize), MagicPoints::from(0)),
     ]);
@@ -2521,7 +2521,7 @@ fn test_heterogeneous_hash_map_chuuibyou1() {
 
 #[test]
 fn test_heterogeneous_hash_map_chuuibyou2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
         (Key::new(1_usize), Chuunibyou::from(u32::MAX)),
     ]);
@@ -2536,7 +2536,7 @@ fn test_heterogeneous_hash_map_chuuibyou2() {
 
 #[test]
 fn test_heterogeneous_hash_map_chuuibyou3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
         (Key::new(1_usize), Chuunibyou::from(0)),
     ]);
@@ -2551,7 +2551,7 @@ fn test_heterogeneous_hash_map_chuuibyou3() {
 
 #[test]
 fn test_heterogeneous_hash_map_chuuibyou4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
         (Key::new(1_usize), Chuunibyou::from(0)),
     ]);
@@ -2566,7 +2566,7 @@ fn test_heterogeneous_hash_map_chuuibyou4() {
 
 #[test]
 fn test_heterogeneous_hash_map_chuuibyou5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
         (Key::new(1_usize), Chuunibyou::from(1)),
     ]);
@@ -2581,7 +2581,7 @@ fn test_heterogeneous_hash_map_chuuibyou5() {
 
 #[test]
 fn test_heterogeneous_hash_map_chuuibyou6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
         (Key::new(1_usize), Chuunibyou::from(0)),
     ]);
@@ -2596,7 +2596,7 @@ fn test_heterogeneous_hash_map_chuuibyou6() {
 
 #[test]
 fn test_heterogeneous_hash_map_chuuibyou7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
         (Key::new(1_usize), Chuunibyou::from(0)),
     ]);
@@ -2611,7 +2611,7 @@ fn test_heterogeneous_hash_map_chuuibyou7() {
 
 #[test]
 fn test_heterogeneous_hash_map_chuuibyou8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
         (Key::new(1_usize), Chuunibyou::from(u32::MAX - 1)),
     ]);
@@ -2669,7 +2669,7 @@ fn test_heterogeneous_hash_map_equipment1() {
 
 #[test]
 fn test_heterogeneous_hash_map_equipment2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
         (Key::new(1_usize), Equipment::from("Magic Rod")),
         (Key::new(2_usize), Equipment::from("Big Floppy Wizard Hat")),
@@ -2688,7 +2688,7 @@ fn test_heterogeneous_hash_map_equipment2() {
 
 #[test]
 fn test_heterogeneous_hash_map_equipment3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
         (Key::new(1_usize), Equipment::from("Feather Mantle")),
         (Key::new(2_usize), Equipment::from("Scepter")),
@@ -2704,7 +2704,7 @@ fn test_heterogeneous_hash_map_equipment3() {
 
 #[test]
 fn test_heterogeneous_hash_map_equipment4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
         (Key::new(1_usize), Equipment::from("Adamantite Armor")),
         (Key::new(2_usize), Equipment::from("Long Sword")),
@@ -2720,7 +2720,7 @@ fn test_heterogeneous_hash_map_equipment4() {
 
 #[test]
 fn test_heterogeneous_hash_map_equipment5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
         (Key::new(1_usize), Equipment::from("Short Sword")),
         (Key::new(2_usize), Equipment::from("Magic Rod")),
@@ -2736,7 +2736,7 @@ fn test_heterogeneous_hash_map_equipment5() {
 
 #[test]
 fn test_heterogeneous_hash_map_equipment6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
         (Key::new(1_usize), Equipment::from("Rosary")),
     ]);
@@ -2751,7 +2751,7 @@ fn test_heterogeneous_hash_map_equipment6() {
 
 #[test]
 fn test_heterogeneous_hash_map_equipment7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
         (Key::new(1_usize), Equipment::from("Magic Dagger")),
     ]);
@@ -2766,7 +2766,7 @@ fn test_heterogeneous_hash_map_equipment7() {
 
 #[test]
 fn test_heterogeneous_hash_map_equipment8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
         (Key::new(1_usize), Equipment::from("Cursed Sword Gram")),
     ]);
@@ -2827,7 +2827,7 @@ fn test_heterogeneous_hash_map_inventory_item1() {
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
         (Key::new(1_usize), InventoryItem::new("Light Of Reflection Scroll", 1)),
         (Key::new(2_usize), InventoryItem::new("Sword Of Shack The Ripper", 1)),
@@ -2844,7 +2844,7 @@ fn test_heterogeneous_hash_map_inventory_item2() {
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
         (Key::new(1_usize), InventoryItem::new("Jarred Snow Sprite", 1)),
         (Key::new(2_usize), InventoryItem::new("Bubbly", 0)),
@@ -2861,7 +2861,7 @@ fn test_heterogeneous_hash_map_inventory_item3() {
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([]);
 
     for (key, inventory_item) in expected_map.iter() {
@@ -2874,7 +2874,7 @@ fn test_heterogeneous_hash_map_inventory_item4() {
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
         (Key::new(1_usize), InventoryItem::new("Magic Canceller Scroll", 1)),
         (Key::new(2_usize), InventoryItem::new("Manatites", 3)),
@@ -2893,7 +2893,7 @@ fn test_heterogeneous_hash_map_inventory_item5() {
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
         (Key::new(1_usize), InventoryItem::new("Forced Teleport Scroll", 1)),
         (Key::new(2_usize), InventoryItem::new("Barrier Tool", 1)),
@@ -2910,7 +2910,7 @@ fn test_heterogeneous_hash_map_inventory_item6() {
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
         (Key::new(1_usize), InventoryItem::new("Barrier Breaker", 1)),
         (Key::new(2_usize), InventoryItem::new("Rock", 8)),
@@ -2926,7 +2926,7 @@ fn test_heterogeneous_hash_map_inventory_item7() {
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([]);
 
     for (key, inventory_item) in expected_map.iter() {
@@ -2989,7 +2989,7 @@ fn test_heterogeneous_hash_map_ability1() {
 
 #[test]
 fn test_heterogeneous_hash_map_ability2() {
-    let character = get_character_megumin();
+    let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
         (Key::new(1_usize), Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999)),
     ]);
@@ -3004,17 +3004,17 @@ fn test_heterogeneous_hash_map_ability2() {
 
 #[test]
 fn test_heterogeneous_hash_map_ability3() {
-    let character = get_character_aqua();
+    let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
-        (Key::new(1_usize), Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1)),
-        (Key::new(2_usize), Ability::new(AbilityClass::from("Water Magic"), "Create Water", 1)),
-        (Key::new(3_usize), Ability::new(AbilityClass::from("Water Magic"), "Sacred Create Water", 5)),
-        (Key::new(4_usize), Ability::new(AbilityClass::from("Water Magic"), "Purification", 1)),
-        (Key::new(5_usize), Ability::new(AbilityClass::from("Water Magic"), "Holy Water", 1)),
-        (Key::new(6_usize), Ability::new(AbilityClass::from("Holy Magic"), "Heal", 5)),
-        (Key::new(7_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Highness Heal", 20)),
-        (Key::new(8_usize), Ability::new(AbilityClass::from("Holy Magic"), "Turn Undead", 5)),
-        (Key::new(9_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Turn Undead", 20)),
+        (Key::new(1_usize),  Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1)),
+        (Key::new(2_usize),  Ability::new(AbilityClass::from("Water Magic"), "Create Water", 1)),
+        (Key::new(3_usize),  Ability::new(AbilityClass::from("Water Magic"), "Sacred Create Water", 5)),
+        (Key::new(4_usize),  Ability::new(AbilityClass::from("Water Magic"), "Purification", 1)),
+        (Key::new(5_usize),  Ability::new(AbilityClass::from("Water Magic"), "Holy Water", 1)),
+        (Key::new(6_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Heal", 5)),
+        (Key::new(7_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Sacred Highness Heal", 20)),
+        (Key::new(8_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Turn Undead", 5)),
+        (Key::new(9_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Sacred Turn Undead", 20)),
         (Key::new(10_usize), Ability::new(AbilityClass::from("Holy Magic"), "Exorcism", 5)),
         (Key::new(11_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Exorcism", 20)),
         (Key::new(12_usize), Ability::new(AbilityClass::from("Holy Magic"), "Break Spell", 7)),
@@ -3043,7 +3043,7 @@ fn test_heterogeneous_hash_map_ability3() {
 
 #[test]
 fn test_heterogeneous_hash_map_ability4() {
-    let character = get_character_darkness();
+    let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
         (Key::new(1_usize), Ability::new(AbilityClass::from("Crusader"), "Physical Resistance", 0)),
         (Key::new(2_usize), Ability::new(AbilityClass::from("Crusader"), "Magic Resistance", 0)),
@@ -3062,7 +3062,7 @@ fn test_heterogeneous_hash_map_ability4() {
 
 #[test]
 fn test_heterogeneous_hash_map_ability5() {
-    let character = get_character_yunyun();
+    let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
         (Key::new(1_usize),  Ability::new(AbilityClass::from("Wizard"), "Lightning", 10)),
         (Key::new(2_usize),  Ability::new(AbilityClass::from("Wizard"), "Fireball", 10)),
@@ -3097,7 +3097,7 @@ fn test_heterogeneous_hash_map_ability5() {
 
 #[test]
 fn test_heterogeneous_hash_map_ability6() {
-    let character = get_character_wiz();
+    let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
         (Key::new(1_usize),  Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3)),
         (Key::new(2_usize),  Ability::new(AbilityClass::from("Undead"), "Hand Of The Immortal King", 10)),
@@ -3136,7 +3136,7 @@ fn test_heterogeneous_hash_map_ability6() {
 
 #[test]
 fn test_heterogeneous_hash_map_ability7() {
-    let character = get_character_chris();
+    let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
         (Key::new(1_usize),  Ability::new(AbilityClass::from("Thief"), "Steal", 1)),
         (Key::new(2_usize),  Ability::new(AbilityClass::from("Thief"), "Lurk", 1)),
@@ -3161,7 +3161,7 @@ fn test_heterogeneous_hash_map_ability7() {
 
 #[test]
 fn test_heterogeneous_hash_map_ability8() {
-    let character = get_character_mitsurugi();
+    let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
         (Key::new(1_usize), Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10)),
     ]);
@@ -3171,5 +3171,82 @@ fn test_heterogeneous_hash_map_ability8() {
         let result = character.get(name).cloned();
 
         assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability_insert_remove1() {
+    let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Wiz");
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(), Some(1));
+    assert_eq!(character.len::<Race>(), Some(2));
+    assert_eq!(character.len::<Class>(), Some(1));
+    assert_eq!(character.len::<Job>(), Some(2));
+    assert_eq!(character.len::<Status>(), Some(1));
+    assert_eq!(character.len::<Description>(), Some(1));
+    assert_eq!(character.len::<Stats>(), Some(1));
+    assert_eq!(character.len::<HitPoints>(), Some(1));
+    assert_eq!(character.len::<MagicPoints>(), Some(1));
+    assert_eq!(character.len::<Chuunibyou>(), Some(1));
+    assert_eq!(character.len::<Equipment>(), Some(1));
+    assert_eq!(character.len::<Ability>(), Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        character.insert::<InventoryItem>(key, InventoryItem::new(&item_name, 1));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(), Some(1));
+    assert_eq!(character.len::<Race>(), Some(2));
+    assert_eq!(character.len::<Class>(), Some(1));
+    assert_eq!(character.len::<Job>(), Some(2));
+    assert_eq!(character.len::<Status>(), Some(1));
+    assert_eq!(character.len::<Description>(), Some(1));
+    assert_eq!(character.len::<Stats>(), Some(1));
+    assert_eq!(character.len::<HitPoints>(), Some(1));
+    assert_eq!(character.len::<MagicPoints>(), Some(1));
+    assert_eq!(character.len::<Chuunibyou>(), Some(1));
+    assert_eq!(character.len::<Equipment>(), Some(1));
+    assert_eq!(character.len::<Ability>(), Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(1027));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        let expected = Some(InventoryItem::new(&item_name, 1));
+        let result = character.remove::<InventoryItem, _>(&key);
+
+        assert_eq!(result, expected);
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(), Some(1));
+    assert_eq!(character.len::<Race>(), Some(2));
+    assert_eq!(character.len::<Class>(), Some(1));
+    assert_eq!(character.len::<Job>(), Some(2));
+    assert_eq!(character.len::<Status>(), Some(1));
+    assert_eq!(character.len::<Description>(), Some(1));
+    assert_eq!(character.len::<Stats>(), Some(1));
+    assert_eq!(character.len::<HitPoints>(), Some(1));
+    assert_eq!(character.len::<MagicPoints>(), Some(1));
+    assert_eq!(character.len::<Chuunibyou>(), Some(1));
+    assert_eq!(character.len::<Equipment>(), Some(1));
+    assert_eq!(character.len::<Ability>(), Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
     }
 }
