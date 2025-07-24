@@ -2446,3 +2446,149 @@ fn test_heterogeneous_hash_map_magic_points8() {
         assert_eq!(result, expected);
     }
 }
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<Chuunibyou>> = hash_map::HashMap::from([
+        (String::from("Kazuma"), Some(Chuunibyou::from(0))),
+        (String::from("Megumin"), Some(Chuunibyou::from(u32::MAX))),
+        (String::from("Aqua"), Some(Chuunibyou::from(0))),
+        (String::from("Darkness"), Some(Chuunibyou::from(0))),
+        (String::from("Yunyun"), Some(Chuunibyou::from(1))),
+        (String::from("Wiz"), Some(Chuunibyou::from(0))),
+        (String::from("Chris"), Some(Chuunibyou::from(0))),
+        (String::from("Mitsurugi"), Some(Chuunibyou::from(u32::MAX - 1))),
+    ]);
+    let key = Key::new(1_usize);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = chuuibyou.clone();
+        let result = characters
+            .get_unchecked(name)
+            .get::<Chuunibyou, _>(&key)
+            .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou1() {
+    let character = get_character_map_kazuma();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(0)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou2() {
+    let character = get_character_megumin();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(u32::MAX)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou3() {
+    let character = get_character_aqua();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(0)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou4() {
+    let character = get_character_darkness();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(0)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou5() {
+    let character = get_character_yunyun();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(1)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou6() {
+    let character = get_character_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(0)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou7() {
+    let character = get_character_chris();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(0)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_chuuibyou8() {
+    let character = get_character_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, Chuunibyou>, Chuunibyou> = hash_map::HashMap::from([
+        (Key::new(1_usize), Chuunibyou::from(u32::MAX - 1)),
+    ]);
+
+    for (name, chuuibyou) in expected_map.iter() {
+        let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
