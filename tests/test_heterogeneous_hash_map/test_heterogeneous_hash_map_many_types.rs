@@ -2506,6 +2506,70 @@ fn test_heterogeneous_hash_map_ability5() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (22_usize..=1024_usize).map(Key::new))
 }
 
+#[test]
+fn test_heterogeneous_hash_map_ability6() {
+    let character = get_character_map_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize),  Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3)),
+        (Key::new(2_usize),  Ability::new(AbilityClass::from("Undead"), "Hand Of The Immortal King", 10)),
+        (Key::new(3_usize),  Ability::new(AbilityClass::from("Undead"), "Physical Resistance", 0)),
+        (Key::new(4_usize),  Ability::new(AbilityClass::from("Undead"), "Magic Resistance", 0)),
+        (Key::new(5_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Petrification", 10)),
+        (Key::new(6_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Necromancy", 10)),
+        (Key::new(7_usize),  Ability::new(AbilityClass::from("Undead"), "Night Vision", 10)),
+        (Key::new(8_usize),  Ability::new(AbilityClass::from("Wizard"), "Anti-Devil Curses", 4)),
+        (Key::new(9_usize),  Ability::new(AbilityClass::from("Wizard"), "Freeze", 2)),
+        (Key::new(10_usize), Ability::new(AbilityClass::from("Wizard"), "Freeze Gust", 12)),
+        (Key::new(11_usize), Ability::new(AbilityClass::from("Wizard"), "Sleep", 10)),
+        (Key::new(12_usize), Ability::new(AbilityClass::from("Wizard"), "Crystal Prison", 10)),
+        (Key::new(13_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Crystal Prison", 10)),
+        (Key::new(14_usize), Ability::new(AbilityClass::from("Wizard"), "Bottomless Swamp", 10)),
+        (Key::new(15_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Lightning", 10)),
+        (Key::new(16_usize), Ability::new(AbilityClass::from("Wizard"), "Inferno", 10)),
+        (Key::new(17_usize), Ability::new(AbilityClass::from("Wizard"), "Light Of Saber", 10)),
+        (Key::new(18_usize), Ability::new(AbilityClass::from("Wizard"), "Lightning Strike", 10)),
+        (Key::new(19_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Golem", 10)),
+        (Key::new(20_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Wall", 10)),
+        (Key::new(21_usize), Ability::new(AbilityClass::from("Wizard"), "Enemy Search", 10)),
+        (Key::new(22_usize), Ability::new(AbilityClass::from("Wizard"), "Trap Search", 10)),
+        (Key::new(23_usize), Ability::new(AbilityClass::from("Wizard"), "Teleport", 10)),
+        (Key::new(24_usize), Ability::new(AbilityClass::from("Wizard"), "Random Teleport", 10)),
+        (Key::new(25_usize), Ability::new(AbilityClass::from("Wizard"), "Explosion", 100)),
+    ]);
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (26_usize..=1024_usize).map(Key::new))
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability7() {
+    let character = get_character_map_chris();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize),  Ability::new(AbilityClass::from("Thief"), "Steal", 1)),
+        (Key::new(2_usize),  Ability::new(AbilityClass::from("Thief"), "Lurk", 1)),
+        (Key::new(3_usize),  Ability::new(AbilityClass::from("Thief"), "Enemy Detection", 1)),
+        (Key::new(4_usize),  Ability::new(AbilityClass::from("Thief"), "Trap Detection", 1)),
+        (Key::new(5_usize),  Ability::new(AbilityClass::from("Thief"), "Disarm Trap", 1)),
+        (Key::new(6_usize),  Ability::new(AbilityClass::from("Thief"), "Flee", 1)),
+        (Key::new(7_usize),  Ability::new(AbilityClass::from("Thief"), "Bind", 1)),
+        (Key::new(8_usize),  Ability::new(AbilityClass::from("Thief"), "Skill Bind", 1)),
+        (Key::new(9_usize),  Ability::new(AbilityClass::from("Thief"), "Wire Trap", 1)),
+        (Key::new(10_usize), Ability::new(AbilityClass::from("Thief"), "Detect Treasure", 1)),
+        (Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Lockpick", 1)),
+    ]);
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (12_usize..=1024_usize).map(Key::new))
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability8() {
+    let character = get_character_map_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize), Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10)),
+    ]);
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+}
+
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar() {
@@ -2538,6 +2602,8 @@ fn test_heterogeneous_hash_map_familiar1() {
     let character = get_character_map_kazuma();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
+    assert_eq!(character.len::<Familiar>(), None);
+
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
@@ -2548,6 +2614,8 @@ fn test_heterogeneous_hash_map_familiar2() {
         (Key::new(1_usize), Familiar::from("Chomusuke")),
     ]);
 
+    assert_eq!(character.len::<Familiar>(), Some(1));
+
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
@@ -2555,6 +2623,8 @@ fn test_heterogeneous_hash_map_familiar2() {
 fn test_heterogeneous_hash_map_familiar3() {
     let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    assert_eq!(character.len::<Familiar>(), None);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
@@ -2564,6 +2634,8 @@ fn test_heterogeneous_hash_map_familiar4() {
     let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
+    assert_eq!(character.len::<Familiar>(), None);
+
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
@@ -2572,6 +2644,8 @@ fn test_heterogeneous_hash_map_familiar5() {
     let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
+    assert_eq!(character.len::<Familiar>(), None);
+
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
@@ -2579,6 +2653,8 @@ fn test_heterogeneous_hash_map_familiar5() {
 fn test_heterogeneous_hash_map_familiar6() {
     let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    assert_eq!(character.len::<Familiar>(), None);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
@@ -2595,6 +2671,8 @@ fn test_heterogeneous_hash_map_familiar7() {
 fn test_heterogeneous_hash_map_familiar8() {
     let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    assert_eq!(character.len::<Familiar>(), None);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
