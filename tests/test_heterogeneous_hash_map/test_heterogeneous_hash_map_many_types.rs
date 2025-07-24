@@ -228,6 +228,7 @@ impl InventoryItem {
     }
 }
 
+#[rustfmt::skip]
 fn get_character_map_kazuma() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Kazuma Satou"));
@@ -323,6 +324,7 @@ fn get_character_map_megumin() -> HeterogeneousHashMap<usize> {
     character
 }
 
+#[rustfmt::skip]
 fn get_character_map_aqua() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Aqua"));
@@ -369,15 +371,15 @@ fn get_character_map_aqua() -> HeterogeneousHashMap<usize> {
     character.insert::<InventoryItem>(Key::new(1_usize), InventoryItem::new("Jarred Snow Sprite", 1));
     character.insert::<InventoryItem>(Key::new(2_usize), InventoryItem::new("Bubbly", 0));
     character.insert::<InventoryItem>(Key::new(3_usize), InventoryItem::new("Coins", 0));
-    character.insert::<Ability>(Key::new(1_usize), Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1));
-    character.insert::<Ability>(Key::new(2_usize), Ability::new(AbilityClass::from("Water Magic"), "Create Water", 1));
-    character.insert::<Ability>(Key::new(3_usize), Ability::new(AbilityClass::from("Water Magic"), "Sacred Create Water", 5));
-    character.insert::<Ability>(Key::new(4_usize), Ability::new(AbilityClass::from("Water Magic"), "Purification", 1));
-    character.insert::<Ability>(Key::new(5_usize), Ability::new(AbilityClass::from("Water Magic"), "Holy Water", 1));
-    character.insert::<Ability>(Key::new(6_usize), Ability::new(AbilityClass::from("Holy Magic"), "Heal", 5));
-    character.insert::<Ability>(Key::new(7_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Highness Heal", 20));
-    character.insert::<Ability>(Key::new(8_usize), Ability::new(AbilityClass::from("Holy Magic"), "Turn Undead", 5));
-    character.insert::<Ability>(Key::new(9_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Turn Undead", 20));
+    character.insert::<Ability>(Key::new(1_usize),  Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1));
+    character.insert::<Ability>(Key::new(2_usize),  Ability::new(AbilityClass::from("Water Magic"), "Create Water", 1));
+    character.insert::<Ability>(Key::new(3_usize),  Ability::new(AbilityClass::from("Water Magic"), "Sacred Create Water", 5));
+    character.insert::<Ability>(Key::new(4_usize),  Ability::new(AbilityClass::from("Water Magic"), "Purification", 1));
+    character.insert::<Ability>(Key::new(5_usize),  Ability::new(AbilityClass::from("Water Magic"), "Holy Water", 1));
+    character.insert::<Ability>(Key::new(6_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Heal", 5));
+    character.insert::<Ability>(Key::new(7_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Sacred Highness Heal", 20));
+    character.insert::<Ability>(Key::new(8_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Turn Undead", 5));
+    character.insert::<Ability>(Key::new(9_usize),  Ability::new(AbilityClass::from("Holy Magic"), "Sacred Turn Undead", 20));
     character.insert::<Ability>(Key::new(10_usize), Ability::new(AbilityClass::from("Holy Magic"), "Exorcism", 5));
     character.insert::<Ability>(Key::new(11_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Exorcism", 20));
     character.insert::<Ability>(Key::new(12_usize), Ability::new(AbilityClass::from("Holy Magic"), "Break Spell", 7));
@@ -398,6 +400,7 @@ fn get_character_map_aqua() -> HeterogeneousHashMap<usize> {
     character
 }
 
+#[rustfmt::skip]
 fn get_character_map_darkness() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Darkness"));
@@ -433,6 +436,7 @@ fn get_character_map_darkness() -> HeterogeneousHashMap<usize> {
     character
 }
 
+#[rustfmt::skip]
 fn get_character_map_yunyun() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Yunyun"));
@@ -489,6 +493,7 @@ fn get_character_map_yunyun() -> HeterogeneousHashMap<usize> {
     character
 }
 
+#[rustfmt::skip]
 fn get_character_map_wiz() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Wiz"));
@@ -549,6 +554,7 @@ fn get_character_map_wiz() -> HeterogeneousHashMap<usize> {
     character
 }
 
+#[rustfmt::skip]
 fn get_character_map_chris() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Chris"));
@@ -596,6 +602,7 @@ fn get_character_map_chris() -> HeterogeneousHashMap<usize> {
     character
 }
 
+#[rustfmt::skip]
 fn get_character_map_mitsurugi() -> HeterogeneousHashMap<usize> {
     let mut character = HeterogeneousHashMap::new();
     character.insert::<CharacterName>(Key::new(1_usize), CharacterName::from("Kyouya Mitsurugi"));
@@ -678,6 +685,7 @@ where
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name() {
     let characters = get_character_map();
@@ -795,6 +803,7 @@ fn test_heterogeneous_hash_map_character_name8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name() {
     let characters = get_character_map();
@@ -895,6 +904,7 @@ fn test_heterogeneous_hash_map_player_name8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age() {
     let characters = get_character_map();
@@ -1003,6 +1013,7 @@ fn test_heterogeneous_hash_map_age8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race() {
     let mut characters = get_character_map();
@@ -1113,6 +1124,7 @@ fn test_heterogeneous_hash_map_race8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class() {
     let characters = get_character_map();
