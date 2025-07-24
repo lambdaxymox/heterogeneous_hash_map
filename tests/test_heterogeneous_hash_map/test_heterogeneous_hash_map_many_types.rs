@@ -6,7 +6,7 @@ use heterogeneous_hash_map::{
 
 use core::any;
 use core::fmt;
-use alloc_crate::string::{String, ToString};
+use alloc_crate::string::String;
 use std::hash;
 
 use hashbrown::hash_map;
@@ -715,7 +715,6 @@ fn test_heterogeneous_hash_map_character_name() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(2)),
         (String::from("Megumin"),   Some(3)),
@@ -762,7 +761,7 @@ fn test_heterogeneous_hash_map_character_name_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<CharacterName>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -889,7 +888,6 @@ fn test_heterogeneous_hash_map_player_name() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(3)),
         (String::from("Megumin"),   None),
@@ -936,7 +934,7 @@ fn test_heterogeneous_hash_map_player_name_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<PlayerName>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -1046,7 +1044,6 @@ fn test_heterogeneous_hash_map_age() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(1)),
@@ -1093,7 +1090,7 @@ fn test_heterogeneous_hash_map_age_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Age>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -1211,7 +1208,6 @@ fn test_heterogeneous_hash_map_race() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(2)),
@@ -1258,7 +1254,7 @@ fn test_heterogeneous_hash_map_race_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Race>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -1378,7 +1374,6 @@ fn test_heterogeneous_hash_map_class() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(1)),
@@ -1425,7 +1420,7 @@ fn test_heterogeneous_hash_map_class_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Class>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -1541,7 +1536,6 @@ fn test_heterogeneous_hash_map_job() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(3)),
         (String::from("Megumin"),   None),
@@ -1588,7 +1582,7 @@ fn test_heterogeneous_hash_map_job_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Job>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -1705,7 +1699,6 @@ fn test_heterogeneous_hash_map_status() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(1)),
@@ -1752,7 +1745,7 @@ fn test_heterogeneous_hash_map_status_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Status>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -1888,7 +1881,6 @@ fn test_heterogeneous_hash_map_description() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(2)),
@@ -1935,7 +1927,7 @@ fn test_heterogeneous_hash_map_description_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Description>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -2135,7 +2127,6 @@ fn test_heterogeneous_hash_map_stats() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(1)),
@@ -2182,7 +2173,7 @@ fn test_heterogeneous_hash_map_stats_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Stats>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -2362,7 +2353,6 @@ fn test_heterogeneous_hash_map_hit_points() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(1)),
@@ -2409,7 +2399,7 @@ fn test_heterogeneous_hash_map_hit_points_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<HitPoints>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -2525,7 +2515,6 @@ fn test_heterogeneous_hash_map_magic_points() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(1)),
@@ -2572,7 +2561,7 @@ fn test_heterogeneous_hash_map_magic_points_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<MagicPoints>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -2688,7 +2677,6 @@ fn test_heterogeneous_hash_map_chuunibyou() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(1)),
         (String::from("Megumin"),   Some(1)),
@@ -2735,7 +2723,7 @@ fn test_heterogeneous_hash_map_chuunibyou_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Chuunibyou>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -2851,7 +2839,6 @@ fn test_heterogeneous_hash_map_equipment() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(3)),
         (String::from("Megumin"),   Some(5)),
@@ -2898,7 +2885,7 @@ fn test_heterogeneous_hash_map_equipment_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Equipment>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -3023,7 +3010,6 @@ fn test_heterogeneous_hash_map_inventory_item() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(6)),
         (String::from("Megumin"),   Some(3)),
@@ -3070,7 +3056,7 @@ fn test_heterogeneous_hash_map_inventory_item_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<InventoryItem>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -3171,7 +3157,6 @@ fn test_heterogeneous_hash_map_inventory_item8() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    Some(10)),
         (String::from("Megumin"),   Some(1)),
@@ -3218,7 +3203,7 @@ fn test_heterogeneous_hash_map_ability_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Ability>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
@@ -3452,7 +3437,6 @@ fn test_heterogeneous_hash_map_familiar() {
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar_len1() {
-    let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
         (String::from("Kazuma"),    None),
         (String::from("Megumin"),   Some(1)),
@@ -3499,7 +3483,7 @@ fn test_heterogeneous_hash_map_familiar_len2() {
 
     for (name, len) in expected_map.iter() {
         let result = characters.get_unchecked(name).len::<Familiar>();
-        let expected = expected_map[name];
+        let expected = len.clone();
 
         assert_eq!(result, expected);
     }
