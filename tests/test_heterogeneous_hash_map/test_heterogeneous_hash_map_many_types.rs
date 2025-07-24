@@ -4,8 +4,10 @@ use heterogeneous_hash_map::{
     Key,
 };
 
+use core::any;
+use core::fmt;
+use alloc_crate::string::{String, ToString};
 use std::hash;
-use std::string::{String, ToString};
 
 use hashbrown::hash_map;
 
@@ -650,6 +652,32 @@ fn get_character_map() -> HomogeneousHashMap<String, HeterogeneousHashMap<usize>
     characters
 }
 
+fn run_test_heterogeneous_hash_map_accessors<T, I1, I2>(
+    het_map: &HeterogeneousHashMap<usize>,
+    expected_map: &hash_map::HashMap<Key<usize, T>, T>,
+    pre_range: I1, post_range: I2
+)
+where
+    T: any::Any + fmt::Debug + Clone + PartialEq,
+    I1: IntoIterator<Item = Key<usize, T>>,
+    I2: IntoIterator<Item = Key<usize, T>>,
+{
+    for key in pre_range.into_iter() {
+        assert_eq!(het_map.get::<T, _>(&key), None);
+    }
+
+    for (key, value) in expected_map.iter() {
+        let expected = Some(value.clone());
+        let result = het_map.get::<T, _>(key).cloned();
+
+        assert_eq!(result, expected);
+    }
+
+    for key in post_range.into_iter() {
+        assert_eq!(het_map.get::<T, _>(&key), None);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_character_name() {
     let characters = get_character_map();
@@ -684,18 +712,7 @@ fn test_heterogeneous_hash_map_character_name1() {
         (Key::new(2_usize), CharacterName::from("Kazutrash")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -707,18 +724,7 @@ fn test_heterogeneous_hash_map_character_name2() {
         (Key::new(3_usize), CharacterName::from("Crazy Explosion Girl")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -730,18 +736,7 @@ fn test_heterogeneous_hash_map_character_name3() {
         (Key::new(3_usize), CharacterName::from("Goddess Of Party Tricks")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -752,18 +747,7 @@ fn test_heterogeneous_hash_map_character_name4() {
         (Key::new(2_usize), CharacterName::from("Lalatina Ford Dustiness")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -773,18 +757,7 @@ fn test_heterogeneous_hash_map_character_name5() {
         (Key::new(1_usize), CharacterName::from("Yunyun")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -796,18 +769,7 @@ fn test_heterogeneous_hash_map_character_name6() {
         (Key::new(3_usize), CharacterName::from("Queen Of The Undead")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -818,18 +780,7 @@ fn test_heterogeneous_hash_map_character_name7() {
         (Key::new(2_usize), CharacterName::from("Noble Thief")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -841,18 +792,7 @@ fn test_heterogeneous_hash_map_character_name8() {
         (Key::new(3_usize), CharacterName::from("Magic Sword Guy")),
     ]);
 
-    assert_eq!(character.get::<CharacterName, _>(&0_usize), None);
-
-    for (key, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
-        let result = character.get::<CharacterName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<CharacterName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -890,26 +830,15 @@ fn test_heterogeneous_hash_map_player_name1() {
         (Key::new(3_usize), PlayerName::from("Kazuma Satou")),
     ]);
 
-    assert_eq!(character.get::<PlayerName, _>(&0_usize), None);
-
-    for (key, player_name) in expected_map.iter() {
-        let expected = Some(player_name.clone());
-        let result = character.get::<PlayerName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
 fn test_heterogeneous_hash_map_player_name2() {
     let character = get_character_map_megumin();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -919,42 +848,31 @@ fn test_heterogeneous_hash_map_player_name3() {
         (Key::new(1_usize), PlayerName::from("Aqua")),
     ]);
 
-    assert_eq!(character.get::<PlayerName, _>(&0_usize), None);
-
-    for (key, player_name) in expected_map.iter() {
-        let expected = Some(player_name.clone());
-        let result = character.get::<PlayerName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
 fn test_heterogeneous_hash_map_player_name4() {
     let character = get_character_map_darkness();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
 fn test_heterogeneous_hash_map_player_name5() {
     let character = get_character_map_yunyun();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
 fn test_heterogeneous_hash_map_player_name6() {
     let character = get_character_map_wiz();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -964,18 +882,7 @@ fn test_heterogeneous_hash_map_player_name7() {
         (Key::new(1_usize), PlayerName::from("Eris")),
     ]);
 
-    assert_eq!(character.get::<PlayerName, _>(&0_usize), None);
-
-    for (key, player_name) in expected_map.iter() {
-        let expected = Some(player_name.clone());
-        let result = character.get::<PlayerName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -985,18 +892,7 @@ fn test_heterogeneous_hash_map_player_name8() {
         (Key::new(1_usize), PlayerName::from("Kyouya Mitsurugi")),
     ]);
 
-    assert_eq!(character.get::<PlayerName, _>(&0_usize), None);
-
-    for (key, player_name) in expected_map.iter() {
-        let expected = Some(player_name.clone());
-        let result = character.get::<PlayerName, _>(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<PlayerName, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1032,18 +928,7 @@ fn test_heterogeneous_hash_map_age1() {
         (Key::new(1_usize), Age::from(17)),
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1053,18 +938,7 @@ fn test_heterogeneous_hash_map_age2() {
         (Key::new(1_usize), Age::from(14)),
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1075,18 +949,7 @@ fn test_heterogeneous_hash_map_age3() {
         (Key::new(2_usize), Age::from(u32::MAX)),
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1096,18 +959,7 @@ fn test_heterogeneous_hash_map_age4() {
         (Key::new(1_usize), Age::from(18)),
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1117,18 +969,7 @@ fn test_heterogeneous_hash_map_age5() {
         (Key::new(1_usize), Age::from(14)),
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1138,18 +979,7 @@ fn test_heterogeneous_hash_map_age6() {
         (Key::new(1_usize), Age::from(20_u32)),
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1160,18 +990,7 @@ fn test_heterogeneous_hash_map_age7() {
         (Key::new(2_usize), Age::from(u32::MAX))
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1181,18 +1000,7 @@ fn test_heterogeneous_hash_map_age8() {
         (Key::new(1_usize), Age::from(17)),
     ]);
 
-    assert_eq!(character.get::<Age, _>(&0_usize), None);
-
-    for (key, age) in expected_map.iter() {
-        let expected = Some(age.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Age, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1228,18 +1036,7 @@ fn test_heterogeneous_hash_map_race1() {
         (Key::new(1_usize), Race::from("Human")),
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1250,18 +1047,7 @@ fn test_heterogeneous_hash_map_race2() {
         (Key::new(2_usize), Race::from("Crimson Magic Clan")),
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1271,18 +1057,7 @@ fn test_heterogeneous_hash_map_race3() {
         (Key::new(1_usize), Race::from("God")),
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1292,18 +1067,7 @@ fn test_heterogeneous_hash_map_race4() {
         (Key::new(1_usize), Race::from("Human")),
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1314,18 +1078,7 @@ fn test_heterogeneous_hash_map_race5() {
         (Key::new(2_usize), Race::from("Crimson Magic Clan")),
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1336,18 +1089,7 @@ fn test_heterogeneous_hash_map_race6() {
         (Key::new(2_usize), Race::from("Human")),
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1358,18 +1100,7 @@ fn test_heterogeneous_hash_map_race7() {
         (Key::new(2_usize), Race::from("God"))
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1379,18 +1110,7 @@ fn test_heterogeneous_hash_map_race8() {
         (Key::new(1_usize), Race::from("Human")),
     ]);
 
-    assert_eq!(character.get::<Race, _>(&0_usize), None);
-
-    for (key, race) in expected_map.iter() {
-        let expected = Some(race.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Race, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1426,18 +1146,7 @@ fn test_heterogeneous_hash_map_class1() {
         (Key::new(1_usize), Class::from("Adventurer")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1447,18 +1156,7 @@ fn test_heterogeneous_hash_map_class2() {
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1468,18 +1166,7 @@ fn test_heterogeneous_hash_map_class3() {
         (Key::new(1_usize), Class::from("Arch Priest")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1489,18 +1176,7 @@ fn test_heterogeneous_hash_map_class4() {
         (Key::new(1_usize), Class::from("Crusader")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1510,18 +1186,7 @@ fn test_heterogeneous_hash_map_class5() {
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1531,18 +1196,7 @@ fn test_heterogeneous_hash_map_class6() {
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1552,18 +1206,7 @@ fn test_heterogeneous_hash_map_class7() {
         (Key::new(1_usize), Class::from("Thief")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1573,18 +1216,7 @@ fn test_heterogeneous_hash_map_class8() {
         (Key::new(1_usize), Class::from("Swordmaster")),
     ]);
 
-    assert_eq!(character.get::<Class, _>(&0_usize), None);
-
-    for (key, class) in expected_map.iter() {
-        let expected = Some(class.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Class, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1622,26 +1254,15 @@ fn test_heterogeneous_hash_map_job1() {
         (Key::new(3_usize), Job::from("Strategic Coward")),
     ]);
 
-    assert_eq!(character.get::<Job, _>(&0_usize), None);
-
-    for (name, job) in expected_map.iter() {
-        let expected = Some(job.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
 fn test_heterogeneous_hash_map_job2() {
     let character = get_character_map_megumin();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1651,18 +1272,7 @@ fn test_heterogeneous_hash_map_job3() {
         (Key::new(1_usize), Job::from("Self-Proclaimed Goddess")),
     ]);
 
-    assert_eq!(character.get::<Job, _>(&0_usize), None);
-
-    for (key, job) in expected_map.iter() {
-        let expected = Some(job.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1672,26 +1282,15 @@ fn test_heterogeneous_hash_map_job4() {
         (Key::new(1_usize), Job::from("Noble")),
     ]);
 
-    assert_eq!(character.get::<Job, _>(&0_usize), None);
-
-    for (key, job) in expected_map.iter() {
-        let expected = Some(job.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
 fn test_heterogeneous_hash_map_job5() {
     let character = get_character_map_yunyun();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1702,18 +1301,7 @@ fn test_heterogeneous_hash_map_job6() {
         (Key::new(2_usize), Job::from("Shopkeeper")),
     ]);
 
-    assert_eq!(character.get::<Job, _>(&0_usize), None);
-
-    for (key, job) in expected_map.iter() {
-        let expected = Some(job.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1725,18 +1313,7 @@ fn test_heterogeneous_hash_map_job7() {
         (Key::new(3_usize), Job::from("Currently Cleaning Up Aqua's Messes. Send Help.")),
     ]);
 
-    assert_eq!(character.get::<Job, _>(&0_usize), None);
-
-    for (key, job) in expected_map.iter() {
-        let expected = Some(job.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1746,18 +1323,7 @@ fn test_heterogeneous_hash_map_job8() {
         (Key::new(1_usize), Job::from("Isekai Protagonist")),
     ]);
 
-    assert_eq!(character.get::<Job, _>(&0_usize), None);
-
-    for (key, job) in expected_map.iter() {
-        let expected = Some(job.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Job, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1793,18 +1359,7 @@ fn test_heterogeneous_hash_map_status1() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    assert_eq!(character.get::<Status, _>(&0_usize), None);
-
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1814,18 +1369,7 @@ fn test_heterogeneous_hash_map_status2() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    assert_eq!(character.get::<Status, _>(&0_usize), None);
-
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1835,18 +1379,7 @@ fn test_heterogeneous_hash_map_status3() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    assert_eq!(character.get::<Status, _>(&0_usize), None);
-
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1856,18 +1389,7 @@ fn test_heterogeneous_hash_map_status4() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    assert_eq!(character.get::<Status, _>(&0_usize), None);
-
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1877,18 +1399,7 @@ fn test_heterogeneous_hash_map_status5() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    assert_eq!(character.get::<Status, _>(&0_usize), None);
-
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1898,18 +1409,7 @@ fn test_heterogeneous_hash_map_status6() {
         (Key::new(1_usize), Status::from("Undead")),
     ]);
 
-    assert_eq!(character.get::<Status, _>(&0_usize), None);
-
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1919,16 +1419,7 @@ fn test_heterogeneous_hash_map_status7() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -1938,18 +1429,7 @@ fn test_heterogeneous_hash_map_status8() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    assert_eq!(character.get::<Status, _>(&0_usize), None);
-
-    for (key, status) in expected_map.iter() {
-        let expected = Some(status.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Status, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2005,18 +1485,7 @@ fn test_heterogeneous_hash_map_description1() {
         (Key::new(1_usize), Description::from("Slovenly shut-in NEET with questionable morals and a surprisingly sharp wit.")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2027,18 +1496,7 @@ fn test_heterogeneous_hash_map_description2() {
         (Key::new(2_usize), Description::from("NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps.")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2055,18 +1513,7 @@ fn test_heterogeneous_hash_map_description3() {
         ")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (6_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2078,18 +1525,7 @@ fn test_heterogeneous_hash_map_description4() {
         ")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2102,18 +1538,7 @@ fn test_heterogeneous_hash_map_description5() {
         ")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2125,18 +1550,7 @@ fn test_heterogeneous_hash_map_description6() {
         ")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2148,18 +1562,7 @@ fn test_heterogeneous_hash_map_description7() {
         ")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2172,18 +1575,7 @@ fn test_heterogeneous_hash_map_description8() {
         ")),
     ]);
 
-    assert_eq!(character.get::<Description, _>(&0_usize), None);
-
-    for (key, description) in expected_map.iter() {
-        let expected = Some(description.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Description, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2291,18 +1683,7 @@ fn test_heterogeneous_hash_map_stats1() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2320,18 +1701,7 @@ fn test_heterogeneous_hash_map_stats2() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2349,18 +1719,7 @@ fn test_heterogeneous_hash_map_stats3() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2378,18 +1737,7 @@ fn test_heterogeneous_hash_map_stats4() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2407,18 +1755,7 @@ fn test_heterogeneous_hash_map_stats5() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2436,18 +1773,7 @@ fn test_heterogeneous_hash_map_stats6() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2465,18 +1791,7 @@ fn test_heterogeneous_hash_map_stats7() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2494,18 +1809,7 @@ fn test_heterogeneous_hash_map_stats8() {
         }),
     ]);
 
-    assert_eq!(character.get::<Stats, _>(&0_usize), None);
-
-    for (key, stats) in expected_map.iter() {
-        let expected = Some(stats.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Stats, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2541,18 +1845,7 @@ fn test_heterogeneous_hash_map_hit_points1() {
         (Key::new(1_usize), HitPoints::from(40_u32)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2562,18 +1855,7 @@ fn test_heterogeneous_hash_map_hit_points2() {
         (Key::new(1_usize), HitPoints::from(20_u32)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2583,18 +1865,7 @@ fn test_heterogeneous_hash_map_hit_points3() {
         (Key::new(1_usize), HitPoints::from(60_u32)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2604,18 +1875,7 @@ fn test_heterogeneous_hash_map_hit_points4() {
         (Key::new(1_usize), HitPoints::from(150)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2625,18 +1885,7 @@ fn test_heterogeneous_hash_map_hit_points5() {
         (Key::new(1_usize), HitPoints::from(30_u32)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2646,18 +1895,7 @@ fn test_heterogeneous_hash_map_hit_points6() {
         (Key::new(1_usize), HitPoints::from(60_u32)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2667,18 +1905,7 @@ fn test_heterogeneous_hash_map_hit_points7() {
         (Key::new(1_usize), HitPoints::from(100_u32)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2688,18 +1915,7 @@ fn test_heterogeneous_hash_map_hit_points8() {
         (Key::new(1_usize), HitPoints::from(200_u32)),
     ]);
 
-    assert_eq!(character.get::<HitPoints, _>(&0_usize), None);
-
-    for (key, hit_points) in expected_map.iter() {
-        let expected = Some(hit_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<HitPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2735,18 +1951,7 @@ fn test_heterogeneous_hash_map_magic_points1() {
         (Key::new(1_usize), MagicPoints::from(20_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2756,18 +1961,7 @@ fn test_heterogeneous_hash_map_magic_points2() {
         (Key::new(1_usize), MagicPoints::from(999_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2777,18 +1971,7 @@ fn test_heterogeneous_hash_map_magic_points3() {
         (Key::new(1_usize), MagicPoints::from(u32::MAX)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2798,18 +1981,7 @@ fn test_heterogeneous_hash_map_magic_points4() {
         (Key::new(1_usize), MagicPoints::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2819,18 +1991,7 @@ fn test_heterogeneous_hash_map_magic_points5() {
         (Key::new(1_usize), MagicPoints::from(400_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2840,18 +2001,7 @@ fn test_heterogeneous_hash_map_magic_points6() {
         (Key::new(1_usize), MagicPoints::from(700)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2861,18 +2011,7 @@ fn test_heterogeneous_hash_map_magic_points7() {
         (Key::new(1_usize), MagicPoints::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2882,18 +2021,7 @@ fn test_heterogeneous_hash_map_magic_points8() {
         (Key::new(1_usize), MagicPoints::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, magic_points) in expected_map.iter() {
-        let expected = Some(magic_points.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<MagicPoints, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2929,18 +2057,7 @@ fn test_heterogeneous_hash_map_chuunibyou1() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2950,18 +2067,7 @@ fn test_heterogeneous_hash_map_chuunibyou2() {
         (Key::new(1_usize), Chuunibyou::from(u32::MAX)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2971,18 +2077,7 @@ fn test_heterogeneous_hash_map_chuunibyou3() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2992,18 +2087,7 @@ fn test_heterogeneous_hash_map_chuunibyou4() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3013,18 +2097,7 @@ fn test_heterogeneous_hash_map_chuunibyou5() {
         (Key::new(1_usize), Chuunibyou::from(1_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3034,18 +2107,7 @@ fn test_heterogeneous_hash_map_chuunibyou6() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3055,18 +2117,7 @@ fn test_heterogeneous_hash_map_chuunibyou7() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3076,18 +2127,7 @@ fn test_heterogeneous_hash_map_chuunibyou8() {
         (Key::new(1_usize), Chuunibyou::from(100_u32)),
     ]);
 
-    assert_eq!(character.get::<MagicPoints, _>(&0_usize), None);
-
-    for (key, chuunibyou) in expected_map.iter() {
-        let expected = Some(chuunibyou.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Chuunibyou, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3125,18 +2165,7 @@ fn test_heterogeneous_hash_map_equipment1() {
         (Key::new(3_usize), Equipment::from("Cursed Ring")),
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3150,18 +2179,7 @@ fn test_heterogeneous_hash_map_equipment2() {
         (Key::new(5_usize), Equipment::from("Eye Patch"))
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (6_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3172,18 +2190,7 @@ fn test_heterogeneous_hash_map_equipment3() {
         (Key::new(2_usize), Equipment::from("Scepter")),
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3194,18 +2201,7 @@ fn test_heterogeneous_hash_map_equipment4() {
         (Key::new(2_usize), Equipment::from("Long Sword")),
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3216,18 +2212,7 @@ fn test_heterogeneous_hash_map_equipment5() {
         (Key::new(2_usize), Equipment::from("Magic Rod")),
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3237,18 +2222,7 @@ fn test_heterogeneous_hash_map_equipment6() {
         (Key::new(1_usize), Equipment::from("Rosary")),
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3258,18 +2232,7 @@ fn test_heterogeneous_hash_map_equipment7() {
         (Key::new(1_usize), Equipment::from("Magic Dagger")),
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3279,18 +2242,7 @@ fn test_heterogeneous_hash_map_equipment8() {
         (Key::new(1_usize), Equipment::from("Cursed Sword Gram")),
     ]);
 
-    assert_eq!(character.get::<Equipment, _>(&0_usize), None);
-
-    for (key, equipment) in expected_map.iter() {
-        let expected = Some(equipment.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Equipment, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3331,18 +2283,7 @@ fn test_heterogeneous_hash_map_inventory_item1() {
         (Key::new(6_usize), InventoryItem::new("Dream Consultation Form", 99)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (key, inventory_item) in expected_map.iter() {
-        let expected = Some(inventory_item.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (7_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (7_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3354,18 +2295,7 @@ fn test_heterogeneous_hash_map_inventory_item2() {
         (Key::new(3_usize), InventoryItem::new("Highest-Quality Manatites", 3)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (key, inventory_item) in expected_map.iter() {
-        let expected = Some(inventory_item.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3377,26 +2307,15 @@ fn test_heterogeneous_hash_map_inventory_item3() {
         (Key::new(3_usize), InventoryItem::new("Coins", 0)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (key, inventory_item) in expected_map.iter() {
-        let expected = Some(inventory_item.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
 fn test_heterogeneous_hash_map_inventory_item4() {
     let character = get_character_map_darkness();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3410,18 +2329,7 @@ fn test_heterogeneous_hash_map_inventory_item5() {
         (Key::new(5_usize), InventoryItem::new("Coins", 1000)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (key, inventory_item) in expected_map.iter() {
-        let expected = Some(inventory_item.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (6_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3433,18 +2341,7 @@ fn test_heterogeneous_hash_map_inventory_item6() {
         (Key::new(3_usize), InventoryItem::new("Forbidden Crystal", 1)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (key, inventory_item) in expected_map.iter() {
-        let expected = Some(inventory_item.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (4_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3455,18 +2352,7 @@ fn test_heterogeneous_hash_map_inventory_item7() {
         (Key::new(2_usize), InventoryItem::new("Rock", 8)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (key, inventory_item) in expected_map.iter() {
-        let expected = Some(inventory_item.clone());
-        let result = character.get(key).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (3_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3540,18 +2426,7 @@ fn test_heterogeneous_hash_map_ability2() {
         (Key::new(1_usize), Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3585,18 +2460,7 @@ fn test_heterogeneous_hash_map_ability3() {
         (Key::new(25_usize), Ability::new(AbilityClass::from("Holy Magic"), "Magic Seal", 50)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (26_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (26_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3610,18 +2474,7 @@ fn test_heterogeneous_hash_map_ability4() {
         (Key::new(5_usize), Ability::new(AbilityClass::from("Crusader"), "Side Slash", 0)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (6_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3651,18 +2504,7 @@ fn test_heterogeneous_hash_map_ability5() {
         (Key::new(21_usize), Ability::new(AbilityClass::from("Wizard"), "Control Of Weather", 30)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (22_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (22_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3696,18 +2538,7 @@ fn test_heterogeneous_hash_map_ability6() {
         (Key::new(25_usize), Ability::new(AbilityClass::from("Wizard"), "Explosion", 100)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (26_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (26_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3727,18 +2558,7 @@ fn test_heterogeneous_hash_map_ability7() {
         (Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Lockpick", 1)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (12_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (12_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -3748,18 +2568,7 @@ fn test_heterogeneous_hash_map_ability8() {
         (Key::new(1_usize), Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (2_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]

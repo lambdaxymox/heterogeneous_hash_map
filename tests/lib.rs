@@ -7,6 +7,8 @@
     )
 )]
 #![no_std]
+extern crate alloc as alloc_crate;
+
 extern crate std;
 
 mod test_heterogeneous_hash_map;
