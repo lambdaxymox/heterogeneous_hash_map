@@ -681,20 +681,20 @@ where
 #[test]
 fn test_heterogeneous_hash_map_character_name() {
     let characters = get_character_map();
-    let expected_map: hash_map::HashMap<String, CharacterName> = hash_map::HashMap::from([
-        (String::from("Kazuma"),    CharacterName::from("Kazuma Satou")),
-        (String::from("Megumin"),   CharacterName::from("Megumin")),
-        (String::from("Aqua"),      CharacterName::from("Aqua")),
-        (String::from("Darkness"),  CharacterName::from("Darkness")),
-        (String::from("Yunyun"),    CharacterName::from("Yunyun")),
-        (String::from("Wiz"),       CharacterName::from("Wiz")),
-        (String::from("Chris"),     CharacterName::from("Chris")),
-        (String::from("Mitsurugi"), CharacterName::from("Kyouya Mitsurugi")),
+    let expected_map: hash_map::HashMap<String, Option<CharacterName>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(CharacterName::from("Kazuma Satou"))),
+        (String::from("Megumin"),   Some(CharacterName::from("Megumin"))),
+        (String::from("Aqua"),      Some(CharacterName::from("Aqua"))),
+        (String::from("Darkness"),  Some(CharacterName::from("Darkness"))),
+        (String::from("Yunyun"),    Some(CharacterName::from("Yunyun"))),
+        (String::from("Wiz"),       Some(CharacterName::from("Wiz"))),
+        (String::from("Chris"),     Some(CharacterName::from("Chris"))),
+        (String::from("Mitsurugi"), Some(CharacterName::from("Kyouya Mitsurugi"))),
     ]);
     let key = Key::new(1_usize);
 
     for (name, character_name) in expected_map.iter() {
-        let expected = Some(character_name.clone());
+        let expected = character_name.clone();
         let result = characters
             .get_unchecked(name)
             .get::<CharacterName, _>(&key)
@@ -898,20 +898,20 @@ fn test_heterogeneous_hash_map_player_name8() {
 #[test]
 fn test_heterogeneous_hash_map_age() {
     let characters = get_character_map();
-    let expected_map: hash_map::HashMap<String, Age> = hash_map::HashMap::from([
-        (String::from("Kazuma"),    Age::from(17)),
-        (String::from("Megumin"),   Age::from(14)),
-        (String::from("Aqua"),      Age::from(16)),
-        (String::from("Darkness"),  Age::from(18)),
-        (String::from("Yunyun"),    Age::from(14)),
-        (String::from("Wiz"),       Age::from(20_u32)),
-        (String::from("Chris"),     Age::from(15)),
-        (String::from("Mitsurugi"), Age::from(17)),
+    let expected_map: hash_map::HashMap<String, Option<Age>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(Age::from(17))),
+        (String::from("Megumin"),   Some(Age::from(14))),
+        (String::from("Aqua"),      Some(Age::from(16))),
+        (String::from("Darkness"),  Some(Age::from(18))),
+        (String::from("Yunyun"),    Some(Age::from(14))),
+        (String::from("Wiz"),       Some(Age::from(20_u32))),
+        (String::from("Chris"),     Some(Age::from(15))),
+        (String::from("Mitsurugi"), Some(Age::from(17))),
     ]);
     let key = Key::new(1_usize);
 
     for (name, age) in expected_map.iter() {
-        let expected = Some(age.clone());
+        let expected = age.clone();
         let result = characters
             .get_unchecked(name)
             .get::<Age, _>(&key)
@@ -1006,20 +1006,20 @@ fn test_heterogeneous_hash_map_age8() {
 #[test]
 fn test_heterogeneous_hash_map_race() {
     let mut characters = get_character_map();
-    let expected_map: hash_map::HashMap<String, Race> = hash_map::HashMap::from([
-        (String::from("Kazuma"),    Race::from("Human")),
-        (String::from("Megumin"),   Race::from("Human")),
-        (String::from("Aqua"),      Race::from("God")),
-        (String::from("Darkness"),  Race::from("Human")),
-        (String::from("Yunyun"),    Race::from("Human")),
-        (String::from("Wiz"),       Race::from("Lich")),
-        (String::from("Chris"),     Race::from("Human")),
-        (String::from("Mitsurugi"), Race::from("Human")),
+    let expected_map: hash_map::HashMap<String, Option<Race>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(Race::from("Human"))),
+        (String::from("Megumin"),   Some(Race::from("Human"))),
+        (String::from("Aqua"),      Some(Race::from("God"))),
+        (String::from("Darkness"),  Some(Race::from("Human"))),
+        (String::from("Yunyun"),    Some(Race::from("Human"))),
+        (String::from("Wiz"),       Some(Race::from("Lich"))),
+        (String::from("Chris"),     Some(Race::from("Human"))),
+        (String::from("Mitsurugi"), Some(Race::from("Human"))),
     ]);
     let key = Key::new(1_usize);
 
     for (name, race) in expected_map.iter() {
-        let expected = Some(race.clone());
+        let expected = race.clone();
         let result = characters
             .get_unchecked(name)
             .get::<Race, _>(&key)
@@ -1116,20 +1116,20 @@ fn test_heterogeneous_hash_map_race8() {
 #[test]
 fn test_heterogeneous_hash_map_class() {
     let characters = get_character_map();
-    let expected_map: hash_map::HashMap<String, Class> = hash_map::HashMap::from([
-        (String::from("Kazuma"),    Class::from("Adventurer")),
-        (String::from("Megumin"),   Class::from("Arch Wizard")),
-        (String::from("Aqua"),      Class::from("Arch Priest")),
-        (String::from("Darkness"),  Class::from("Crusader")),
-        (String::from("Yunyun"),    Class::from("Arch Wizard")),
-        (String::from("Wiz"),       Class::from("Arch Wizard")),
-        (String::from("Chris"),     Class::from("Thief")),
-        (String::from("Mitsurugi"), Class::from("Swordmaster")),
+    let expected_map: hash_map::HashMap<String, Option<Class>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(Class::from("Adventurer"))),
+        (String::from("Megumin"),   Some(Class::from("Arch Wizard"))),
+        (String::from("Aqua"),      Some(Class::from("Arch Priest"))),
+        (String::from("Darkness"),  Some(Class::from("Crusader"))),
+        (String::from("Yunyun"),    Some(Class::from("Arch Wizard"))),
+        (String::from("Wiz"),       Some(Class::from("Arch Wizard"))),
+        (String::from("Chris"),     Some(Class::from("Thief"))),
+        (String::from("Mitsurugi"), Some(Class::from("Swordmaster"))),
     ]);
     let key = Key::new(1_usize);
 
     for (name, class) in expected_map.iter() {
-        let expected = Some(class.clone());
+        let expected = class.clone();
         let result = characters
             .get_unchecked(name)
             .get::<Class, _>(&key)
@@ -1219,6 +1219,7 @@ fn test_heterogeneous_hash_map_class8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job() {
     let characters = get_character_map();
@@ -1326,6 +1327,7 @@ fn test_heterogeneous_hash_map_job8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status() {
     let characters = get_character_map();
@@ -1432,6 +1434,7 @@ fn test_heterogeneous_hash_map_status8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description() {
     let characters = get_character_map();
@@ -1578,6 +1581,7 @@ fn test_heterogeneous_hash_map_description8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats() {
     let characters = get_character_map();
@@ -1812,17 +1816,18 @@ fn test_heterogeneous_hash_map_stats8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points() {
     let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<HitPoints>> = hash_map::HashMap::from([
-        (String::from("Kazuma"), Some(HitPoints::from(40_u32))),
-        (String::from("Megumin"), Some(HitPoints::from(20_u32))),
-        (String::from("Aqua"), Some(HitPoints::from(60_u32))),
-        (String::from("Darkness"), Some(HitPoints::from(150))),
-        (String::from("Yunyun"), Some(HitPoints::from(30_u32))),
-        (String::from("Wiz"), Some(HitPoints::from(60_u32))),
-        (String::from("Chris"), Some(HitPoints::from(100_u32))),
+        (String::from("Kazuma"),    Some(HitPoints::from(40_u32))),
+        (String::from("Megumin"),   Some(HitPoints::from(20_u32))),
+        (String::from("Aqua"),      Some(HitPoints::from(60_u32))),
+        (String::from("Darkness"),  Some(HitPoints::from(150))),
+        (String::from("Yunyun"),    Some(HitPoints::from(30_u32))),
+        (String::from("Wiz"),       Some(HitPoints::from(60_u32))),
+        (String::from("Chris"),     Some(HitPoints::from(100_u32))),
         (String::from("Mitsurugi"), Some(HitPoints::from(200_u32))),
     ]);
     let key = Key::new(1_usize);
@@ -1918,17 +1923,18 @@ fn test_heterogeneous_hash_map_hit_points8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points() {
     let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<MagicPoints>> = hash_map::HashMap::from([
-        (String::from("Kazuma"), Some(MagicPoints::from(20_u32))),
-        (String::from("Megumin"), Some(MagicPoints::from(999_u32))),
-        (String::from("Aqua"), Some(MagicPoints::from(u32::MAX))),
-        (String::from("Darkness"), Some(MagicPoints::from(0_u32))),
-        (String::from("Yunyun"), Some(MagicPoints::from(400_u32))),
-        (String::from("Wiz"), Some(MagicPoints::from(700))),
-        (String::from("Chris"), Some(MagicPoints::from(0_u32))),
+        (String::from("Kazuma"),    Some(MagicPoints::from(20_u32))),
+        (String::from("Megumin"),   Some(MagicPoints::from(999_u32))),
+        (String::from("Aqua"),      Some(MagicPoints::from(u32::MAX))),
+        (String::from("Darkness"),  Some(MagicPoints::from(0_u32))),
+        (String::from("Yunyun"),    Some(MagicPoints::from(400_u32))),
+        (String::from("Wiz"),       Some(MagicPoints::from(700))),
+        (String::from("Chris"),     Some(MagicPoints::from(0_u32))),
         (String::from("Mitsurugi"), Some(MagicPoints::from(0_u32))),
     ]);
     let key = Key::new(1_usize);
@@ -2024,17 +2030,18 @@ fn test_heterogeneous_hash_map_magic_points8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou() {
     let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<Chuunibyou>> = hash_map::HashMap::from([
-        (String::from("Kazuma"), Some(Chuunibyou::from(0_u32))),
-        (String::from("Megumin"), Some(Chuunibyou::from(u32::MAX))),
-        (String::from("Aqua"), Some(Chuunibyou::from(0_u32))),
-        (String::from("Darkness"), Some(Chuunibyou::from(0_u32))),
-        (String::from("Yunyun"), Some(Chuunibyou::from(1_u32))),
-        (String::from("Wiz"), Some(Chuunibyou::from(0_u32))),
-        (String::from("Chris"), Some(Chuunibyou::from(0_u32))),
+        (String::from("Kazuma"),    Some(Chuunibyou::from(0_u32))),
+        (String::from("Megumin"),   Some(Chuunibyou::from(u32::MAX))),
+        (String::from("Aqua"),      Some(Chuunibyou::from(0_u32))),
+        (String::from("Darkness"),  Some(Chuunibyou::from(0_u32))),
+        (String::from("Yunyun"),    Some(Chuunibyou::from(1_u32))),
+        (String::from("Wiz"),       Some(Chuunibyou::from(0_u32))),
+        (String::from("Chris"),     Some(Chuunibyou::from(0_u32))),
         (String::from("Mitsurugi"), Some(Chuunibyou::from(100_u32))),
     ]);
     let key = Key::new(1_usize);
@@ -2130,17 +2137,18 @@ fn test_heterogeneous_hash_map_chuunibyou8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment() {
     let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<Equipment>> = hash_map::HashMap::from([
-        (String::from("Kazuma"), Some(Equipment::from("Chunchunmaru"))),
-        (String::from("Megumin"), Some(Equipment::from("Magic Rod"))),
-        (String::from("Aqua"), Some(Equipment::from("Feather Mantle"))),
-        (String::from("Darkness"), Some(Equipment::from("Adamantite Armor"))),
-        (String::from("Yunyun"), Some(Equipment::from("Short Sword"))),
-        (String::from("Wiz"), Some(Equipment::from("Rosary"))),
-        (String::from("Chris"), Some(Equipment::from("Magic Dagger"))),
+        (String::from("Kazuma"),    Some(Equipment::from("Chunchunmaru"))),
+        (String::from("Megumin"),   Some(Equipment::from("Magic Rod"))),
+        (String::from("Aqua"),      Some(Equipment::from("Feather Mantle"))),
+        (String::from("Darkness"),  Some(Equipment::from("Adamantite Armor"))),
+        (String::from("Yunyun"),    Some(Equipment::from("Short Sword"))),
+        (String::from("Wiz"),       Some(Equipment::from("Rosary"))),
+        (String::from("Chris"),     Some(Equipment::from("Magic Dagger"))),
         (String::from("Mitsurugi"), Some(Equipment::from("Cursed Sword Gram"))),
     ]);
     let key = Key::new(1_usize);
@@ -2245,17 +2253,18 @@ fn test_heterogeneous_hash_map_equipment8() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item() {
     let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<InventoryItem>> = hash_map::HashMap::from([
-        (String::from("Kazuma"), Some(InventoryItem::new("Adventurer Card", 1))),
-        (String::from("Megumin"), Some(InventoryItem::new("Light Of Reflection Scroll", 1))),
-        (String::from("Aqua"), Some(InventoryItem::new("Jarred Snow Sprite", 1))),
-        (String::from("Darkness"), None),
-        (String::from("Yunyun"), Some(InventoryItem::new("Magic Canceller Scroll", 1))),
-        (String::from("Wiz"), Some(InventoryItem::new("Forced Teleport Scroll", 1))),
-        (String::from("Chris"), Some(InventoryItem::new("Barrier Breaker", 1))),
+        (String::from("Kazuma"),    Some(InventoryItem::new("Adventurer Card", 1))),
+        (String::from("Megumin"),   Some(InventoryItem::new("Light Of Reflection Scroll", 1))),
+        (String::from("Aqua"),      Some(InventoryItem::new("Jarred Snow Sprite", 1))),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    Some(InventoryItem::new("Magic Canceller Scroll", 1))),
+        (String::from("Wiz"),       Some(InventoryItem::new("Forced Teleport Scroll", 1))),
+        (String::from("Chris"),     Some(InventoryItem::new("Barrier Breaker", 1))),
         (String::from("Mitsurugi"), None),
     ]);
     let key = Key::new(1_usize);
@@ -2363,17 +2372,18 @@ fn test_heterogeneous_hash_map_inventory_item8() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability() {
     let characters = get_character_map();
     let expected_map: hash_map::HashMap<String, Option<Ability>> = hash_map::HashMap::from([
-        (String::from("Kazuma"), Some(Ability::new(AbilityClass::from("Wizard"), "Create Water", 1))),
-        (String::from("Megumin"), Some(Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999))),
-        (String::from("Aqua"), Some(Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1))),
-        (String::from("Darkness"), Some(Ability::new(AbilityClass::from("Crusader"), "Physical Resistance", 0))),
-        (String::from("Yunyun"), Some(Ability::new(AbilityClass::from("Wizard"), "Lightning", 10))),
-        (String::from("Wiz"), Some(Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3))),
-        (String::from("Chris"), Some(Ability::new(AbilityClass::from("Thief"), "Steal", 1))),
+        (String::from("Kazuma"),    Some(Ability::new(AbilityClass::from("Wizard"), "Create Water", 1))),
+        (String::from("Megumin"),   Some(Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999))),
+        (String::from("Aqua"),      Some(Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1))),
+        (String::from("Darkness"),  Some(Ability::new(AbilityClass::from("Crusader"), "Physical Resistance", 0))),
+        (String::from("Yunyun"),    Some(Ability::new(AbilityClass::from("Wizard"), "Lightning", 10))),
+        (String::from("Wiz"),       Some(Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3))),
+        (String::from("Chris"),     Some(Ability::new(AbilityClass::from("Thief"), "Steal", 1))),
         (String::from("Mitsurugi"), Some(Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10))),
     ]);
     let key = Key::new(1_usize);
@@ -2405,18 +2415,7 @@ fn test_heterogeneous_hash_map_ability1() {
         (Key::new(10_usize), Ability::new(AbilityClass::from("Thief"), "Bind", 1)),
     ]);
 
-    assert_eq!(character.get::<InventoryItem, _>(&0_usize), None);
-
-    for (name, ability) in expected_map.iter() {
-        let expected = Some(ability.clone());
-        let result = character.get(name).cloned();
-
-        assert_eq!(result, expected);
-    }
-
-    for key in (11_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<Ability, _>(&key), None);
-    }
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (11_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
@@ -2507,89 +2506,120 @@ fn test_heterogeneous_hash_map_ability5() {
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (22_usize..=1024_usize).map(Key::new))
 }
 
+#[rustfmt::skip]
 #[test]
-fn test_heterogeneous_hash_map_ability6() {
-    let character = get_character_map_wiz();
-    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
-        (Key::new(1_usize),  Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3)),
-        (Key::new(2_usize),  Ability::new(AbilityClass::from("Undead"), "Hand Of The Immortal King", 10)),
-        (Key::new(3_usize),  Ability::new(AbilityClass::from("Undead"), "Physical Resistance", 0)),
-        (Key::new(4_usize),  Ability::new(AbilityClass::from("Undead"), "Magic Resistance", 0)),
-        (Key::new(5_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Petrification", 10)),
-        (Key::new(6_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Necromancy", 10)),
-        (Key::new(7_usize),  Ability::new(AbilityClass::from("Undead"), "Night Vision", 10)),
-        (Key::new(8_usize),  Ability::new(AbilityClass::from("Wizard"), "Anti-Devil Curses", 4)),
-        (Key::new(9_usize),  Ability::new(AbilityClass::from("Wizard"), "Freeze", 2)),
-        (Key::new(10_usize), Ability::new(AbilityClass::from("Wizard"), "Freeze Gust", 12)),
-        (Key::new(11_usize), Ability::new(AbilityClass::from("Wizard"), "Sleep", 10)),
-        (Key::new(12_usize), Ability::new(AbilityClass::from("Wizard"), "Crystal Prison", 10)),
-        (Key::new(13_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Crystal Prison", 10)),
-        (Key::new(14_usize), Ability::new(AbilityClass::from("Wizard"), "Bottomless Swamp", 10)),
-        (Key::new(15_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Lightning", 10)),
-        (Key::new(16_usize), Ability::new(AbilityClass::from("Wizard"), "Inferno", 10)),
-        (Key::new(17_usize), Ability::new(AbilityClass::from("Wizard"), "Light Of Saber", 10)),
-        (Key::new(18_usize), Ability::new(AbilityClass::from("Wizard"), "Lightning Strike", 10)),
-        (Key::new(19_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Golem", 10)),
-        (Key::new(20_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Wall", 10)),
-        (Key::new(21_usize), Ability::new(AbilityClass::from("Wizard"), "Enemy Search", 10)),
-        (Key::new(22_usize), Ability::new(AbilityClass::from("Wizard"), "Trap Search", 10)),
-        (Key::new(23_usize), Ability::new(AbilityClass::from("Wizard"), "Teleport", 10)),
-        (Key::new(24_usize), Ability::new(AbilityClass::from("Wizard"), "Random Teleport", 10)),
-        (Key::new(25_usize), Ability::new(AbilityClass::from("Wizard"), "Explosion", 100)),
+fn test_heterogeneous_hash_map_familiar() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<Familiar>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    None),
+        (String::from("Megumin"),   Some(Familiar::from("Chomusuke"))),
+        (String::from("Aqua"),      None),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    None),
+        (String::from("Wiz"),       None),
+        (String::from("Chris"),     None),
+        (String::from("Mitsurugi"), None),
     ]);
+    let key = Key::new(1_usize);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (26_usize..=1024_usize).map(Key::new))
+    for (name, familiar) in expected_map.iter() {
+        let expected = familiar.clone();
+        let result = characters
+            .get_unchecked(name)
+            .get::<Familiar, _>(&key)
+            .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
 }
 
 #[test]
-fn test_heterogeneous_hash_map_ability7() {
-    let character = get_character_map_chris();
-    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
-        (Key::new(1_usize),  Ability::new(AbilityClass::from("Thief"), "Steal", 1)),
-        (Key::new(2_usize),  Ability::new(AbilityClass::from("Thief"), "Lurk", 1)),
-        (Key::new(3_usize),  Ability::new(AbilityClass::from("Thief"), "Enemy Detection", 1)),
-        (Key::new(4_usize),  Ability::new(AbilityClass::from("Thief"), "Trap Detection", 1)),
-        (Key::new(5_usize),  Ability::new(AbilityClass::from("Thief"), "Disarm Trap", 1)),
-        (Key::new(6_usize),  Ability::new(AbilityClass::from("Thief"), "Flee", 1)),
-        (Key::new(7_usize),  Ability::new(AbilityClass::from("Thief"), "Bind", 1)),
-        (Key::new(8_usize),  Ability::new(AbilityClass::from("Thief"), "Skill Bind", 1)),
-        (Key::new(9_usize),  Ability::new(AbilityClass::from("Thief"), "Wire Trap", 1)),
-        (Key::new(10_usize), Ability::new(AbilityClass::from("Thief"), "Detect Treasure", 1)),
-        (Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Lockpick", 1)),
-    ]);
+fn test_heterogeneous_hash_map_familiar1() {
+    let character = get_character_map_kazuma();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (12_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
-fn test_heterogeneous_hash_map_ability8() {
-    let character = get_character_map_mitsurugi();
-    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
-        (Key::new(1_usize), Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10)),
+fn test_heterogeneous_hash_map_familiar2() {
+    let character = get_character_map_megumin();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::from([
+        (Key::new(1_usize), Familiar::from("Chomusuke")),
     ]);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
 #[test]
-fn test_heterogeneous_hash_map_ability_insert_remove1() {
+fn test_heterogeneous_hash_map_familiar3() {
+    let character = get_character_map_aqua();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[test]
+fn test_heterogeneous_hash_map_familiar4() {
+    let character = get_character_map_darkness();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[test]
+fn test_heterogeneous_hash_map_familiar5() {
+    let character = get_character_map_yunyun();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[test]
+fn test_heterogeneous_hash_map_familiar6() {
+    let character = get_character_map_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[test]
+fn test_heterogeneous_hash_map_familiar7() {
+    let character = get_character_map_chris();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[test]
+fn test_heterogeneous_hash_map_familiar8() {
+    let character = get_character_map_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove1() {
     let mut characters = get_character_map();
     let character = characters.get_mut_unchecked("Wiz");
     let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
 
     assert_eq!(character.len::<CharacterName>(), Some(3));
-    assert_eq!(character.len::<Age>(), Some(1));
-    assert_eq!(character.len::<Race>(), Some(2));
-    assert_eq!(character.len::<Class>(), Some(1));
-    assert_eq!(character.len::<Job>(), Some(2));
-    assert_eq!(character.len::<Status>(), Some(1));
-    assert_eq!(character.len::<Description>(), Some(1));
-    assert_eq!(character.len::<Stats>(), Some(1));
-    assert_eq!(character.len::<HitPoints>(), Some(1));
-    assert_eq!(character.len::<MagicPoints>(), Some(1));
-    assert_eq!(character.len::<Chuunibyou>(), Some(1));
-    assert_eq!(character.len::<Equipment>(), Some(1));
-    assert_eq!(character.len::<Ability>(), Some(25));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
     assert_eq!(character.len::<InventoryItem>(), Some(3));
 
     for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
@@ -2602,18 +2632,19 @@ fn test_heterogeneous_hash_map_ability_insert_remove1() {
     }
 
     assert_eq!(character.len::<CharacterName>(), Some(3));
-    assert_eq!(character.len::<Age>(), Some(1));
-    assert_eq!(character.len::<Race>(), Some(2));
-    assert_eq!(character.len::<Class>(), Some(1));
-    assert_eq!(character.len::<Job>(), Some(2));
-    assert_eq!(character.len::<Status>(), Some(1));
-    assert_eq!(character.len::<Description>(), Some(1));
-    assert_eq!(character.len::<Stats>(), Some(1));
-    assert_eq!(character.len::<HitPoints>(), Some(1));
-    assert_eq!(character.len::<MagicPoints>(), Some(1));
-    assert_eq!(character.len::<Chuunibyou>(), Some(1));
-    assert_eq!(character.len::<Equipment>(), Some(1));
-    assert_eq!(character.len::<Ability>(), Some(25));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
     assert_eq!(character.len::<InventoryItem>(), Some(1027));
 
     for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
@@ -2629,18 +2660,19 @@ fn test_heterogeneous_hash_map_ability_insert_remove1() {
     }
 
     assert_eq!(character.len::<CharacterName>(), Some(3));
-    assert_eq!(character.len::<Age>(), Some(1));
-    assert_eq!(character.len::<Race>(), Some(2));
-    assert_eq!(character.len::<Class>(), Some(1));
-    assert_eq!(character.len::<Job>(), Some(2));
-    assert_eq!(character.len::<Status>(), Some(1));
-    assert_eq!(character.len::<Description>(), Some(1));
-    assert_eq!(character.len::<Stats>(), Some(1));
-    assert_eq!(character.len::<HitPoints>(), Some(1));
-    assert_eq!(character.len::<MagicPoints>(), Some(1));
-    assert_eq!(character.len::<Chuunibyou>(), Some(1));
-    assert_eq!(character.len::<Equipment>(), Some(1));
-    assert_eq!(character.len::<Ability>(), Some(25));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
     assert_eq!(character.len::<InventoryItem>(), Some(3));
 
     for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
