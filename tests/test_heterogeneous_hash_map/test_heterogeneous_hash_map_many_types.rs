@@ -310,6 +310,7 @@ fn get_character_megumin() -> HeterogeneousHashMap<usize> {
     character.insert::<Equipment>(Key::new(2_usize), Equipment::from("Big Floppy Wizard Hat"));
     character.insert::<Equipment>(Key::new(3_usize), Equipment::from("Adventurer's Cloak"));
     character.insert::<Equipment>(Key::new(4_usize), Equipment::from("Demon Ring"));
+    character.insert::<Equipment>(Key::new(5_usize), Equipment::from("Eye Patch"));
     character.insert::<InventoryItem>(Key::new(1_usize), InventoryItem::new("Light Of Reflection Scroll", 1));
     character.insert::<InventoryItem>(Key::new(2_usize), InventoryItem::new("Sword Of Shack The Ripper", 1));
     character.insert::<InventoryItem>(Key::new(3_usize), InventoryItem::new("Highest-Quality Manatites", 3));
@@ -2674,6 +2675,7 @@ fn test_heterogeneous_hash_map_equipment2() {
         (Key::new(2_usize), Equipment::from("Big Floppy Wizard Hat")),
         (Key::new(3_usize), Equipment::from("Adventurer's Cloak")),
         (Key::new(4_usize), Equipment::from("Demon Ring")),
+        (Key::new(5_usize), Equipment::from("Eye Patch"))
     ]);
 
     for (key, equipment) in expected_map.iter() {
