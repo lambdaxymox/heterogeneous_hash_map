@@ -228,7 +228,9 @@ fn get_character_map_kazuma() -> HeterogeneousHashMap<usize> {
     character.insert::<Job>(Key::new(2_usize), Job::from("Definitely Not A Harem Protagonist"));
     character.insert::<Job>(Key::new(3_usize), Job::from("Strategic Coward"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
-    character.insert::<Description>(Key::new(1_usize), Description::from("Slovenly shut-in NEET with questionable morals."));
+    character.insert::<Description>(Key::new(1_usize), Description::from("\
+        Slovenly shut-in NEET with questionable morals and a surprisingly sharp wit.\
+    "));
     character.insert::<Stats>(Key::new(1_usize), Stats {
         strength: 12,
         dexterity: 14,
@@ -275,11 +277,11 @@ fn get_character_megumin() -> HeterogeneousHashMap<usize> {
     character.insert::<Class>(Key::new(1_usize), Class::from("Arch Wizard"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
     character.insert::<Description>(Key::new(1_usize), Description::from("\
-            I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!\
-        "));
+        I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!\
+    "));
     character.insert::<Description>(Key::new(2_usize), Description::from("\
-            NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps.\
-        "));
+        NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps.\
+    "));
     character.insert::<Stats>(Key::new(1_usize), Stats {
         strength: 14,
         dexterity: 10,
@@ -319,8 +321,22 @@ fn get_character_aqua() -> HeterogeneousHashMap<usize> {
     character.insert::<Job>(Key::new(1_usize), Job::from("Self-Proclaimed Goddess"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
     character.insert::<Description>(Key::new(1_usize), Description::from("\
-        Useless water goddess of the Axis church. Her followers are even crazier than she is.\
+        Useless water goddess of the Axis church. Somehow, her followers are even crazier than she is.\
     "));
+    character.insert::<Description>(Key::new(2_usize), Description::from("\
+        Self-proclaimed goddess who specializes in getting us into trouble and drinking all the party’s funds. Blessings included, probably.\
+    "));
+    character.insert::<Description>(Key::new(3_usize), Description::from("\
+        A self-proclaimed goddess notorious for causing disasters and drinking all the booze. Worship at your own risk.\
+    "));
+    character.insert::<Description>(Key::new(4_usize), Description::from("\
+        Patron deity of purification, renewal, and... occasional self-sabotage. Pray hard, avoid the frogs.\
+    "));
+    character.insert::<Description>(Key::new(5_usize), Description::from("\
+        Revered water goddess of the Axis Church, renowned for her unparalleled purity and unwavering dedication to her followers' prosperity. \
+        Her divine blessings ensure the flourishing of faith and the cleansing of corruption across the realm.\
+    "));
+
     character.insert::<Stats>(Key::new(1_usize), Stats {
         strength: 18,
         dexterity: 11,
@@ -377,9 +393,8 @@ fn get_character_darkness() -> HeterogeneousHashMap<usize> {
     character.insert::<Job>(Key::new(1_usize), Job::from("Noble"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
     character.insert::<Description>(Key::new(1_usize), Description::from("\
-            A noble crusader who intercepts every blow with unwavering resolve. None of her attacks \
-            ever hit their mark.\
-        "));
+        A noble crusader who intercepts every blow with unwavering resolve. None of her attacks ever hit their mark.\
+    "));
     character.insert::<Stats>(Key::new(1_usize), Stats {
         strength: 22,
         dexterity: 4,
@@ -467,9 +482,8 @@ fn get_character_wiz() -> HeterogeneousHashMap<usize> {
     character.insert::<Job>(Key::new(2_usize), Job::from("Shopkeeper"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Undead"));
     character.insert::<Description>(Key::new(1_usize), Description::from("\
-            A benevolent lich and former general of the Demon King’s army. Now facing her true \
-            enemy: small business ownership.\
-        "));
+        Benevolent lich, retired adventurer, and former Devil King's general. Now fighting her greatest battle: running a small business.\
+    "));
     character.insert::<Stats>(Key::new(1_usize), Stats {
         strength: 10,
         dexterity: 10,
@@ -505,9 +519,8 @@ fn get_character_chris() -> HeterogeneousHashMap<usize> {
     character.insert::<Job>(Key::new(3_usize), Job::from("Currently Cleaning Up Aqua's Messes. Send Help."));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
     character.insert::<Description>(Key::new(1_usize), Description::from("\
-            A humble traveler devoted to justice, fairness, and guiding others through times of trial. \
-            Quite good with locks too.\
-        "));
+        She’s got a strong sense of justice and an even stronger sense of when a locked chest needs opening.\
+    "));
     character.insert::<Stats>(Key::new(1_usize), Stats {
         strength: 11,
         dexterity: 25,
@@ -1664,6 +1677,192 @@ fn test_heterogeneous_hash_map_status8() {
 
     for (name, status) in expected_map.iter() {
         let expected = Some(status.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<Description>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(Description::from("\
+            Slovenly shut-in NEET with questionable morals and a surprisingly sharp wit.\
+        "))),
+        (String::from("Megumin"),   Some(Description::from("\
+            I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!\
+        "))),
+        (String::from("Aqua"),      Some(Description::from("\
+            Useless water goddess of the Axis church. Somehow, her followers are even crazier than she is.\
+        "))),
+        (String::from("Darkness"),  Some(Description::from("\
+            A noble crusader who intercepts every blow with unwavering resolve. \
+            None of her attacks ever hit their mark.\
+        "))),
+        (String::from("Yunyun"),    Some(Description::from("\
+            Crimson Demon honor student. Megumin’s arch rival (not that anyone else is competing). \
+            Would really like it if someone talked to her.\
+        "))),
+        (String::from("Wiz"),       Some(Description::from("\
+            Benevolent lich, retired adventurer, and former Devil King's general. Now fighting her \
+            greatest battle: running a small business.\
+        "))),
+        (String::from("Chris"),     Some(Description::from("\
+            She’s got a strong sense of justice and an even stronger sense of when a locked chest needs opening.\
+        "))),
+        (String::from("Mitsurugi"), Some(Description::from("\
+            Textbook case of main character syndrome. He thinks he is the real deal Isekai hero. \
+            Constantly played like a side quest by Kazuma.\
+        "))),
+    ]);
+    let key = Key::new(1_usize);
+
+    for (name, description) in expected_map.iter() {
+        let expected = description.clone();
+        let result = characters
+            .get_unchecked(name)
+            .get::<Description, _>(&key)
+            .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description1() {
+    let character = get_character_map_kazuma();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("Slovenly shut-in NEET with questionable morals and a surprisingly sharp wit.")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description2() {
+    let character = get_character_megumin();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!")),
+        (Key::new(2_usize), Description::from("NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps.")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description3() {
+    let character = get_character_aqua();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("Useless water goddess of the Axis church. Somehow, her followers are even crazier than she is.")),
+        (Key::new(2_usize), Description::from("Self-proclaimed goddess who specializes in getting us into trouble and drinking all the party’s funds. Blessings included, probably.")),
+        (Key::new(3_usize), Description::from("A self-proclaimed goddess notorious for causing disasters and drinking all the booze. Worship at your own risk.")),
+        (Key::new(4_usize), Description::from("Patron deity of purification, renewal, and... occasional self-sabotage. Pray hard, avoid the frogs.")),
+        (Key::new(5_usize), Description::from("\
+            Revered water goddess of the Axis Church, renowned for her unparalleled purity and unwavering dedication to her followers' prosperity. \
+            Her divine blessings ensure the flourishing of faith and the cleansing of corruption across the realm.\
+        ")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description4() {
+    let character = get_character_darkness();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("\
+            A noble crusader who intercepts every blow with unwavering resolve. None of her attacks ever hit their mark.\
+        ")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description5() {
+    let character = get_character_yunyun();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("\
+            Crimson Demon honor student. Megumin’s arch rival (not that anyone else is competing). \
+            Would really like it if someone talked to her.\
+        ")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description6() {
+    let character = get_character_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("\
+            Benevolent lich, retired adventurer, and former Devil King's general. Now fighting her greatest battle: running a small business.\
+        ")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description7() {
+    let character = get_character_chris();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("\
+            She’s got a strong sense of justice and an even stronger sense of when a locked chest needs opening.\
+        ")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_description8() {
+    let character = get_character_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
+        (Key::new(1_usize), Description::from("\
+            Textbook case of main character syndrome. He thinks he is the real deal Isekai hero. \
+            Constantly played like a side quest by Kazuma.\
+        ")),
+    ]);
+
+    for (name, description) in expected_map.iter() {
+        let expected = Some(description.clone());
         let result = character.get(name).cloned();
 
         assert_eq!(result, expected);
