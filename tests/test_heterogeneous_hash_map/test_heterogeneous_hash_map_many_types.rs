@@ -554,9 +554,9 @@ fn get_character_chris() -> HeterogeneousHashMap<usize> {
     character.insert::<Ability>(Key::new(4_usize),  Ability::new(AbilityClass::from("Thief"), "Trap Detection", 1));
     character.insert::<Ability>(Key::new(5_usize),  Ability::new(AbilityClass::from("Thief"), "Disarm Trap", 1));
     character.insert::<Ability>(Key::new(6_usize),  Ability::new(AbilityClass::from("Thief"), "Flee", 1));
-    character.insert::<Ability>(Key::new(7_usize), Ability::new(AbilityClass::from("Thief"), "Bind", 1));
-    character.insert::<Ability>(Key::new(8_usize), Ability::new(AbilityClass::from("Thief"), "Skill Bind", 1));
-    character.insert::<Ability>(Key::new(9_usize), Ability::new(AbilityClass::from("Thief"), "Wire Trap", 1));
+    character.insert::<Ability>(Key::new(7_usize),  Ability::new(AbilityClass::from("Thief"), "Bind", 1));
+    character.insert::<Ability>(Key::new(8_usize),  Ability::new(AbilityClass::from("Thief"), "Skill Bind", 1));
+    character.insert::<Ability>(Key::new(9_usize),  Ability::new(AbilityClass::from("Thief"), "Wire Trap", 1));
     character.insert::<Ability>(Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Detect Treasure", 1));
     character.insert::<Ability>(Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Lockpick", 1));
 
@@ -2295,6 +2295,152 @@ fn test_heterogeneous_hash_map_hit_points8() {
 
     for (name, hit_points) in expected_map.iter() {
         let expected = Some(hit_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<MagicPoints>> = hash_map::HashMap::from([
+        (String::from("Kazuma"), Some(MagicPoints::from(20))),
+        (String::from("Megumin"), Some(MagicPoints::from(999))),
+        (String::from("Aqua"), Some(MagicPoints::from(u32::MAX))),
+        (String::from("Darkness"), Some(MagicPoints::from(0))),
+        (String::from("Yunyun"), Some(MagicPoints::from(400))),
+        (String::from("Wiz"), Some(MagicPoints::from(700))),
+        (String::from("Chris"), Some(MagicPoints::from(0))),
+        (String::from("Mitsurugi"), Some(MagicPoints::from(0))),
+    ]);
+    let key = Key::new(1_usize);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = magic_points.clone();
+        let result = characters
+            .get_unchecked(name)
+            .get::<MagicPoints, _>(&key)
+            .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points1() {
+    let character = get_character_map_kazuma();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(20)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points2() {
+    let character = get_character_megumin();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(999)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points3() {
+    let character = get_character_aqua();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(u32::MAX)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points4() {
+    let character = get_character_darkness();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(0)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points5() {
+    let character = get_character_yunyun();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(400)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points6() {
+    let character = get_character_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(700)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points7() {
+    let character = get_character_chris();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(0)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_magic_points8() {
+    let character = get_character_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, MagicPoints>, MagicPoints> = hash_map::HashMap::from([
+        (Key::new(1_usize), MagicPoints::from(0)),
+    ]);
+
+    for (name, magic_points) in expected_map.iter() {
+        let expected = Some(magic_points.clone());
         let result = character.get(name).cloned();
 
         assert_eq!(result, expected);
