@@ -712,6 +712,62 @@ fn test_heterogeneous_hash_map_character_name() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_character_name_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(2)),
+        (String::from("Megumin"),   Some(3)),
+        (String::from("Aqua"),      Some(3)),
+        (String::from("Darkness"),  Some(2)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(3)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), Some(3)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<CharacterName>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<CharacterName>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<CharacterName>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<CharacterName>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<CharacterName>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<CharacterName>()),
+        (String::from("Chris"),     get_character_map_chris().len::<CharacterName>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<CharacterName>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_character_name_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(2)),
+        (String::from("Megumin"),   Some(3)),
+        (String::from("Aqua"),      Some(3)),
+        (String::from("Darkness"),  Some(2)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(3)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), Some(3)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<CharacterName>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_character_name1() {
     let character = get_character_map_kazuma();
@@ -830,6 +886,62 @@ fn test_heterogeneous_hash_map_player_name() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_player_name_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(3)),
+        (String::from("Megumin"),   None),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    None),
+        (String::from("Wiz"),       None),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<PlayerName>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<PlayerName>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<PlayerName>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<PlayerName>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<PlayerName>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<PlayerName>()),
+        (String::from("Chris"),     get_character_map_chris().len::<PlayerName>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<PlayerName>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_player_name_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(3)),
+        (String::from("Megumin"),   None),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    None),
+        (String::from("Wiz"),       None),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<PlayerName>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_player_name1() {
     let character = get_character_map_kazuma();
@@ -926,6 +1038,62 @@ fn test_heterogeneous_hash_map_age() {
             .get_unchecked(name)
             .get::<Age, _>(&key)
             .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_age_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(2)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Age>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Age>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Age>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Age>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Age>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Age>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Age>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Age>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_age_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(2)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Age>();
+        let expected = expected_map[name];
 
         assert_eq!(result, expected);
     }
@@ -1035,6 +1203,62 @@ fn test_heterogeneous_hash_map_race() {
             .get_unchecked(name)
             .get::<Race, _>(&key)
             .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_race_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(2)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(2)),
+        (String::from("Wiz"),       Some(2)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Race>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Race>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Race>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Race>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Race>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Race>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Race>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Race>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_race_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(2)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(2)),
+        (String::from("Wiz"),       Some(2)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Race>();
+        let expected = expected_map[name];
 
         assert_eq!(result, expected);
     }
@@ -1151,6 +1375,62 @@ fn test_heterogeneous_hash_map_class() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_class_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Class>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Class>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Class>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Class>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Class>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Class>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Class>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Class>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_class_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Class>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_class1() {
     let character = get_character_map_kazuma();
@@ -1253,6 +1533,62 @@ fn test_heterogeneous_hash_map_job() {
             .get_unchecked(name)
             .get::<Job, _>(&key)
             .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_job_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(3)),
+        (String::from("Megumin"),   None),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    None),
+        (String::from("Wiz"),       Some(2)),
+        (String::from("Chris"),     Some(3)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Job>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Job>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Job>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Job>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Job>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Job>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Job>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Job>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_job_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(3)),
+        (String::from("Megumin"),   None),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    None),
+        (String::from("Wiz"),       Some(2)),
+        (String::from("Chris"),     Some(3)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Job>();
+        let expected = expected_map[name];
 
         assert_eq!(result, expected);
     }
@@ -1361,6 +1697,62 @@ fn test_heterogeneous_hash_map_status() {
             .get_unchecked(name)
             .get::<Status, _>(&key)
             .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_status_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Status>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Status>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Status>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Status>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Status>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Status>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Status>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Status>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_status_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Status>();
+        let expected = expected_map[name];
 
         assert_eq!(result, expected);
     }
@@ -1488,6 +1880,62 @@ fn test_heterogeneous_hash_map_description() {
             .get_unchecked(name)
             .get::<Description, _>(&key)
             .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_description_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(2)),
+        (String::from("Aqua"),      Some(5)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Description>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Description>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Description>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Description>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Description>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Description>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Description>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Description>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_description_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(2)),
+        (String::from("Aqua"),      Some(5)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Description>();
+        let expected = expected_map[name];
 
         assert_eq!(result, expected);
     }
@@ -1684,6 +2132,62 @@ fn test_heterogeneous_hash_map_stats() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_stats_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Stats>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Stats>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Stats>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Stats>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Stats>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Stats>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Stats>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Stats>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_stats_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Stats>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_stats1() {
     let character = get_character_map_kazuma();
@@ -1855,6 +2359,62 @@ fn test_heterogeneous_hash_map_hit_points() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_hit_points_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<HitPoints>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<HitPoints>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<HitPoints>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<HitPoints>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<HitPoints>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<HitPoints>()),
+        (String::from("Chris"),     get_character_map_chris().len::<HitPoints>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<HitPoints>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_hit_points_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<HitPoints>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_hit_points1() {
     let character = get_character_map_kazuma();
@@ -1957,6 +2517,62 @@ fn test_heterogeneous_hash_map_magic_points() {
             .get_unchecked(name)
             .get::<MagicPoints, _>(&key)
             .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_magic_points_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<MagicPoints>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<MagicPoints>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<MagicPoints>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<MagicPoints>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<MagicPoints>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<MagicPoints>()),
+        (String::from("Chris"),     get_character_map_chris().len::<MagicPoints>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<MagicPoints>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_magic_points_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<MagicPoints>();
+        let expected = expected_map[name];
 
         assert_eq!(result, expected);
     }
@@ -2069,6 +2685,62 @@ fn test_heterogeneous_hash_map_chuunibyou() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_chuunibyou_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Chuunibyou>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Chuunibyou>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Chuunibyou>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Chuunibyou>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Chuunibyou>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Chuunibyou>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Chuunibyou>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Chuunibyou>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_chuunibyou_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(1)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(1)),
+        (String::from("Darkness"),  Some(1)),
+        (String::from("Yunyun"),    Some(1)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Chuunibyou>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou1() {
     let character = get_character_map_kazuma();
@@ -2171,6 +2843,62 @@ fn test_heterogeneous_hash_map_equipment() {
             .get_unchecked(name)
             .get::<Equipment, _>(&key)
             .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_equipment_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(3)),
+        (String::from("Megumin"),   Some(5)),
+        (String::from("Aqua"),      Some(2)),
+        (String::from("Darkness"),  Some(2)),
+        (String::from("Yunyun"),    Some(2)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Equipment>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Equipment>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Equipment>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Equipment>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Equipment>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Equipment>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Equipment>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Equipment>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_equipment_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(3)),
+        (String::from("Megumin"),   Some(5)),
+        (String::from("Aqua"),      Some(2)),
+        (String::from("Darkness"),  Some(2)),
+        (String::from("Yunyun"),    Some(2)),
+        (String::from("Wiz"),       Some(1)),
+        (String::from("Chris"),     Some(1)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Equipment>();
+        let expected = expected_map[name];
 
         assert_eq!(result, expected);
     }
@@ -2292,6 +3020,62 @@ fn test_heterogeneous_hash_map_inventory_item() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(6)),
+        (String::from("Megumin"),   Some(3)),
+        (String::from("Aqua"),      Some(3)),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    Some(5)),
+        (String::from("Wiz"),       Some(3)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), None),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<InventoryItem>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<InventoryItem>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<InventoryItem>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<InventoryItem>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<InventoryItem>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<InventoryItem>()),
+        (String::from("Chris"),     get_character_map_chris().len::<InventoryItem>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<InventoryItem>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(6)),
+        (String::from("Megumin"),   Some(3)),
+        (String::from("Aqua"),      Some(3)),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    Some(5)),
+        (String::from("Wiz"),       Some(3)),
+        (String::from("Chris"),     Some(2)),
+        (String::from("Mitsurugi"), None),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<InventoryItem>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_inventory_item1() {
     let character = get_character_map_kazuma();
@@ -2382,6 +3166,62 @@ fn test_heterogeneous_hash_map_inventory_item8() {
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::new();
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_ability_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(10)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(25)),
+        (String::from("Darkness"),  Some(5)),
+        (String::from("Yunyun"),    Some(21)),
+        (String::from("Wiz"),       Some(25)),
+        (String::from("Chris"),     Some(11)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Ability>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Ability>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Ability>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Ability>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Ability>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Ability>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Ability>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Ability>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_ability_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    Some(10)),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      Some(25)),
+        (String::from("Darkness"),  Some(5)),
+        (String::from("Yunyun"),    Some(21)),
+        (String::from("Wiz"),       Some(25)),
+        (String::from("Chris"),     Some(11)),
+        (String::from("Mitsurugi"), Some(1)),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Ability>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
 }
 
 #[rustfmt::skip]
@@ -2609,12 +3449,66 @@ fn test_heterogeneous_hash_map_familiar() {
     }
 }
 
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_familiar_len1() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    None),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      None),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    None),
+        (String::from("Wiz"),       None),
+        (String::from("Chris"),     None),
+        (String::from("Mitsurugi"), None),
+    ]);
+    let result_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len::<Familiar>()),
+        (String::from("Megumin"),   get_character_map_megumin().len::<Familiar>()),
+        (String::from("Aqua"),      get_character_map_aqua().len::<Familiar>()),
+        (String::from("Darkness"),  get_character_map_darkness().len::<Familiar>()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len::<Familiar>()),
+        (String::from("Wiz"),       get_character_map_wiz().len::<Familiar>()),
+        (String::from("Chris"),     get_character_map_chris().len::<Familiar>()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len::<Familiar>()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_familiar_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<usize>> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    None),
+        (String::from("Megumin"),   Some(1)),
+        (String::from("Aqua"),      None),
+        (String::from("Darkness"),  None),
+        (String::from("Yunyun"),    None),
+        (String::from("Wiz"),       None),
+        (String::from("Chris"),     None),
+        (String::from("Mitsurugi"), None),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len::<Familiar>();
+        let expected = expected_map[name];
+
+        assert_eq!(result, expected);
+    }
+}
+
 #[test]
 fn test_heterogeneous_hash_map_familiar1() {
     let character = get_character_map_kazuma();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
-
-    assert_eq!(character.len::<Familiar>(), None);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
@@ -2626,8 +3520,6 @@ fn test_heterogeneous_hash_map_familiar2() {
         (Key::new(1_usize), Familiar::from("Chomusuke")),
     ]);
 
-    assert_eq!(character.len::<Familiar>(), Some(1));
-
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
 }
 
@@ -2635,8 +3527,6 @@ fn test_heterogeneous_hash_map_familiar2() {
 fn test_heterogeneous_hash_map_familiar3() {
     let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
-
-    assert_eq!(character.len::<Familiar>(), None);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
@@ -2646,8 +3536,6 @@ fn test_heterogeneous_hash_map_familiar4() {
     let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    assert_eq!(character.len::<Familiar>(), None);
-
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
@@ -2656,8 +3544,6 @@ fn test_heterogeneous_hash_map_familiar5() {
     let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    assert_eq!(character.len::<Familiar>(), None);
-
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
@@ -2665,8 +3551,6 @@ fn test_heterogeneous_hash_map_familiar5() {
 fn test_heterogeneous_hash_map_familiar6() {
     let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
-
-    assert_eq!(character.len::<Familiar>(), None);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
@@ -2683,8 +3567,6 @@ fn test_heterogeneous_hash_map_familiar7() {
 fn test_heterogeneous_hash_map_familiar8() {
     let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
-
-    assert_eq!(character.len::<Familiar>(), None);
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
