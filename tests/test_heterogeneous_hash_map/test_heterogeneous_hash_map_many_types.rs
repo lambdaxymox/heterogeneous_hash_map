@@ -315,7 +315,7 @@ fn get_character_megumin() -> HeterogeneousHashMap<usize> {
     character.insert::<InventoryItem>(Key::new(3_usize), InventoryItem::new("Highest-Quality Manatites", 3));
     character.insert::<Familiar>(Key::new(1_usize), Familiar::from("Chomusuke"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
-    character.insert::<Ability>(Key::new(1_usize), Ability::new(AbilityClass::from("Wizard"), "Explosion", 999));
+    character.insert::<Ability>(Key::new(1_usize), Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999));
 
     character
 }
@@ -421,6 +421,11 @@ fn get_character_darkness() -> HeterogeneousHashMap<usize> {
     character.insert::<Chuunibyou>(Key::new(1_usize), Chuunibyou(0));
     character.insert::<Equipment>(Key::new(1_usize), Equipment::from("Adamantite Armor"));
     character.insert::<Equipment>(Key::new(2_usize), Equipment::from("Long Sword"));
+    character.insert::<Ability>(Key::new(1_usize), Ability::new(AbilityClass::from("Crusader"), "Physical Resistance", 0));
+    character.insert::<Ability>(Key::new(2_usize), Ability::new(AbilityClass::from("Crusader"), "Magic Resistance", 0));
+    character.insert::<Ability>(Key::new(3_usize), Ability::new(AbilityClass::from("Crusader"), "Debuff Resistance (All Types)", 0));
+    character.insert::<Ability>(Key::new(4_usize), Ability::new(AbilityClass::from("Crusader"), "Decoy", 0));
+    character.insert::<Ability>(Key::new(5_usize), Ability::new(AbilityClass::from("Crusader"), "Side Slash", 0));
 
     character
 }
@@ -512,6 +517,31 @@ fn get_character_wiz() -> HeterogeneousHashMap<usize> {
     character.insert::<InventoryItem>(Key::new(1_usize), InventoryItem::new("Forced Teleport Scroll", 1));
     character.insert::<InventoryItem>(Key::new(2_usize), InventoryItem::new("Barrier Tool", 1));
     character.insert::<InventoryItem>(Key::new(3_usize), InventoryItem::new("Forbidden Crystal", 1));
+    character.insert::<Ability>(Key::new(1_usize),  Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3));
+    character.insert::<Ability>(Key::new(2_usize),  Ability::new(AbilityClass::from("Undead"), "Hand Of The Immortal King", 10));
+    character.insert::<Ability>(Key::new(3_usize),  Ability::new(AbilityClass::from("Undead"), "Physical Resistance", 0));
+    character.insert::<Ability>(Key::new(4_usize),  Ability::new(AbilityClass::from("Undead"), "Magic Resistance", 0));
+    character.insert::<Ability>(Key::new(5_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Petrification", 10));
+    character.insert::<Ability>(Key::new(6_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Necromancy", 10));
+    character.insert::<Ability>(Key::new(7_usize),  Ability::new(AbilityClass::from("Undead"), "Night Vision", 10));
+    character.insert::<Ability>(Key::new(8_usize),  Ability::new(AbilityClass::from("Wizard"), "Anti-Devil Curses", 4));
+    character.insert::<Ability>(Key::new(9_usize),  Ability::new(AbilityClass::from("Wizard"), "Freeze", 2));
+    character.insert::<Ability>(Key::new(10_usize), Ability::new(AbilityClass::from("Wizard"), "Freeze Gust", 12));
+    character.insert::<Ability>(Key::new(11_usize), Ability::new(AbilityClass::from("Wizard"), "Sleep", 10));
+    character.insert::<Ability>(Key::new(12_usize), Ability::new(AbilityClass::from("Wizard"), "Crystal Prison", 10));
+    character.insert::<Ability>(Key::new(13_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Crystal Prison", 10));
+    character.insert::<Ability>(Key::new(14_usize), Ability::new(AbilityClass::from("Wizard"), "Bottomless Swamp", 10));
+    character.insert::<Ability>(Key::new(15_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Lightning", 10));
+    character.insert::<Ability>(Key::new(16_usize), Ability::new(AbilityClass::from("Wizard"), "Inferno", 10));
+    character.insert::<Ability>(Key::new(17_usize), Ability::new(AbilityClass::from("Wizard"), "Light Of Saber", 10));
+    character.insert::<Ability>(Key::new(18_usize), Ability::new(AbilityClass::from("Wizard"), "Lightning Strike", 10));
+    character.insert::<Ability>(Key::new(19_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Golem", 10));
+    character.insert::<Ability>(Key::new(20_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Wall", 10));
+    character.insert::<Ability>(Key::new(21_usize), Ability::new(AbilityClass::from("Wizard"), "Enemy Search", 10));
+    character.insert::<Ability>(Key::new(22_usize), Ability::new(AbilityClass::from("Wizard"), "Trap Search", 10));
+    character.insert::<Ability>(Key::new(23_usize), Ability::new(AbilityClass::from("Wizard"), "Teleport", 10));
+    character.insert::<Ability>(Key::new(24_usize), Ability::new(AbilityClass::from("Wizard"), "Random Teleport", 10));
+    character.insert::<Ability>(Key::new(25_usize), Ability::new(AbilityClass::from("Wizard"), "Explosion", 100));
 
     character
 }
@@ -557,7 +587,7 @@ fn get_character_chris() -> HeterogeneousHashMap<usize> {
     character.insert::<Ability>(Key::new(7_usize),  Ability::new(AbilityClass::from("Thief"), "Bind", 1));
     character.insert::<Ability>(Key::new(8_usize),  Ability::new(AbilityClass::from("Thief"), "Skill Bind", 1));
     character.insert::<Ability>(Key::new(9_usize),  Ability::new(AbilityClass::from("Thief"), "Wire Trap", 1));
-    character.insert::<Ability>(Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Detect Treasure", 1));
+    character.insert::<Ability>(Key::new(10_usize), Ability::new(AbilityClass::from("Thief"), "Detect Treasure", 1));
     character.insert::<Ability>(Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Lockpick", 1));
 
     character
@@ -2900,6 +2930,243 @@ fn test_heterogeneous_hash_map_inventory_item8() {
     for (key, inventory_item) in expected_map.iter() {
         let expected = Some(inventory_item.clone());
         let result = character.get(key).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<Ability>> = hash_map::HashMap::from([
+        (String::from("Kazuma"), Some(Ability::new(AbilityClass::from("Wizard"), "Create Water", 1))),
+        (String::from("Megumin"), Some(Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999))),
+        (String::from("Aqua"), Some(Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1))),
+        (String::from("Darkness"), Some(Ability::new(AbilityClass::from("Crusader"), "Physical Resistance", 0))),
+        (String::from("Yunyun"), Some(Ability::new(AbilityClass::from("Wizard"), "Lightning", 10))),
+        (String::from("Wiz"), Some(Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3))),
+        (String::from("Chris"), Some(Ability::new(AbilityClass::from("Thief"), "Steal", 1))),
+        (String::from("Mitsurugi"), Some(Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10))),
+    ]);
+    let key = Key::new(1_usize);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = ability.clone();
+        let result = characters
+            .get_unchecked(name)
+            .get::<Ability, _>(&key)
+            .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability1() {
+    let character = get_character_map_kazuma();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize),  Ability::new(AbilityClass::from("Wizard"), "Create Water", 1)),
+        (Key::new(2_usize),  Ability::new(AbilityClass::from("Wizard"), "Freeze", 2)),
+        (Key::new(3_usize),  Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3)),
+        (Key::new(4_usize),  Ability::new(AbilityClass::from("Thief"), "Steal", 1)),
+        (Key::new(5_usize),  Ability::new(AbilityClass::from("Thief"), "Lurk", 1)),
+        (Key::new(6_usize),  Ability::new(AbilityClass::from("Thief"), "Enemy Detection", 1)),
+        (Key::new(7_usize),  Ability::new(AbilityClass::from("Thief"), "Trap Detection", 1)),
+        (Key::new(8_usize),  Ability::new(AbilityClass::from("Thief"), "Disarm Trap", 1)),
+        (Key::new(9_usize),  Ability::new(AbilityClass::from("Thief"), "Flee", 1)),
+        (Key::new(10_usize), Ability::new(AbilityClass::from("Thief"), "Bind", 1)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability2() {
+    let character = get_character_megumin();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize), Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability3() {
+    let character = get_character_aqua();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize), Ability::new(AbilityClass::from("Party Trick"), "Nature's Beauty", 1)),
+        (Key::new(2_usize), Ability::new(AbilityClass::from("Water Magic"), "Create Water", 1)),
+        (Key::new(3_usize), Ability::new(AbilityClass::from("Water Magic"), "Sacred Create Water", 5)),
+        (Key::new(4_usize), Ability::new(AbilityClass::from("Water Magic"), "Purification", 1)),
+        (Key::new(5_usize), Ability::new(AbilityClass::from("Water Magic"), "Holy Water", 1)),
+        (Key::new(6_usize), Ability::new(AbilityClass::from("Holy Magic"), "Heal", 5)),
+        (Key::new(7_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Highness Heal", 20)),
+        (Key::new(8_usize), Ability::new(AbilityClass::from("Holy Magic"), "Turn Undead", 5)),
+        (Key::new(9_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Turn Undead", 20)),
+        (Key::new(10_usize), Ability::new(AbilityClass::from("Holy Magic"), "Exorcism", 5)),
+        (Key::new(11_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Exorcism", 20)),
+        (Key::new(12_usize), Ability::new(AbilityClass::from("Holy Magic"), "Break Spell", 7)),
+        (Key::new(13_usize), Ability::new(AbilityClass::from("Holy Magic"), "Sacred Break Spell", 24)),
+        (Key::new(14_usize), Ability::new(AbilityClass::from("Holy Magic"), "Cure Poison", 2)),
+        (Key::new(15_usize), Ability::new(AbilityClass::from("Holy Magic"), "Refresh", 1)),
+        (Key::new(16_usize), Ability::new(AbilityClass::from("Holy Magic"), "Blessing", 1)),
+        (Key::new(17_usize), Ability::new(AbilityClass::from("Holy Magic"), "Powered", 1)),
+        (Key::new(18_usize), Ability::new(AbilityClass::from("Holy Magic"), "Haste", 5)),
+        (Key::new(19_usize), Ability::new(AbilityClass::from("Holy Magic"), "Protection", 10)),
+        (Key::new(20_usize), Ability::new(AbilityClass::from("Holy Magic"), "Resistance", 10)),
+        (Key::new(21_usize), Ability::new(AbilityClass::from("Holy Magic"), "Versatile Entertainer", 0)),
+        (Key::new(22_usize), Ability::new(AbilityClass::from("Holy Magic"), "Eyes of Providence", 0)),
+        (Key::new(23_usize), Ability::new(AbilityClass::from("Holy Magic"), "Reflect", 30)),
+        (Key::new(24_usize), Ability::new(AbilityClass::from("Holy Magic"), "Force Fire", 30)),
+        (Key::new(25_usize), Ability::new(AbilityClass::from("Holy Magic"), "Magic Seal", 50)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability4() {
+    let character = get_character_darkness();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize), Ability::new(AbilityClass::from("Crusader"), "Physical Resistance", 0)),
+        (Key::new(2_usize), Ability::new(AbilityClass::from("Crusader"), "Magic Resistance", 0)),
+        (Key::new(3_usize), Ability::new(AbilityClass::from("Crusader"), "Debuff Resistance (All Types)", 0)),
+        (Key::new(4_usize), Ability::new(AbilityClass::from("Crusader"), "Decoy", 0)),
+        (Key::new(5_usize), Ability::new(AbilityClass::from("Crusader"), "Side Slash", 0)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability5() {
+    let character = get_character_yunyun();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize),  Ability::new(AbilityClass::from("Wizard"), "Lightning", 10)),
+        (Key::new(2_usize),  Ability::new(AbilityClass::from("Wizard"), "Fireball", 10)),
+        (Key::new(3_usize),  Ability::new(AbilityClass::from("Wizard"), "Blade Of Wind", 10)),
+        (Key::new(4_usize),  Ability::new(AbilityClass::from("Wizard"), "Freeze Gust", 10)),
+        (Key::new(5_usize),  Ability::new(AbilityClass::from("Wizard"), "Sleep", 10)),
+        (Key::new(6_usize),  Ability::new(AbilityClass::from("Wizard"), "Unlock", 5)),
+        (Key::new(7_usize),  Ability::new(AbilityClass::from("Wizard"), "Flash", 8)),
+        (Key::new(8_usize),  Ability::new(AbilityClass::from("Wizard"), "Paralyze", 10)),
+        (Key::new(9_usize),  Ability::new(AbilityClass::from("Wizard"), "Teleport", 20)),
+        (Key::new(10_usize), Ability::new(AbilityClass::from("Wizard"), "Enemy Search", 10)),
+        (Key::new(11_usize), Ability::new(AbilityClass::from("Wizard"), "Light Of Saber", 20)),
+        (Key::new(12_usize), Ability::new(AbilityClass::from("Wizard"), "Lightning Strike", 20)),
+        (Key::new(13_usize), Ability::new(AbilityClass::from("Wizard"), "Energy Ignition", 20)),
+        (Key::new(14_usize), Ability::new(AbilityClass::from("Wizard"), "Bottomless Swamp", 20)),
+        (Key::new(15_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Lightning", 20)),
+        (Key::new(16_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Crystal Prison", 20)),
+        (Key::new(17_usize), Ability::new(AbilityClass::from("Wizard"), "Inferno", 20)),
+        (Key::new(18_usize), Ability::new(AbilityClass::from("Wizard"), "Tornado", 20)),
+        (Key::new(19_usize), Ability::new(AbilityClass::from("Wizard"), "Silent", 20)),
+        (Key::new(20_usize), Ability::new(AbilityClass::from("Wizard"), "Light Of Reflection", 20)),
+        (Key::new(21_usize), Ability::new(AbilityClass::from("Wizard"), "Control Of Weather", 30)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability6() {
+    let character = get_character_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize),  Ability::new(AbilityClass::from("Undead"), "Drain Touch", 3)),
+        (Key::new(2_usize),  Ability::new(AbilityClass::from("Undead"), "Hand Of The Immortal King", 10)),
+        (Key::new(3_usize),  Ability::new(AbilityClass::from("Undead"), "Physical Resistance", 0)),
+        (Key::new(4_usize),  Ability::new(AbilityClass::from("Undead"), "Magic Resistance", 0)),
+        (Key::new(5_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Petrification", 10)),
+        (Key::new(6_usize),  Ability::new(AbilityClass::from("Undead"), "Cursed Necromancy", 10)),
+        (Key::new(7_usize),  Ability::new(AbilityClass::from("Undead"), "Night Vision", 10)),
+        (Key::new(8_usize),  Ability::new(AbilityClass::from("Wizard"), "Anti-Devil Curses", 4)),
+        (Key::new(9_usize),  Ability::new(AbilityClass::from("Wizard"), "Freeze", 2)),
+        (Key::new(10_usize), Ability::new(AbilityClass::from("Wizard"), "Freeze Gust", 12)),
+        (Key::new(11_usize), Ability::new(AbilityClass::from("Wizard"), "Sleep", 10)),
+        (Key::new(12_usize), Ability::new(AbilityClass::from("Wizard"), "Crystal Prison", 10)),
+        (Key::new(13_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Crystal Prison", 10)),
+        (Key::new(14_usize), Ability::new(AbilityClass::from("Wizard"), "Bottomless Swamp", 10)),
+        (Key::new(15_usize), Ability::new(AbilityClass::from("Wizard"), "Cursed Lightning", 10)),
+        (Key::new(16_usize), Ability::new(AbilityClass::from("Wizard"), "Inferno", 10)),
+        (Key::new(17_usize), Ability::new(AbilityClass::from("Wizard"), "Light Of Saber", 10)),
+        (Key::new(18_usize), Ability::new(AbilityClass::from("Wizard"), "Lightning Strike", 10)),
+        (Key::new(19_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Golem", 10)),
+        (Key::new(20_usize), Ability::new(AbilityClass::from("Wizard"), "Create Earth Wall", 10)),
+        (Key::new(21_usize), Ability::new(AbilityClass::from("Wizard"), "Enemy Search", 10)),
+        (Key::new(22_usize), Ability::new(AbilityClass::from("Wizard"), "Trap Search", 10)),
+        (Key::new(23_usize), Ability::new(AbilityClass::from("Wizard"), "Teleport", 10)),
+        (Key::new(24_usize), Ability::new(AbilityClass::from("Wizard"), "Random Teleport", 10)),
+        (Key::new(25_usize), Ability::new(AbilityClass::from("Wizard"), "Explosion", 100)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability7() {
+    let character = get_character_chris();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize),  Ability::new(AbilityClass::from("Thief"), "Steal", 1)),
+        (Key::new(2_usize),  Ability::new(AbilityClass::from("Thief"), "Lurk", 1)),
+        (Key::new(3_usize),  Ability::new(AbilityClass::from("Thief"), "Enemy Detection", 1)),
+        (Key::new(4_usize),  Ability::new(AbilityClass::from("Thief"), "Trap Detection", 1)),
+        (Key::new(5_usize),  Ability::new(AbilityClass::from("Thief"), "Disarm Trap", 1)),
+        (Key::new(6_usize),  Ability::new(AbilityClass::from("Thief"), "Flee", 1)),
+        (Key::new(7_usize),  Ability::new(AbilityClass::from("Thief"), "Bind", 1)),
+        (Key::new(8_usize),  Ability::new(AbilityClass::from("Thief"), "Skill Bind", 1)),
+        (Key::new(9_usize),  Ability::new(AbilityClass::from("Thief"), "Wire Trap", 1)),
+        (Key::new(10_usize), Ability::new(AbilityClass::from("Thief"), "Detect Treasure", 1)),
+        (Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Lockpick", 1)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_ability8() {
+    let character = get_character_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, Ability>, Ability> = hash_map::HashMap::from([
+        (Key::new(1_usize), Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10)),
+    ]);
+
+    for (name, ability) in expected_map.iter() {
+        let expected = Some(ability.clone());
+        let result = character.get(name).cloned();
 
         assert_eq!(result, expected);
     }
