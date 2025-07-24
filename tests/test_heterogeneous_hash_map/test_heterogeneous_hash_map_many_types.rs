@@ -2379,9 +2379,9 @@ fn test_heterogeneous_hash_map_inventory_item7() {
 #[test]
 fn test_heterogeneous_hash_map_inventory_item8() {
     let character = get_character_map_mitsurugi();
-    for key in (0_usize..=1024_usize).map(Key::new) {
-        assert_eq!(character.get::<InventoryItem, _>(&key), None);
-    }
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::new();
+
+    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
 }
 
 #[rustfmt::skip]
