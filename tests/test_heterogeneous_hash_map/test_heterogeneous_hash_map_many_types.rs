@@ -419,8 +419,8 @@ fn get_character_darkness() -> HeterogeneousHashMap<usize> {
     character.insert::<HitPoints>(Key::new(1_usize), HitPoints(150));
     character.insert::<MagicPoints>(Key::new(1_usize), MagicPoints(0));
     character.insert::<Chuunibyou>(Key::new(1_usize), Chuunibyou(0));
-    character.insert::<Equipment>(Key::new(1_usize), Equipment::from("Long Sword"));
-    character.insert::<Equipment>(Key::new(2_usize), Equipment::from("Adamantite Armor"));
+    character.insert::<Equipment>(Key::new(1_usize), Equipment::from("Adamantite Armor"));
+    character.insert::<Equipment>(Key::new(2_usize), Equipment::from("Long Sword"));
 
     character
 }
@@ -510,8 +510,8 @@ fn get_character_wiz() -> HeterogeneousHashMap<usize> {
     character.insert::<Chuunibyou>(Key::new(1_usize), Chuunibyou(0));
     character.insert::<Equipment>(Key::new(1_usize), Equipment::from("Rosary"));
     character.insert::<InventoryItem>(Key::new(1_usize), InventoryItem::new("Forced Teleport Scroll", 1));
-    character.insert::<InventoryItem>(Key::new(1_usize), InventoryItem::new("Barrier Tool", 1));
-    character.insert::<InventoryItem>(Key::new(1_usize), InventoryItem::new("Forbidden Crystal", 1));
+    character.insert::<InventoryItem>(Key::new(2_usize), InventoryItem::new("Barrier Tool", 1));
+    character.insert::<InventoryItem>(Key::new(3_usize), InventoryItem::new("Forbidden Crystal", 1));
 
     character
 }
@@ -2587,6 +2587,318 @@ fn test_heterogeneous_hash_map_chuuibyou8() {
 
     for (name, chuuibyou) in expected_map.iter() {
         let expected = Some(chuuibyou.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<Equipment>> = hash_map::HashMap::from([
+        (String::from("Kazuma"), Some(Equipment::from("Chunchunmaru"))),
+        (String::from("Megumin"), Some(Equipment::from("Magic Rod"))),
+        (String::from("Aqua"), Some(Equipment::from("Feather Mantle"))),
+        (String::from("Darkness"), Some(Equipment::from("Adamantite Armor"))),
+        (String::from("Yunyun"), Some(Equipment::from("Short Sword"))),
+        (String::from("Wiz"), Some(Equipment::from("Rosary"))),
+        (String::from("Chris"), Some(Equipment::from("Magic Dagger"))),
+        (String::from("Mitsurugi"), Some(Equipment::from("Cursed Sword Gram"))),
+    ]);
+    let key = Key::new(1_usize);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = equipment.clone();
+        let result = characters
+            .get_unchecked(name)
+            .get::<Equipment, _>(&key)
+            .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment1() {
+    let character = get_character_map_kazuma();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Chunchunmaru")),
+        (Key::new(2_usize), Equipment::from("Mass-Produced Vanir Mask")),
+        (Key::new(3_usize), Equipment::from("Cursed Ring")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment2() {
+    let character = get_character_megumin();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Magic Rod")),
+        (Key::new(2_usize), Equipment::from("Big Floppy Wizard Hat")),
+        (Key::new(3_usize), Equipment::from("Adventurer's Cloak")),
+        (Key::new(4_usize), Equipment::from("Demon Ring")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment3() {
+    let character = get_character_aqua();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Feather Mantle")),
+        (Key::new(2_usize), Equipment::from("Scepter")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment4() {
+    let character = get_character_darkness();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Adamantite Armor")),
+        (Key::new(2_usize), Equipment::from("Long Sword")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment5() {
+    let character = get_character_yunyun();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Short Sword")),
+        (Key::new(2_usize), Equipment::from("Magic Rod")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment6() {
+    let character = get_character_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Rosary")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment7() {
+    let character = get_character_chris();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Magic Dagger")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_equipment8() {
+    let character = get_character_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, Equipment>, Equipment> = hash_map::HashMap::from([
+        (Key::new(1_usize), Equipment::from("Cursed Sword Gram")),
+    ]);
+
+    for (name, equipment) in expected_map.iter() {
+        let expected = Some(equipment.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, Option<InventoryItem>> = hash_map::HashMap::from([
+        (String::from("Kazuma"), Some(InventoryItem::new("Adventurer Card", 1))),
+        (String::from("Megumin"), Some(InventoryItem::new("Light Of Reflection Scroll", 1))),
+        (String::from("Aqua"), Some(InventoryItem::new("Jarred Snow Sprite", 1))),
+        (String::from("Darkness"), None),
+        (String::from("Yunyun"), Some(InventoryItem::new("Magic Canceller Scroll", 1))),
+        (String::from("Wiz"), Some(InventoryItem::new("Forced Teleport Scroll", 1))),
+        (String::from("Chris"), Some(InventoryItem::new("Barrier Breaker", 1))),
+        (String::from("Mitsurugi"), None),
+    ]);
+    let key = Key::new(1_usize);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = inventory_item.clone();
+        let result = characters
+            .get_unchecked(name)
+            .get::<InventoryItem, _>(&key)
+            .map(|s| s.clone());
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item1() {
+    let character = get_character_map_kazuma();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
+        (Key::new(1_usize), InventoryItem::new("Adventurer Card", 1)),
+        (Key::new(2_usize), InventoryItem::new("Green Tracksuit", 1)),
+        (Key::new(3_usize), InventoryItem::new("Bottle Of Poison", 5)),
+        (Key::new(4_usize), InventoryItem::new("Tinymite", 2)),
+        (Key::new(5_usize), InventoryItem::new("Silver Arrows", 20)),
+        (Key::new(6_usize), InventoryItem::new("Dream Consultation Form", 99)),
+    ]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item2() {
+    let character = get_character_megumin();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
+        (Key::new(1_usize), InventoryItem::new("Light Of Reflection Scroll", 1)),
+        (Key::new(2_usize), InventoryItem::new("Sword Of Shack The Ripper", 1)),
+        (Key::new(3_usize), InventoryItem::new("Highest-Quality Manatites", 3)),
+    ]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item3() {
+    let character = get_character_aqua();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
+        (Key::new(1_usize), InventoryItem::new("Jarred Snow Sprite", 1)),
+        (Key::new(2_usize), InventoryItem::new("Bubbly", 0)),
+        (Key::new(3_usize), InventoryItem::new("Coins", 0)),
+    ]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item4() {
+    let character = get_character_darkness();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item5() {
+    let character = get_character_yunyun();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
+        (Key::new(1_usize), InventoryItem::new("Magic Canceller Scroll", 1)),
+        (Key::new(2_usize), InventoryItem::new("Manatites", 3)),
+        (Key::new(3_usize), InventoryItem::new("Paralyze Booster Potion", 3)),
+        (Key::new(4_usize), InventoryItem::new("Yunyun's Spellbook", 1)),
+        (Key::new(5_usize), InventoryItem::new("Coins", 1000)),
+    ]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item6() {
+    let character = get_character_wiz();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
+        (Key::new(1_usize), InventoryItem::new("Forced Teleport Scroll", 1)),
+        (Key::new(2_usize), InventoryItem::new("Barrier Tool", 1)),
+        (Key::new(3_usize), InventoryItem::new("Forbidden Crystal", 1)),
+    ]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item7() {
+    let character = get_character_chris();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([
+        (Key::new(1_usize), InventoryItem::new("Barrier Breaker", 1)),
+        (Key::new(2_usize), InventoryItem::new("Rock", 8)),
+    ]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
+        let result = character.get(name).cloned();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item8() {
+    let character = get_character_mitsurugi();
+    let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::from([]);
+
+    for (name, inventory_item) in expected_map.iter() {
+        let expected = Some(inventory_item.clone());
         let result = character.get(name).cloned();
 
         assert_eq!(result, expected);
