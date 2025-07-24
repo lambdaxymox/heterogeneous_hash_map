@@ -3,6 +3,7 @@ use core::cmp;
 use core::fmt;
 use core::hash;
 use core::marker;
+use alloc_crate::string::String;
 
 /// A typed key type for heterogeneous hash maps.
 ///
@@ -180,5 +181,11 @@ where
 impl<K, T> Borrow<K> for Key<K, T> {
     fn borrow(&self) -> &K {
         &self.id
+    }
+}
+
+impl<T> Borrow<str> for Key<String, T> {
+    fn borrow(&self) -> &str {
+        self.id.borrow()
     }
 }
