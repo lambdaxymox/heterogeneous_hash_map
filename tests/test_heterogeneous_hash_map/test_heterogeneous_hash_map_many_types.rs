@@ -2,6 +2,7 @@ use heterogeneous_hash_map::{
     HeterogeneousHashMap,
     HomogeneousHashMap,
     Key,
+    TypeMetadata,
 };
 
 use core::any;
@@ -3554,6 +3555,350 @@ fn test_heterogeneous_hash_map_familiar8() {
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
     run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata_len1() {
+    let expected_map: hash_map::HashMap<String, usize> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    15),
+        (String::from("Megumin"),   14),
+        (String::from("Aqua"),      15),
+        (String::from("Darkness"),  13),
+        (String::from("Yunyun"),    13),
+        (String::from("Wiz"),       14),
+        (String::from("Chris"),     15),
+        (String::from("Mitsurugi"), 14),
+    ]);
+    let result_map: hash_map::HashMap<String, usize> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    get_character_map_kazuma().len_types()),
+        (String::from("Megumin"),   get_character_map_megumin().len_types()),
+        (String::from("Aqua"),      get_character_map_aqua().len_types()),
+        (String::from("Darkness"),  get_character_map_darkness().len_types()),
+        (String::from("Yunyun"),    get_character_map_yunyun().len_types()),
+        (String::from("Wiz"),       get_character_map_wiz().len_types()),
+        (String::from("Chris"),     get_character_map_chris().len_types()),
+        (String::from("Mitsurugi"), get_character_map_mitsurugi().len_types()),
+    ]);
+
+    for name in expected_map.keys() {
+        let expected = expected_map.get(name).unwrap();
+        let result = result_map.get(name).unwrap();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata_len2() {
+    let characters = get_character_map();
+    let expected_map: hash_map::HashMap<String, usize> = hash_map::HashMap::from([
+        (String::from("Kazuma"),    15),
+        (String::from("Megumin"),   14),
+        (String::from("Aqua"),      15),
+        (String::from("Darkness"),  13),
+        (String::from("Yunyun"),    13),
+        (String::from("Wiz"),       14),
+        (String::from("Chris"),     15),
+        (String::from("Mitsurugi"), 14),
+    ]);
+
+    for (name, len) in expected_map.iter() {
+        let result = characters.get_unchecked(name).len_types();
+        let expected = len.clone();
+
+        assert_eq!(result, expected);
+    }
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata1() {
+    let character = get_character_map_kazuma();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<PlayerName>(),    TypeMetadata::of::<PlayerName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Job>(),           TypeMetadata::of::<Job>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<InventoryItem>(), TypeMetadata::of::<InventoryItem>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata2() {
+    let character = get_character_map_megumin();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<InventoryItem>(), TypeMetadata::of::<InventoryItem>()),
+            (any::TypeId::of::<Familiar>(),      TypeMetadata::of::<Familiar>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata3() {
+    let character = get_character_map_aqua();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<PlayerName>(),    TypeMetadata::of::<PlayerName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Job>(),           TypeMetadata::of::<Job>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<InventoryItem>(), TypeMetadata::of::<InventoryItem>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata4() {
+    let character = get_character_map_darkness();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Job>(),           TypeMetadata::of::<Job>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata5() {
+    let character = get_character_map_yunyun();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<InventoryItem>(), TypeMetadata::of::<InventoryItem>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata6() {
+    let character = get_character_map_wiz();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Job>(),           TypeMetadata::of::<Job>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<InventoryItem>(), TypeMetadata::of::<InventoryItem>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata7() {
+    let character = get_character_map_chris();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<PlayerName>(),    TypeMetadata::of::<PlayerName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Job>(),           TypeMetadata::of::<Job>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<InventoryItem>(), TypeMetadata::of::<InventoryItem>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_metadata8() {
+    let character = get_character_map_mitsurugi();
+    let expected = {
+        let mut _expected: Vec<(any::TypeId, TypeMetadata)> = Vec::from([
+            (any::TypeId::of::<CharacterName>(), TypeMetadata::of::<CharacterName>()),
+            (any::TypeId::of::<PlayerName>(),    TypeMetadata::of::<PlayerName>()),
+            (any::TypeId::of::<Age>(),           TypeMetadata::of::<Age>()),
+            (any::TypeId::of::<Race>(),          TypeMetadata::of::<Race>()),
+            (any::TypeId::of::<Class>(),         TypeMetadata::of::<Class>()),
+            (any::TypeId::of::<Job>(),           TypeMetadata::of::<Job>()),
+            (any::TypeId::of::<Status>(),        TypeMetadata::of::<Status>()),
+            (any::TypeId::of::<Description>(),   TypeMetadata::of::<Description>()),
+            (any::TypeId::of::<Stats>(),         TypeMetadata::of::<Stats>()),
+            (any::TypeId::of::<HitPoints>(),     TypeMetadata::of::<HitPoints>()),
+            (any::TypeId::of::<MagicPoints>(),   TypeMetadata::of::<MagicPoints>()),
+            (any::TypeId::of::<Chuunibyou>(),    TypeMetadata::of::<Chuunibyou>()),
+            (any::TypeId::of::<Equipment>(),     TypeMetadata::of::<Equipment>()),
+            (any::TypeId::of::<Ability>(),       TypeMetadata::of::<Ability>()),
+        ]);
+        _expected.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _expected
+    };
+    let result = {
+        let mut _result: Vec<(any::TypeId, TypeMetadata)> = character
+            .metadata_iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        _result.sort_by(|t1, t2| t1.0.cmp(&t2.0));
+        _result
+    };
+
+    assert_eq!(result, expected);
 }
 
 #[rustfmt::skip]
