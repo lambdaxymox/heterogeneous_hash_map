@@ -1,4 +1,4 @@
-use heterogeneous_hash_map::{Key, Entry, HomogeneousHashMap};
+use heterogeneous_hash_map::{Key, HomogeneousHashMap};
 
 use alloc_crate::string::String;
 
@@ -450,7 +450,6 @@ fn test_homogeneous_hash_map_and_modify3() {
 
         assert_eq!(entry.key(), &Key::new(2_usize));
 
-        let expected = AlchemyItem::new("Golden Oriole", 1_u32);
         let func = |value: &mut AlchemyItem| {
             value.quantity += 1;
         };
