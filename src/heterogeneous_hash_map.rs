@@ -1,23 +1,23 @@
-use crate::homogeneous_hash_map::HomogeneousHashMap;
 use crate::entry::Entry;
+use crate::homogeneous_hash_map::HomogeneousHashMap;
 use crate::iterator::{
+    Drain,
+    ExtractIf,
     Iter,
     IterMut,
     Keys,
+    TypeMetadataIter,
     Values,
     ValuesMut,
-    Drain,
-    ExtractIf,
-    TypeMetadataIter,
 };
 use crate::key::Key;
 use crate::metadata::TypeMetadata;
 
+use alloc_crate::vec::Vec;
 use core::any;
+use core::borrow::Borrow;
 use core::fmt;
 use core::marker;
-use core::borrow::Borrow;
-use alloc_crate::vec::Vec;
 
 #[cfg(feature = "std")]
 use std::hash;
@@ -612,7 +612,8 @@ where
         T: any::Any,
     {
         let type_id = any::TypeId::of::<T>();
-        let map = self.map
+        let map = self
+            .map
             .get_mut(&type_id)
             .unwrap()
             .as_proj_mut::<Key<K, T>, T, S, alloc::Global>();
@@ -664,7 +665,8 @@ where
             return None;
         }
 
-        let map = self.map
+        let map = self
+            .map
             .get(&type_id)
             .map(|m| m.as_proj::<Key<K, T>, T, S, alloc::Global>())?;
 
@@ -721,7 +723,8 @@ where
             return None;
         }
 
-        let map = self.map
+        let map = self
+            .map
             .get_mut(&type_id)
             .map(|m| m.as_proj_mut::<Key<K, T>, T, S, alloc::Global>())?;
 
@@ -1031,6 +1034,7 @@ where
     ///
     /// assert!(het_map.is_empty_types());
     /// ```
+    #[rustfmt::skip]
     pub fn take_type<T>(&mut self) -> Option<HomogeneousHashMap<K, T, S>>
     where
         T: any::Any,
@@ -2826,28 +2830,32 @@ where
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let entries: Vec<TypeEntry> = self.map.iter().map(|(type_id, map)| {
-            let metadata = self.registry.get(type_id)
-                .expect("Every stored type must have registered metadata");
+        let entries: Vec<TypeEntry> = self
+            .map
+            .iter()
+            .map(|(type_id, map)| {
+                let metadata = self
+                    .registry
+                    .get(type_id)
+                    .expect("Every stored type must have registered metadata");
 
-            TypeEntry {
-                type_id,
-                metadata,
-                length: map.len(),
-            }
-        }).collect();
+                TypeEntry {
+                    type_id,
+                    metadata,
+                    length: map.len(),
+                }
+            })
+            .collect();
 
-        f.debug_struct("HeterogeneousHashMap")
-            .field("entries", &entries)
-            .finish()
+        f.debug_struct("HeterogeneousHashMap").field("entries", &entries).finish()
     }
 }
 
 #[cfg(test)]
 mod test_internals {
+    use super::*;
     use std::boxed::Box;
     use std::string::String;
-    use super::*;
 
     fn match_map_type_ids(het_map: &HeterogeneousHashMap<hash::RandomState>) {
         for (type_id, map) in het_map.map.iter() {

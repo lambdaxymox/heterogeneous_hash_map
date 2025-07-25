@@ -1,9 +1,9 @@
+use alloc_crate::string::String;
 use core::borrow::Borrow;
 use core::cmp;
 use core::fmt;
 use core::hash;
 use core::marker;
-use alloc_crate::string::String;
 
 /// A typed key type for heterogeneous hash maps.
 ///
@@ -100,11 +100,7 @@ where
     }
 }
 
-impl<K, T> Copy for Key<K, T>
-where
-    K: Copy,
-{
-}
+impl<K, T> Copy for Key<K, T> where K: Copy {}
 
 impl<K, T> hash::Hash for Key<K, T>
 where
@@ -136,11 +132,7 @@ where
     }
 }
 
-impl<K, T> Eq for Key<K, T>
-where
-    K: Eq,
-{
-}
+impl<K, T> Eq for Key<K, T> where K: Eq {}
 
 impl<K, T> PartialOrd for Key<K, T>
 where

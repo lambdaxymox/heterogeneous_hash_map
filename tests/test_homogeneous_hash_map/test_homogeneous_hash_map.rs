@@ -1,4 +1,7 @@
-use heterogeneous_hash_map::{HomogeneousHashMap, Key};
+use heterogeneous_hash_map::{
+    HomogeneousHashMap,
+    Key,
+};
 
 use std::vec::Vec;
 

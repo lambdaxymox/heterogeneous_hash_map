@@ -1,23 +1,23 @@
-use crate::error::{
-    TryReserveErrorKind,
-    TryReserveError,
-};
 use crate::entry::{
     Entry,
     OccupiedEntry,
     VacantEntry,
 };
+use crate::error::{
+    TryReserveError,
+    TryReserveErrorKind,
+};
 use crate::iterator::{
     Drain,
     ExtractIf,
+    IntoIter,
+    IntoKeys,
+    IntoValues,
     Iter,
     IterMut,
     Keys,
     Values,
     ValuesMut,
-    IntoIter,
-    IntoKeys,
-    IntoValues,
 };
 use crate::key::Key;
 

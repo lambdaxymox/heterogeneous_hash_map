@@ -5,10 +5,10 @@ use heterogeneous_hash_map::{
     TypeMetadata,
 };
 
-use core::any;
-use core::fmt;
 use alloc_crate::string::String;
 use alloc_crate::vec::Vec;
+use core::any;
+use core::fmt;
 use std::hash;
 
 use hashbrown::hash_map;
@@ -293,21 +293,26 @@ fn get_character_map_megumin() -> HeterogeneousHashMap<usize> {
     character.insert::<Race>(Key::new(2_usize), Race::from("Crimson Magic Clan"));
     character.insert::<Class>(Key::new(1_usize), Class::from("Arch Wizard"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
-    character.insert::<Description>(Key::new(1_usize), Description::from("\
-        I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!\
-    "));
-    character.insert::<Description>(Key::new(2_usize), Description::from("\
-        NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps.\
-    "));
-    character.insert::<Stats>(Key::new(1_usize), Stats {
-        strength: 14,
-        dexterity: 10,
-        agility: 10,
-        intelligence: 25,
-        perception: 14,
-        mind: 24,
-        luck: 10,
-    });
+    character.insert::<Description>(
+        Key::new(1_usize),
+        Description::from("I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!"),
+    );
+    character.insert::<Description>(
+        Key::new(2_usize),
+        Description::from("NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps."),
+    );
+    character.insert::<Stats>(
+        Key::new(1_usize),
+        Stats {
+            strength: 14,
+            dexterity: 10,
+            agility: 10,
+            intelligence: 25,
+            perception: 14,
+            mind: 24,
+            luck: 10,
+        },
+    );
     character.insert::<HitPoints>(Key::new(1_usize), HitPoints(20));
     character.insert::<MagicPoints>(Key::new(1_usize), MagicPoints(999));
     character.insert::<Chuunibyou>(Key::new(1_usize), Chuunibyou(u32::MAX));
@@ -661,10 +666,12 @@ fn get_character_map() -> HomogeneousHashMap<String, HeterogeneousHashMap<usize>
     characters
 }
 
+#[rustfmt::skip]
 fn run_test_heterogeneous_hash_map_accessors<T, I1, I2>(
     het_map: &HeterogeneousHashMap<usize>,
     expected_map: &hash_map::HashMap<Key<usize, T>, T>,
-    pre_range: I1, post_range: I2
+    pre_range: I1,
+    post_range: I2,
 )
 where
     T: any::Any + fmt::Debug + Clone + PartialEq,
@@ -769,6 +776,7 @@ fn test_heterogeneous_hash_map_character_name_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name1() {
     let character = get_character_map_kazuma();
@@ -777,9 +785,15 @@ fn test_heterogeneous_hash_map_character_name1() {
         (Key::new(2_usize), CharacterName::from("Kazutrash")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name2() {
     let character = get_character_map_megumin();
@@ -789,9 +803,15 @@ fn test_heterogeneous_hash_map_character_name2() {
         (Key::new(3_usize), CharacterName::from("Crazy Explosion Girl")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name3() {
     let character = get_character_map_aqua();
@@ -801,9 +821,15 @@ fn test_heterogeneous_hash_map_character_name3() {
         (Key::new(3_usize), CharacterName::from("Goddess Of Party Tricks")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name4() {
     let character = get_character_map_darkness();
@@ -812,19 +838,30 @@ fn test_heterogeneous_hash_map_character_name4() {
         (Key::new(2_usize), CharacterName::from("Lalatina Ford Dustiness")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name5() {
     let character = get_character_map_yunyun();
-    let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> = hash_map::HashMap::from([
-        (Key::new(1_usize), CharacterName::from("Yunyun")),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, CharacterName>, CharacterName> =
+        hash_map::HashMap::from([(Key::new(1_usize), CharacterName::from("Yunyun"))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name6() {
     let character = get_character_map_wiz();
@@ -834,9 +871,15 @@ fn test_heterogeneous_hash_map_character_name6() {
         (Key::new(3_usize), CharacterName::from("Queen Of The Undead")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name7() {
     let character = get_character_map_chris();
@@ -845,9 +888,15 @@ fn test_heterogeneous_hash_map_character_name7() {
         (Key::new(2_usize), CharacterName::from("Noble Thief")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_character_name8() {
     let character = get_character_map_mitsurugi();
@@ -857,7 +906,12 @@ fn test_heterogeneous_hash_map_character_name8() {
         (Key::new(3_usize), CharacterName::from("Magic Sword Guy")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -942,6 +996,7 @@ fn test_heterogeneous_hash_map_player_name_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name1() {
     let character = get_character_map_kazuma();
@@ -951,69 +1006,113 @@ fn test_heterogeneous_hash_map_player_name1() {
         (Key::new(3_usize), PlayerName::from("Kazuma Satou")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name2() {
     let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name3() {
     let character = get_character_map_aqua();
-    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::from([
-        (Key::new(1_usize), PlayerName::from("Aqua")),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> =
+        hash_map::HashMap::from([(Key::new(1_usize), PlayerName::from("Aqua"))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name4() {
     let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name5() {
     let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name6() {
     let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name7() {
     let character = get_character_map_chris();
-    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::from([
-        (Key::new(1_usize), PlayerName::from("Eris")),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> =
+        hash_map::HashMap::from([(Key::new(1_usize), PlayerName::from("Eris"))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_player_name8() {
     let character = get_character_map_mitsurugi();
-    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> = hash_map::HashMap::from([
-        (Key::new(1_usize), PlayerName::from("Kyouya Mitsurugi")),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, PlayerName>, PlayerName> =
+        hash_map::HashMap::from([(Key::new(1_usize), PlayerName::from("Kyouya Mitsurugi"))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -1098,86 +1197,118 @@ fn test_heterogeneous_hash_map_age_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age1() {
     let character = get_character_map_kazuma();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(17)),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([(Key::new(1_usize), Age::from(17))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age2() {
     let character = get_character_map_megumin();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(14)),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([(Key::new(1_usize), Age::from(14))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age3() {
     let character = get_character_map_aqua();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(16)),
-        (Key::new(2_usize), Age::from(u32::MAX)),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> =
+        hash_map::HashMap::from([(Key::new(1_usize), Age::from(16)), (Key::new(2_usize), Age::from(u32::MAX))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age4() {
     let character = get_character_map_darkness();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(18)),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([(Key::new(1_usize), Age::from(18))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age5() {
     let character = get_character_map_yunyun();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(14)),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([(Key::new(1_usize), Age::from(14))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age6() {
     let character = get_character_map_wiz();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(20_u32)),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([(Key::new(1_usize), Age::from(20_u32))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age7() {
     let character = get_character_map_chris();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(15)),
-        (Key::new(2_usize), Age::from(u32::MAX))
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> =
+        hash_map::HashMap::from([(Key::new(1_usize), Age::from(15)), (Key::new(2_usize), Age::from(u32::MAX))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_age8() {
     let character = get_character_map_mitsurugi();
-    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([
-        (Key::new(1_usize), Age::from(17)),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Age>, Age> = hash_map::HashMap::from([(Key::new(1_usize), Age::from(17))]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -1262,16 +1393,23 @@ fn test_heterogeneous_hash_map_race_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race1() {
     let character = get_character_map_kazuma();
-    let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
-        (Key::new(1_usize), Race::from("Human")),
+    let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([(
+        Key::new(1_usize), Race::from("Human")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race2() {
     let character = get_character_map_megumin();
@@ -1280,9 +1418,15 @@ fn test_heterogeneous_hash_map_race2() {
         (Key::new(2_usize), Race::from("Crimson Magic Clan")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race3() {
     let character = get_character_map_aqua();
@@ -1290,9 +1434,15 @@ fn test_heterogeneous_hash_map_race3() {
         (Key::new(1_usize), Race::from("God")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race4() {
     let character = get_character_map_darkness();
@@ -1300,9 +1450,15 @@ fn test_heterogeneous_hash_map_race4() {
         (Key::new(1_usize), Race::from("Human")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race5() {
     let character = get_character_map_yunyun();
@@ -1311,9 +1467,15 @@ fn test_heterogeneous_hash_map_race5() {
         (Key::new(2_usize), Race::from("Crimson Magic Clan")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race6() {
     let character = get_character_map_wiz();
@@ -1322,20 +1484,32 @@ fn test_heterogeneous_hash_map_race6() {
         (Key::new(2_usize), Race::from("Human")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race7() {
     let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Race>, Race> = hash_map::HashMap::from([
         (Key::new(1_usize), Race::from("Human")),
-        (Key::new(2_usize), Race::from("God"))
+        (Key::new(2_usize), Race::from("God")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_race8() {
     let character = get_character_map_mitsurugi();
@@ -1343,7 +1517,12 @@ fn test_heterogeneous_hash_map_race8() {
         (Key::new(1_usize), Race::from("Human")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -1428,6 +1607,7 @@ fn test_heterogeneous_hash_map_class_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class1() {
     let character = get_character_map_kazuma();
@@ -1435,9 +1615,15 @@ fn test_heterogeneous_hash_map_class1() {
         (Key::new(1_usize), Class::from("Adventurer")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class2() {
     let character = get_character_map_megumin();
@@ -1445,9 +1631,15 @@ fn test_heterogeneous_hash_map_class2() {
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class3() {
     let character = get_character_map_aqua();
@@ -1455,9 +1647,15 @@ fn test_heterogeneous_hash_map_class3() {
         (Key::new(1_usize), Class::from("Arch Priest")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class4() {
     let character = get_character_map_darkness();
@@ -1465,9 +1663,15 @@ fn test_heterogeneous_hash_map_class4() {
         (Key::new(1_usize), Class::from("Crusader")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class5() {
     let character = get_character_map_yunyun();
@@ -1475,9 +1679,15 @@ fn test_heterogeneous_hash_map_class5() {
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class6() {
     let character = get_character_map_wiz();
@@ -1485,9 +1695,15 @@ fn test_heterogeneous_hash_map_class6() {
         (Key::new(1_usize), Class::from("Arch Wizard")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class7() {
     let character = get_character_map_chris();
@@ -1495,9 +1711,15 @@ fn test_heterogeneous_hash_map_class7() {
         (Key::new(1_usize), Class::from("Thief")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_class8() {
     let character = get_character_map_mitsurugi();
@@ -1505,7 +1727,12 @@ fn test_heterogeneous_hash_map_class8() {
         (Key::new(1_usize), Class::from("Swordmaster")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -1590,6 +1817,7 @@ fn test_heterogeneous_hash_map_job_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job1() {
     let character = get_character_map_kazuma();
@@ -1599,17 +1827,29 @@ fn test_heterogeneous_hash_map_job1() {
         (Key::new(3_usize), Job::from("Strategic Coward")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job2() {
     let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job3() {
     let character = get_character_map_aqua();
@@ -1617,9 +1857,15 @@ fn test_heterogeneous_hash_map_job3() {
         (Key::new(1_usize), Job::from("Self-Proclaimed Goddess")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job4() {
     let character = get_character_map_darkness();
@@ -1627,17 +1873,29 @@ fn test_heterogeneous_hash_map_job4() {
         (Key::new(1_usize), Job::from("Noble")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job5() {
     let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Job>, Job> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job6() {
     let character = get_character_map_wiz();
@@ -1646,9 +1904,15 @@ fn test_heterogeneous_hash_map_job6() {
         (Key::new(2_usize), Job::from("Shopkeeper")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job7() {
     let character = get_character_map_chris();
@@ -1658,9 +1922,15 @@ fn test_heterogeneous_hash_map_job7() {
         (Key::new(3_usize), Job::from("Currently Cleaning Up Aqua's Messes. Send Help.")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_job8() {
     let character = get_character_map_mitsurugi();
@@ -1668,7 +1938,12 @@ fn test_heterogeneous_hash_map_job8() {
         (Key::new(1_usize), Job::from("Isekai Protagonist")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -1753,6 +2028,7 @@ fn test_heterogeneous_hash_map_status_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status1() {
     let character = get_character_map_kazuma();
@@ -1760,9 +2036,15 @@ fn test_heterogeneous_hash_map_status1() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status2() {
     let character = get_character_map_megumin();
@@ -1770,9 +2052,15 @@ fn test_heterogeneous_hash_map_status2() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status3() {
     let character = get_character_map_aqua();
@@ -1780,9 +2068,15 @@ fn test_heterogeneous_hash_map_status3() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status4() {
     let character = get_character_map_darkness();
@@ -1790,9 +2084,15 @@ fn test_heterogeneous_hash_map_status4() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status5() {
     let character = get_character_map_yunyun();
@@ -1800,9 +2100,15 @@ fn test_heterogeneous_hash_map_status5() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status6() {
     let character = get_character_map_wiz();
@@ -1810,9 +2116,15 @@ fn test_heterogeneous_hash_map_status6() {
         (Key::new(1_usize), Status::from("Undead")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status7() {
     let character = get_character_map_chris();
@@ -1820,9 +2132,15 @@ fn test_heterogeneous_hash_map_status7() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_status8() {
     let character = get_character_map_mitsurugi();
@@ -1830,7 +2148,12 @@ fn test_heterogeneous_hash_map_status8() {
         (Key::new(1_usize), Status::from("Alive")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -1935,104 +2258,182 @@ fn test_heterogeneous_hash_map_description_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description1() {
     let character = get_character_map_kazuma();
-    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("Slovenly shut-in NEET with questionable morals and a surprisingly sharp wit.")),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Description::from("Slovenly shut-in NEET with questionable morals and a surprisingly sharp wit."),
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description2() {
     let character = get_character_map_megumin();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!")),
-        (Key::new(2_usize), Description::from("NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps.")),
+        (
+            Key::new(1_usize),
+            Description::from("I am MEGUMIN! The greatest wizard of the CRIMSON DEMON CLAN! The user of EXPLOSION magic!"),
+        ),
+        (
+            Key::new(2_usize),
+            Description::from("NOTE (Luna): Adventurer refused to provide a standard description. She forced this one in all caps."),
+        ),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description3() {
     let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("Useless water goddess of the Axis church. Somehow, her followers are even crazier than she is.")),
-        (Key::new(2_usize), Description::from("Self-proclaimed goddess who specializes in getting us into trouble and drinking all the party’s funds. Blessings included, probably.")),
-        (Key::new(3_usize), Description::from("A self-proclaimed goddess notorious for causing disasters and drinking all the booze. Worship at your own risk.")),
-        (Key::new(4_usize), Description::from("Patron deity of purification, renewal, and... occasional self-sabotage. Pray hard, avoid the frogs.")),
-        (Key::new(5_usize), Description::from("\
-            Revered water goddess of the Axis Church, renowned for her unparalleled purity and unwavering dedication to her followers' prosperity. \
-            Her divine blessings ensure the flourishing of faith and the cleansing of corruption across the realm.\
-        ")),
+        (
+            Key::new(1_usize),
+            Description::from("Useless water goddess of the Axis church. Somehow, her followers are even crazier than she is."),
+        ),
+        (
+            Key::new(2_usize),
+            Description::from(
+                "Self-proclaimed goddess who specializes in getting us into trouble and drinking all the party’s funds. Blessings included, probably.",
+            ),
+        ),
+        (
+            Key::new(3_usize),
+            Description::from(
+                "A self-proclaimed goddess notorious for causing disasters and drinking all the booze. Worship at your own risk.",
+            ),
+        ),
+        (
+            Key::new(4_usize),
+            Description::from(
+                "Patron deity of purification, renewal, and... occasional self-sabotage. Pray hard, avoid the frogs.",
+            ),
+        ),
+        (
+            Key::new(5_usize),
+            Description::from("\
+                Revered water goddess of the Axis Church, renowned for her unparalleled purity and unwavering dedication to her followers' prosperity. \
+                Her divine blessings ensure the flourishing of faith and the cleansing of corruption across the realm.\
+            "),
+        ),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (6_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description4() {
     let character = get_character_map_darkness();
-    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("\
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Description::from(
+            "\
             A noble crusader who intercepts every blow with unwavering resolve. None of her attacks ever hit their mark.\
-        ")),
-    ]);
+        ",
+        ),
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description5() {
     let character = get_character_map_yunyun();
-    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("\
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Description::from("\
             Crimson Demon honor student. Megumin’s arch rival (not that anyone else is competing). \
             Would really like it if someone talked to her.\
-        ")),
-    ]);
+        "),
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description6() {
     let character = get_character_map_wiz();
-    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("\
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Description::from("\
             Benevolent lich, retired adventurer, and former Devil King's general. Now fighting her greatest battle: running a small business.\
-        ")),
-    ]);
+        "),
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description7() {
     let character = get_character_map_chris();
-    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("\
-            She’s got a strong sense of justice and an even stronger sense of when a locked chest needs opening.\
-        ")),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Description::from("She’s got a strong sense of justice and an even stronger sense of when a locked chest needs opening."),
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_description8() {
     let character = get_character_map_mitsurugi();
-    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([
-        (Key::new(1_usize), Description::from("\
-            Textbook case of main character syndrome. He thinks he is the real deal Isekai hero. \
-            Constantly played like a side quest by Kazuma.\
-        ")),
-    ]);
+    let expected_map: hash_map::HashMap<Key<usize, Description>, Description> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Description::from("Textbook case of main character syndrome. He thinks he is the real deal Isekai hero. Constantly played like a side quest by Kazuma."),
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -2181,11 +2582,13 @@ fn test_heterogeneous_hash_map_stats_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats1() {
     let character = get_character_map_kazuma();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 12,
             dexterity: 14,
             agility: 13,
@@ -2193,17 +2596,24 @@ fn test_heterogeneous_hash_map_stats1() {
             perception: 14,
             mind: 10,
             luck: 99,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats2() {
     let character = get_character_map_megumin();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 14,
             dexterity: 10,
             agility: 10,
@@ -2211,17 +2621,24 @@ fn test_heterogeneous_hash_map_stats2() {
             perception: 14,
             mind: 24,
             luck: 10,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats3() {
     let character = get_character_map_aqua();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 18,
             dexterity: 11,
             agility: 14,
@@ -2229,17 +2646,24 @@ fn test_heterogeneous_hash_map_stats3() {
             perception: 9,
             mind: u32::MAX,
             luck: 1,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats4() {
     let character = get_character_map_darkness();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 22,
             dexterity: 4,
             agility: 25,
@@ -2247,17 +2671,24 @@ fn test_heterogeneous_hash_map_stats4() {
             perception: 6,
             mind: 25,
             luck: 10,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats5() {
     let character = get_character_map_yunyun();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 10,
             dexterity: 12,
             agility: 12,
@@ -2265,17 +2696,24 @@ fn test_heterogeneous_hash_map_stats5() {
             perception: 18,
             mind: 22,
             luck: 12,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats6() {
     let character = get_character_map_wiz();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 10,
             dexterity: 10,
             agility: 10,
@@ -2283,17 +2721,24 @@ fn test_heterogeneous_hash_map_stats6() {
             perception: 12,
             mind: 25,
             luck: 8,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats7() {
     let character = get_character_map_chris();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 11,
             dexterity: 25,
             agility: 25,
@@ -2301,17 +2746,24 @@ fn test_heterogeneous_hash_map_stats7() {
             perception: 25,
             mind: 25,
             luck: u32::MAX,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_stats8() {
     let character = get_character_map_mitsurugi();
-    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([
-        (Key::new(1_usize), Stats {
+    let expected_map: hash_map::HashMap<Key<usize, Stats>, Stats> = hash_map::HashMap::from([(
+        Key::new(1_usize),
+        Stats {
             strength: 25,
             dexterity: 20,
             agility: 20,
@@ -2319,10 +2771,15 @@ fn test_heterogeneous_hash_map_stats8() {
             perception: 4,
             mind: 15,
             luck: 3,
-        }),
-    ]);
+        },
+    )]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -2385,6 +2842,7 @@ fn test_heterogeneous_hash_map_hit_points_len1() {
 }
 
 #[rustfmt::skip]
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points_len2() {
     let characters = get_character_map();
@@ -2407,6 +2865,7 @@ fn test_heterogeneous_hash_map_hit_points_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points1() {
     let character = get_character_map_kazuma();
@@ -2414,9 +2873,15 @@ fn test_heterogeneous_hash_map_hit_points1() {
         (Key::new(1_usize), HitPoints::from(40_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points2() {
     let character = get_character_map_megumin();
@@ -2424,9 +2889,15 @@ fn test_heterogeneous_hash_map_hit_points2() {
         (Key::new(1_usize), HitPoints::from(20_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points3() {
     let character = get_character_map_aqua();
@@ -2434,9 +2905,15 @@ fn test_heterogeneous_hash_map_hit_points3() {
         (Key::new(1_usize), HitPoints::from(60_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points4() {
     let character = get_character_map_darkness();
@@ -2444,9 +2921,15 @@ fn test_heterogeneous_hash_map_hit_points4() {
         (Key::new(1_usize), HitPoints::from(150)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points5() {
     let character = get_character_map_yunyun();
@@ -2454,9 +2937,15 @@ fn test_heterogeneous_hash_map_hit_points5() {
         (Key::new(1_usize), HitPoints::from(30_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points6() {
     let character = get_character_map_wiz();
@@ -2464,9 +2953,15 @@ fn test_heterogeneous_hash_map_hit_points6() {
         (Key::new(1_usize), HitPoints::from(60_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points7() {
     let character = get_character_map_chris();
@@ -2474,9 +2969,15 @@ fn test_heterogeneous_hash_map_hit_points7() {
         (Key::new(1_usize), HitPoints::from(100_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_hit_points8() {
     let character = get_character_map_mitsurugi();
@@ -2484,7 +2985,12 @@ fn test_heterogeneous_hash_map_hit_points8() {
         (Key::new(1_usize), HitPoints::from(200_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -2569,6 +3075,7 @@ fn test_heterogeneous_hash_map_magic_points_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points1() {
     let character = get_character_map_kazuma();
@@ -2576,9 +3083,15 @@ fn test_heterogeneous_hash_map_magic_points1() {
         (Key::new(1_usize), MagicPoints::from(20_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points2() {
     let character = get_character_map_megumin();
@@ -2586,9 +3099,15 @@ fn test_heterogeneous_hash_map_magic_points2() {
         (Key::new(1_usize), MagicPoints::from(999_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points3() {
     let character = get_character_map_aqua();
@@ -2596,9 +3115,15 @@ fn test_heterogeneous_hash_map_magic_points3() {
         (Key::new(1_usize), MagicPoints::from(u32::MAX)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points4() {
     let character = get_character_map_darkness();
@@ -2606,9 +3131,15 @@ fn test_heterogeneous_hash_map_magic_points4() {
         (Key::new(1_usize), MagicPoints::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points5() {
     let character = get_character_map_yunyun();
@@ -2616,9 +3147,15 @@ fn test_heterogeneous_hash_map_magic_points5() {
         (Key::new(1_usize), MagicPoints::from(400_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points6() {
     let character = get_character_map_wiz();
@@ -2626,9 +3163,15 @@ fn test_heterogeneous_hash_map_magic_points6() {
         (Key::new(1_usize), MagicPoints::from(700)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points7() {
     let character = get_character_map_chris();
@@ -2636,9 +3179,15 @@ fn test_heterogeneous_hash_map_magic_points7() {
         (Key::new(1_usize), MagicPoints::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_magic_points8() {
     let character = get_character_map_mitsurugi();
@@ -2646,7 +3195,12 @@ fn test_heterogeneous_hash_map_magic_points8() {
         (Key::new(1_usize), MagicPoints::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -2731,6 +3285,7 @@ fn test_heterogeneous_hash_map_chuunibyou_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou1() {
     let character = get_character_map_kazuma();
@@ -2738,9 +3293,15 @@ fn test_heterogeneous_hash_map_chuunibyou1() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou2() {
     let character = get_character_map_megumin();
@@ -2748,9 +3309,15 @@ fn test_heterogeneous_hash_map_chuunibyou2() {
         (Key::new(1_usize), Chuunibyou::from(u32::MAX)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou3() {
     let character = get_character_map_aqua();
@@ -2758,9 +3325,15 @@ fn test_heterogeneous_hash_map_chuunibyou3() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou4() {
     let character = get_character_map_darkness();
@@ -2768,9 +3341,15 @@ fn test_heterogeneous_hash_map_chuunibyou4() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou5() {
     let character = get_character_map_yunyun();
@@ -2778,9 +3357,15 @@ fn test_heterogeneous_hash_map_chuunibyou5() {
         (Key::new(1_usize), Chuunibyou::from(1_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou6() {
     let character = get_character_map_wiz();
@@ -2788,9 +3373,15 @@ fn test_heterogeneous_hash_map_chuunibyou6() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou7() {
     let character = get_character_map_chris();
@@ -2798,9 +3389,15 @@ fn test_heterogeneous_hash_map_chuunibyou7() {
         (Key::new(1_usize), Chuunibyou::from(0_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_chuunibyou8() {
     let character = get_character_map_mitsurugi();
@@ -2808,7 +3405,12 @@ fn test_heterogeneous_hash_map_chuunibyou8() {
         (Key::new(1_usize), Chuunibyou::from(100_u32)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -2893,6 +3495,7 @@ fn test_heterogeneous_hash_map_equipment_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment1() {
     let character = get_character_map_kazuma();
@@ -2902,9 +3505,15 @@ fn test_heterogeneous_hash_map_equipment1() {
         (Key::new(3_usize), Equipment::from("Cursed Ring")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment2() {
     let character = get_character_map_megumin();
@@ -2913,12 +3522,18 @@ fn test_heterogeneous_hash_map_equipment2() {
         (Key::new(2_usize), Equipment::from("Big Floppy Wizard Hat")),
         (Key::new(3_usize), Equipment::from("Adventurer's Cloak")),
         (Key::new(4_usize), Equipment::from("Demon Ring")),
-        (Key::new(5_usize), Equipment::from("Eye Patch"))
+        (Key::new(5_usize), Equipment::from("Eye Patch")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (6_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment3() {
     let character = get_character_map_aqua();
@@ -2927,9 +3542,15 @@ fn test_heterogeneous_hash_map_equipment3() {
         (Key::new(2_usize), Equipment::from("Scepter")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment4() {
     let character = get_character_map_darkness();
@@ -2938,9 +3559,15 @@ fn test_heterogeneous_hash_map_equipment4() {
         (Key::new(2_usize), Equipment::from("Long Sword")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment5() {
     let character = get_character_map_yunyun();
@@ -2949,9 +3576,15 @@ fn test_heterogeneous_hash_map_equipment5() {
         (Key::new(2_usize), Equipment::from("Magic Rod")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment6() {
     let character = get_character_map_wiz();
@@ -2959,9 +3592,15 @@ fn test_heterogeneous_hash_map_equipment6() {
         (Key::new(1_usize), Equipment::from("Rosary")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment7() {
     let character = get_character_map_chris();
@@ -2969,9 +3608,15 @@ fn test_heterogeneous_hash_map_equipment7() {
         (Key::new(1_usize), Equipment::from("Magic Dagger")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_equipment8() {
     let character = get_character_map_mitsurugi();
@@ -2979,7 +3624,12 @@ fn test_heterogeneous_hash_map_equipment8() {
         (Key::new(1_usize), Equipment::from("Cursed Sword Gram")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -3064,6 +3714,7 @@ fn test_heterogeneous_hash_map_inventory_item_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item1() {
     let character = get_character_map_kazuma();
@@ -3076,9 +3727,15 @@ fn test_heterogeneous_hash_map_inventory_item1() {
         (Key::new(6_usize), InventoryItem::new("Dream Consultation Form", 99)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (7_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (7_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item2() {
     let character = get_character_map_megumin();
@@ -3088,9 +3745,15 @@ fn test_heterogeneous_hash_map_inventory_item2() {
         (Key::new(3_usize), InventoryItem::new("Highest-Quality Manatites", 3)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item3() {
     let character = get_character_map_aqua();
@@ -3100,17 +3763,29 @@ fn test_heterogeneous_hash_map_inventory_item3() {
         (Key::new(3_usize), InventoryItem::new("Coins", 0)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item4() {
     let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item5() {
     let character = get_character_map_yunyun();
@@ -3122,9 +3797,15 @@ fn test_heterogeneous_hash_map_inventory_item5() {
         (Key::new(5_usize), InventoryItem::new("Coins", 1000)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (6_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item6() {
     let character = get_character_map_wiz();
@@ -3134,9 +3815,15 @@ fn test_heterogeneous_hash_map_inventory_item6() {
         (Key::new(3_usize), InventoryItem::new("Forbidden Crystal", 1)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (4_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (4_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item7() {
     let character = get_character_map_chris();
@@ -3145,15 +3832,26 @@ fn test_heterogeneous_hash_map_inventory_item7() {
         (Key::new(2_usize), InventoryItem::new("Rock", 8)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (3_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (3_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item8() {
     let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, InventoryItem>, InventoryItem> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -3238,6 +3936,7 @@ fn test_heterogeneous_hash_map_ability() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability1() {
     let character = get_character_map_kazuma();
@@ -3254,9 +3953,15 @@ fn test_heterogeneous_hash_map_ability1() {
         (Key::new(10_usize), Ability::new(AbilityClass::from("Thief"), "Bind", 1)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (11_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (11_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability2() {
     let character = get_character_map_megumin();
@@ -3264,9 +3969,15 @@ fn test_heterogeneous_hash_map_ability2() {
         (Key::new(1_usize), Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability3() {
     let character = get_character_map_aqua();
@@ -3298,9 +4009,15 @@ fn test_heterogeneous_hash_map_ability3() {
         (Key::new(25_usize), Ability::new(AbilityClass::from("Holy Magic"), "Magic Seal", 50)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (26_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (26_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability4() {
     let character = get_character_map_darkness();
@@ -3312,9 +4029,15 @@ fn test_heterogeneous_hash_map_ability4() {
         (Key::new(5_usize), Ability::new(AbilityClass::from("Crusader"), "Side Slash", 0)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (6_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (6_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability5() {
     let character = get_character_map_yunyun();
@@ -3342,9 +4065,15 @@ fn test_heterogeneous_hash_map_ability5() {
         (Key::new(21_usize), Ability::new(AbilityClass::from("Wizard"), "Control Of Weather", 30)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (22_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (22_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability6() {
     let character = get_character_map_wiz();
@@ -3376,9 +4105,15 @@ fn test_heterogeneous_hash_map_ability6() {
         (Key::new(25_usize), Ability::new(AbilityClass::from("Wizard"), "Explosion", 100)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (26_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (26_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability7() {
     let character = get_character_map_chris();
@@ -3396,9 +4131,15 @@ fn test_heterogeneous_hash_map_ability7() {
         (Key::new(11_usize), Ability::new(AbilityClass::from("Thief"), "Lockpick", 1)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (12_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (12_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_ability8() {
     let character = get_character_map_mitsurugi();
@@ -3406,7 +4147,12 @@ fn test_heterogeneous_hash_map_ability8() {
         (Key::new(1_usize), Ability::new(AbilityClass::from("Swordmaster"), "Rune Of Saber", 10)),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -3491,14 +4237,21 @@ fn test_heterogeneous_hash_map_familiar_len2() {
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar1() {
     let character = get_character_map_kazuma();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar2() {
     let character = get_character_map_megumin();
@@ -3506,55 +4259,96 @@ fn test_heterogeneous_hash_map_familiar2() {
         (Key::new(1_usize), Familiar::from("Chomusuke")),
     ]);
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..1_usize).map(Key::new), (2_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..1_usize).map(Key::new),
+        (2_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar3() {
     let character = get_character_map_aqua();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar4() {
     let character = get_character_map_darkness();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar5() {
     let character = get_character_map_yunyun();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar6() {
     let character = get_character_map_wiz();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar7() {
     let character = get_character_map_chris();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_familiar8() {
     let character = get_character_map_mitsurugi();
     let expected_map: hash_map::HashMap<Key<usize, Familiar>, Familiar> = hash_map::HashMap::new();
 
-    run_test_heterogeneous_hash_map_accessors(&character, &expected_map, (0_usize..0_usize).map(Key::new), (0_usize..=1024_usize).map(Key::new))
+    run_test_heterogeneous_hash_map_accessors(
+        &character,
+        &expected_map,
+        (0_usize..0_usize).map(Key::new),
+        (0_usize..=1024_usize).map(Key::new),
+    )
 }
 
 #[rustfmt::skip]
@@ -4570,19 +5364,15 @@ fn test_heterogeneous_hash_map_inventory_item_insert_remove_entry4() {
     assert_eq!(character.len::<InventoryItem>(), Some(3));
 }
 
+#[rustfmt::skip]
 fn run_test_heterogeneous_hash_map_inventory_item_take_type<T>(character: &mut HeterogeneousHashMap<usize>)
 where
     T: any::Any + fmt::Debug + Clone + PartialEq,
 {
     assert!(character.contains_type::<T>());
 
-    let expected = character
-        .get_map::<T>()
-        .cloned()
-        .unwrap();
-    let taken = character
-        .take_type::<T>()
-        .unwrap();
+    let expected = character.get_map::<T>().cloned().unwrap();
+    let taken = character.take_type::<T>().unwrap();
 
     assert_eq!(taken, expected);
 
@@ -4591,14 +5381,12 @@ where
     character.insert_type::<InventoryItem>();
     character.extend::<_, T>(taken.into_iter());
 
-    let result = character
-        .get_map::<T>()
-        .cloned()
-        .unwrap();
+    let result = character.get_map::<T>().cloned().unwrap();
 
     assert_eq!(result, expected);
 }
 
+#[rustfmt::skip]
 fn run_test_heterogeneous_hash_map_inventory_item_take_type_many<T>(mut characters: HomogeneousHashMap<String, HeterogeneousHashMap<usize>>)
 where
     T: any::Any + fmt::Debug + Clone + PartialEq,
@@ -4614,6 +5402,7 @@ where
     }
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type1() {
     let characters = get_character_map();
@@ -4621,6 +5410,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type1() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<CharacterName>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type2() {
     let characters = get_character_map();
@@ -4628,6 +5418,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type2() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<PlayerName>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type3() {
     let characters = get_character_map();
@@ -4635,6 +5426,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type3() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Age>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type4() {
     let characters = get_character_map();
@@ -4642,6 +5434,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type4() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Race>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type5() {
     let characters = get_character_map();
@@ -4649,6 +5442,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type5() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Job>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type6() {
     let characters = get_character_map();
@@ -4656,6 +5450,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type6() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Status>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type7() {
     let characters = get_character_map();
@@ -4663,6 +5458,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type7() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Description>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type8() {
     let characters = get_character_map();
@@ -4670,6 +5466,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type8() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Stats>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type9() {
     let characters = get_character_map();
@@ -4677,6 +5474,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type9() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<HitPoints>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type10() {
     let characters = get_character_map();
@@ -4684,6 +5482,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type10() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<MagicPoints>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type11() {
     let characters = get_character_map();
@@ -4691,6 +5490,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type11() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Familiar>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type12() {
     let characters = get_character_map();
@@ -4698,6 +5498,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type12() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Chuunibyou>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type13() {
     let characters = get_character_map();
@@ -4705,6 +5506,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type13() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Equipment>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type14() {
     let characters = get_character_map();
@@ -4712,6 +5514,7 @@ fn test_heterogeneous_hash_map_inventory_item_take_type14() {
     run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Ability>(characters)
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_take_type15() {
     let characters = get_character_map();

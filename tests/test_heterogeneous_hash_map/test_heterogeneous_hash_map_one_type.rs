@@ -1,4 +1,7 @@
-use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+use heterogeneous_hash_map::{
+    HeterogeneousHashMap,
+    Key,
+};
 
 #[cfg(feature = "nightly")]
 use std::alloc;
@@ -7,9 +10,9 @@ use std::alloc;
 use opaque::allocator_api::alloc;
 
 use core::any;
-use std::vec::Vec;
 use std::boxed::Box;
 use std::string::String;
+use std::vec::Vec;
 
 #[test]
 fn test_heterogeneous_hash_map_one_type_zst1() {
@@ -296,23 +299,41 @@ fn test_heterogeneous_hash_map_one_type_remove_get_key_value() {
     ];
     het_map.extend::<_, String>(array);
 
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(1_usize)), Some((&Key::new(1_usize), &String::from("foo"))));
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(2_usize)), Some((&Key::new(2_usize), &String::from("bar"))));
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(1_usize)),
+        Some((&Key::new(1_usize), &String::from("foo")))
+    );
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(2_usize)),
+        Some((&Key::new(2_usize), &String::from("bar")))
+    );
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(3_usize)),
+        Some((&Key::new(3_usize), &String::from("baz")))
+    );
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(4_usize)), None);
 
     assert_eq!(het_map.remove::<String, _>(&Key::new(1_usize)), Some(String::from("foo")));
 
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(1_usize)), None);
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(2_usize)), Some((&Key::new(2_usize), &String::from("bar"))));
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(2_usize)),
+        Some((&Key::new(2_usize), &String::from("bar")))
+    );
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(3_usize)),
+        Some((&Key::new(3_usize), &String::from("baz")))
+    );
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(4_usize)), None);
 
     assert_eq!(het_map.remove::<String, _>(&Key::new(2_usize)), Some(String::from("bar")));
 
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(1_usize)), None);
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(2_usize)), None);
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(3_usize)),
+        Some((&Key::new(3_usize), &String::from("baz")))
+    );
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(4_usize)), None);
 
     assert_eq!(het_map.remove::<String, _>(&Key::new(3_usize)), Some(String::from("baz")));
@@ -333,7 +354,10 @@ fn test_heterogeneous_hash_map_one_type_remove_entry1() {
     ];
     het_map.extend::<_, String>(array);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(1_usize)), Some((Key::new(1_usize), String::from("foo"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(1_usize)),
+        Some((Key::new(1_usize), String::from("foo")))
+    );
 
     for _ in 0..100 {
         assert_eq!(het_map.remove_entry::<String, _>(&Key::new(1_usize)), None);
@@ -350,7 +374,10 @@ fn test_heterogeneous_hash_map_one_type_remove_entry2() {
     ];
     het_map.extend::<_, String>(array);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(2_usize)), Some((Key::new(2_usize), String::from("bar"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(2_usize)),
+        Some((Key::new(2_usize), String::from("bar")))
+    );
 
     for _ in 0..100 {
         assert_eq!(het_map.remove_entry::<String, _>(&Key::new(2_usize)), None);
@@ -367,7 +394,10 @@ fn test_heterogeneous_hash_map_one_type_remove_entry3() {
     ];
     het_map.extend::<_, String>(array);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(3_usize)), Some((Key::new(3_usize), String::from("baz"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(3_usize)),
+        Some((Key::new(3_usize), String::from("baz")))
+    );
 
     for _ in 0..100 {
         assert_eq!(het_map.remove_entry::<String, _>(&Key::new(3_usize)), None);
@@ -389,21 +419,30 @@ fn test_heterogeneous_hash_map_one_type_remove_entry_contains_key() {
     assert!(het_map.contains_key::<String, _>(&Key::new(3_usize)));
     assert!(!het_map.contains_key::<String, _>(&Key::new(4_usize)));
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(1_usize)), Some((Key::new(1_usize), String::from("foo"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(1_usize)),
+        Some((Key::new(1_usize), String::from("foo")))
+    );
 
     assert!(!het_map.contains_key::<String, _>(&Key::new(1_usize)));
     assert!(het_map.contains_key::<String, _>(&Key::new(2_usize)));
     assert!(het_map.contains_key::<String, _>(&Key::new(3_usize)));
     assert!(!het_map.contains_key::<String, _>(&Key::new(4_usize)));
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(2_usize)), Some((Key::new(2_usize), String::from("bar"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(2_usize)),
+        Some((Key::new(2_usize), String::from("bar")))
+    );
 
     assert!(!het_map.contains_key::<String, _>(&Key::new(1_usize)));
     assert!(!het_map.contains_key::<String, _>(&Key::new(2_usize)));
     assert!(het_map.contains_key::<String, _>(&Key::new(3_usize)));
     assert!(!het_map.contains_key::<String, _>(&Key::new(4_usize)));
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(3_usize)), Some((Key::new(3_usize), String::from("baz"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(3_usize)),
+        Some((Key::new(3_usize), String::from("baz")))
+    );
 
     assert!(!het_map.contains_key::<String, _>(&Key::new(1_usize)));
     assert!(!het_map.contains_key::<String, _>(&Key::new(2_usize)));
@@ -426,21 +465,30 @@ fn test_heterogeneous_hash_map_one_type_remove_entry_get() {
     assert_eq!(het_map.get::<String, _>(&Key::new(3_usize)), Some(&String::from("baz")));
     assert_eq!(het_map.get::<String, _>(&Key::new(4_usize)), None);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(1_usize)), Some((Key::new(1_usize), String::from("foo"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(1_usize)),
+        Some((Key::new(1_usize), String::from("foo")))
+    );
 
     assert_eq!(het_map.get::<String, _>(&Key::new(1_usize)), None);
     assert_eq!(het_map.get::<String, _>(&Key::new(2_usize)), Some(&String::from("bar")));
     assert_eq!(het_map.get::<String, _>(&Key::new(3_usize)), Some(&String::from("baz")));
     assert_eq!(het_map.get::<String, _>(&Key::new(4_usize)), None);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(2_usize)), Some((Key::new(2_usize), String::from("bar"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(2_usize)),
+        Some((Key::new(2_usize), String::from("bar")))
+    );
 
     assert_eq!(het_map.get::<String, _>(&Key::new(1_usize)), None);
     assert_eq!(het_map.get::<String, _>(&Key::new(2_usize)), None);
     assert_eq!(het_map.get::<String, _>(&Key::new(3_usize)), Some(&String::from("baz")));
     assert_eq!(het_map.get::<String, _>(&Key::new(4_usize)), None);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(3_usize)), Some((Key::new(3_usize), String::from("baz"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(3_usize)),
+        Some((Key::new(3_usize), String::from("baz")))
+    );
 
     assert_eq!(het_map.get::<String, _>(&Key::new(1_usize)), None);
     assert_eq!(het_map.get::<String, _>(&Key::new(2_usize)), None);
@@ -458,26 +506,53 @@ fn test_heterogeneous_hash_map_one_type_remove_entry_get_key_value() {
     ];
     het_map.extend::<_, String>(array);
 
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(1_usize)), Some((&Key::new(1_usize), &String::from("foo"))));
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(2_usize)), Some((&Key::new(2_usize), &String::from("bar"))));
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(1_usize)),
+        Some((&Key::new(1_usize), &String::from("foo")))
+    );
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(2_usize)),
+        Some((&Key::new(2_usize), &String::from("bar")))
+    );
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(3_usize)),
+        Some((&Key::new(3_usize), &String::from("baz")))
+    );
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(4_usize)), None);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(1_usize)), Some((Key::new(1_usize), String::from("foo"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(1_usize)),
+        Some((Key::new(1_usize), String::from("foo")))
+    );
 
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(1_usize)), None);
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(2_usize)), Some((&Key::new(2_usize), &String::from("bar"))));
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(2_usize)),
+        Some((&Key::new(2_usize), &String::from("bar")))
+    );
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(3_usize)),
+        Some((&Key::new(3_usize), &String::from("baz")))
+    );
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(4_usize)), None);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(2_usize)), Some((Key::new(2_usize), String::from("bar"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(2_usize)),
+        Some((Key::new(2_usize), String::from("bar")))
+    );
 
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(1_usize)), None);
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(2_usize)), None);
-    assert_eq!(het_map.get_key_value::<String, _>(&Key::new(3_usize)), Some((&Key::new(3_usize), &String::from("baz"))));
+    assert_eq!(
+        het_map.get_key_value::<String, _>(&Key::new(3_usize)),
+        Some((&Key::new(3_usize), &String::from("baz")))
+    );
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(4_usize)), None);
 
-    assert_eq!(het_map.remove_entry::<String, _>(&Key::new(3_usize)), Some((Key::new(3_usize), String::from("baz"))));
+    assert_eq!(
+        het_map.remove_entry::<String, _>(&Key::new(3_usize)),
+        Some((Key::new(3_usize), String::from("baz")))
+    );
 
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(1_usize)), None);
     assert_eq!(het_map.get_key_value::<String, _>(&Key::new(2_usize)), None);
