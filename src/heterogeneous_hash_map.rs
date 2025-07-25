@@ -1722,6 +1722,45 @@ where
         map.get_mut(key)
     }
 
+    /// Returns a reference to the key and a reference to the value of the given type with
+    /// the given key, if the type and key exist in the heterogeneous hash map.
+    ///
+    /// This method returns `Some((&eq_key, &mut value))`, where `value` has the given type, and an
+    /// equivalent key `eq_key` to the key `key` exists in the map corresponding to the value
+    /// `value`. This method returns `None` if the key-value pair with the given value type and an
+    /// equivalent key to the given key `key` does not exist in the map.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    ///
+    /// assert_eq!(het_map.get_key_value_mut::<i32, _>(&Key::new(0_usize)), None);
+    /// assert_eq!(het_map.get_key_value_mut::<i32, _>(&Key::new(1_usize)), None);
+    ///
+    /// het_map.insert_type::<i32>();
+    ///
+    /// assert_eq!(het_map.get_key_value_mut::<i32, _>(&Key::new(0_usize)), None);
+    /// assert_eq!(het_map.get_key_value_mut::<i32, _>(&Key::new(1_usize)), None);
+    ///
+    /// het_map.insert(Key::new(0_usize), i32::MAX);
+    ///
+    /// assert_eq!(het_map.get_key_value_mut::<i32, _>(&Key::new(0_usize)), Some((&Key::new(0_usize), &mut i32::MAX)));
+    /// assert_eq!(het_map.get_key_value_mut::<i32, _>(&Key::new(1_usize)), None);
+    /// ```
+    pub fn get_key_value_mut<T, Q>(&mut self, key: &Q) -> Option<(&Key<K, T>, &mut T)>
+    where
+        T: any::Any,
+        Key<K, T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
+        let map = self.get_map_mut::<T>()?;
+
+        map.get_key_value_mut(key)
+    }
+
     /// Attempts to get mutable references to multiple values at once in the heterogeneous hash
     /// map.
     ///

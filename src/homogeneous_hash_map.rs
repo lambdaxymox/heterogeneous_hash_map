@@ -443,8 +443,8 @@ where
         self.inner.get(key)
     }
 
-    /// Returns a reference to the key-value with the equivalent key to the given one, if it
-    /// exists.
+    /// Returns a reference to the key-value pair with the equivalent key to the given
+    /// one, if it exists.
     ///
     /// If an equivalent key to the key `key` exists in the homogeneous hash map, this method
     /// returns `Some((&eq_key, &value))`, where `eq_key` is the equivalent key to the key `key`,
@@ -529,6 +529,41 @@ where
         Q: any::Any + hash::Hash + Eq + ?Sized,
     {
         self.inner.get_mut(key)
+    }
+
+    /// Returns a mutable reference to the key-value pair with the equivalent key to the given
+    /// one, if it exists.
+    ///
+    /// If an equivalent key to the key `key` exists in the homogeneous hash map, this method
+    /// returns `Some((&eq_key, &mut value))`, where `eq_key` is the equivalent key to the key
+    /// `key`, and `value` is the value corresponding to `eq_key`. If an equivalent key to the key
+    /// `key` does not exist in the homogeneous hash map, this method returns `None`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
+    /// let mut het_map = HeterogeneousHashMap::new();
+    /// het_map.extend([
+    ///     (Key::new(1_usize), 2_f64),
+    ///     (Key::new(2_usize), 3_f64),
+    ///     (Key::new(3_usize), 4_f64),
+    /// ]);
+    /// let map = het_map.get_map_mut::<f64>().unwrap();
+    ///
+    /// assert_eq!(map.get_key_value_mut(&Key::new(1_usize)), Some((&Key::new(1_usize), &mut 2_f64)));
+    /// assert_eq!(map.get_key_value_mut(&Key::new(2_usize)), Some((&Key::new(2_usize), &mut 3_f64)));
+    /// assert_eq!(map.get_key_value_mut(&Key::new(3_usize)), Some((&Key::new(3_usize), &mut 4_f64)));
+    /// assert_eq!(map.get_key_value_mut(&Key::new(4_usize)), None);
+    /// ```
+    #[inline]
+    pub fn get_key_value_mut<Q>(&mut self, key: &Q) -> Option<(&Key<K, T>, &mut T)>
+    where
+        Key<K, T>: Borrow<Q>,
+        Q: any::Any + hash::Hash + Eq + ?Sized,
+    {
+        self.inner.get_key_value_mut(key)
     }
 
     /// Returns a reference to the value with the equivalent key to the given one, if it
