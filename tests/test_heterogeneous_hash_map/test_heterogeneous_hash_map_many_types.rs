@@ -326,7 +326,10 @@ fn get_character_map_megumin() -> HeterogeneousHashMap<usize> {
     character.insert::<InventoryItem>(Key::new(3_usize), InventoryItem::new("Highest-Quality Manatites", 3));
     character.insert::<Familiar>(Key::new(1_usize), Familiar::from("Chomusuke"));
     character.insert::<Status>(Key::new(1_usize), Status::from("Alive"));
-    character.insert::<Ability>(Key::new(1_usize), Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999));
+    character.insert::<Ability>(
+        Key::new(1_usize),
+        Ability::new(AbilityClass::from("Wizard"), "EXPLOSION!!!", 999),
+    );
 
     character
 }
