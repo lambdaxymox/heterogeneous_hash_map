@@ -7,6 +7,7 @@ use heterogeneous_hash_map::{
 use core::any;
 use core::fmt;
 use alloc_crate::string::String;
+use alloc_crate::vec::Vec;
 use std::hash;
 
 use hashbrown::hash_map;
@@ -3559,6 +3560,83 @@ fn test_heterogeneous_hash_map_familiar8() {
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_insert_remove1() {
     let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Megumin");
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        character.insert::<InventoryItem>(key, InventoryItem::new(&item_name, 1));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(1027));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        let expected = Some(InventoryItem::new(&item_name, 1));
+        let result = character.remove::<InventoryItem, _>(&key);
+
+        assert_eq!(result, expected);
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove2() {
+    let mut characters = get_character_map();
     let character = characters.get_mut_unchecked("Wiz");
     let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
 
@@ -3630,8 +3708,668 @@ fn test_heterogeneous_hash_map_inventory_item_insert_remove1() {
     assert_eq!(character.len::<Equipment>(),     Some(1));
     assert_eq!(character.len::<Ability>(),       Some(25));
     assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove3() {
+    let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Megumin");
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+    let key = Key::new(max_key.id() + 1);
+    let item = InventoryItem::new("Mysterious Powerful Magical Artifact", 1);
+
+    for _ in 0_usize..1024_usize {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+        assert!(character.insert(key, item.clone()).is_none());
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           None);
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(2));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      Some(1));
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(5));
+        assert_eq!(character.len::<Ability>(),       Some(1));
+        assert_eq!(character.len::<InventoryItem>(), Some(4));
+
+        let result = character.remove(&key);
+        let expected = Some(item.clone());
+
+        assert_eq!(result, expected);
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           None);
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(2));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      Some(1));
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(5));
+        assert_eq!(character.len::<Ability>(),       Some(1));
+        assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove4() {
+    let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Wiz");
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+    let key = Key::new(max_key.id() + 1);
+    let item = InventoryItem::new("Mysterious Powerful Magical Artifact", 1);
+
+    for _ in 0_usize..=1024_usize {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+        assert!(character.insert(key, item.clone()).is_none());
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           Some(2));
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(1));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      None);
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(1));
+        assert_eq!(character.len::<Ability>(),       Some(25));
+        assert_eq!(character.len::<InventoryItem>(), Some(4));
+
+        let result = character.remove(&key);
+        let expected = Some(item.clone());
+
+        assert_eq!(result, expected);
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           Some(2));
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(1));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      None);
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(1));
+        assert_eq!(character.len::<Ability>(),       Some(25));
+        assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove_entry1() {
+    let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Megumin");
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
 
     for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
         assert!(!character.contains_key::<InventoryItem, _>(&key));
     }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        character.insert::<InventoryItem>(key, InventoryItem::new(&item_name, 1));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(1027));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        let expected = Some((key, InventoryItem::new(&item_name, 1)));
+        let result = character.remove_entry::<InventoryItem, _>(&key);
+
+        assert_eq!(result, expected);
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove_entry2() {
+    let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Wiz");
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        character.insert::<InventoryItem>(key, InventoryItem::new(&item_name, 1));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(1027));
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    for key in (1..=1024_usize).map(|i| Key::new(max_key.id() + i)) {
+        let item_name = std::format!("Mysterious Powerful Magical Artifact #{key}");
+        let expected = Some((key, InventoryItem::new(&item_name, 1)));
+        let result = character.remove_entry::<InventoryItem, _>(&key);
+
+        assert_eq!(result, expected);
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove_entry3() {
+    let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Megumin");
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+    let key = Key::new(max_key.id() + 1);
+    let item = InventoryItem::new("Mysterious Powerful Magical Artifact", 1);
+
+    for _ in 0_usize..1024_usize {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+        assert!(character.insert(key, item.clone()).is_none());
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           None);
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(2));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      Some(1));
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(5));
+        assert_eq!(character.len::<Ability>(),       Some(1));
+        assert_eq!(character.len::<InventoryItem>(), Some(4));
+
+        let result = character.remove_entry(&key);
+        let expected = Some((key, item.clone()));
+
+        assert_eq!(result, expected);
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           None);
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(2));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      Some(1));
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(5));
+        assert_eq!(character.len::<Ability>(),       Some(1));
+        assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           None);
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(2));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      Some(1));
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(5));
+    assert_eq!(character.len::<Ability>(),       Some(1));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+#[rustfmt::skip]
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_insert_remove_entry4() {
+    let mut characters = get_character_map();
+    let character = characters.get_mut_unchecked("Wiz");
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+    let max_key = character.get_map_unchecked::<InventoryItem>().keys().max().unwrap().clone();
+    let key = Key::new(max_key.id() + 1);
+    let item = InventoryItem::new("Mysterious Powerful Magical Artifact", 1);
+
+    for _ in 0_usize..=1024_usize {
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+        assert!(character.insert(key, item.clone()).is_none());
+        assert!(character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           Some(2));
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(1));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      None);
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(1));
+        assert_eq!(character.len::<Ability>(),       Some(25));
+        assert_eq!(character.len::<InventoryItem>(), Some(4));
+
+        let result = character.remove_entry(&key);
+        let expected = Some((key, item.clone()));
+
+        assert_eq!(result, expected);
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+
+        assert_eq!(character.len::<CharacterName>(), Some(3));
+        assert_eq!(character.len::<Age>(),           Some(1));
+        assert_eq!(character.len::<Race>(),          Some(2));
+        assert_eq!(character.len::<Class>(),         Some(1));
+        assert_eq!(character.len::<Job>(),           Some(2));
+        assert_eq!(character.len::<Status>(),        Some(1));
+        assert_eq!(character.len::<Description>(),   Some(1));
+        assert_eq!(character.len::<Stats>(),         Some(1));
+        assert_eq!(character.len::<HitPoints>(),     Some(1));
+        assert_eq!(character.len::<MagicPoints>(),   Some(1));
+        assert_eq!(character.len::<Familiar>(),      None);
+        assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+        assert_eq!(character.len::<Equipment>(),     Some(1));
+        assert_eq!(character.len::<Ability>(),       Some(25));
+        assert_eq!(character.len::<InventoryItem>(), Some(3));
+
+        assert!(!character.contains_key::<InventoryItem, _>(&key));
+    }
+
+    assert_eq!(character.len::<CharacterName>(), Some(3));
+    assert_eq!(character.len::<Age>(),           Some(1));
+    assert_eq!(character.len::<Race>(),          Some(2));
+    assert_eq!(character.len::<Class>(),         Some(1));
+    assert_eq!(character.len::<Job>(),           Some(2));
+    assert_eq!(character.len::<Status>(),        Some(1));
+    assert_eq!(character.len::<Description>(),   Some(1));
+    assert_eq!(character.len::<Stats>(),         Some(1));
+    assert_eq!(character.len::<HitPoints>(),     Some(1));
+    assert_eq!(character.len::<MagicPoints>(),   Some(1));
+    assert_eq!(character.len::<Familiar>(),      None);
+    assert_eq!(character.len::<Chuunibyou>(),    Some(1));
+    assert_eq!(character.len::<Equipment>(),     Some(1));
+    assert_eq!(character.len::<Ability>(),       Some(25));
+    assert_eq!(character.len::<InventoryItem>(), Some(3));
+}
+
+fn run_test_heterogeneous_hash_map_inventory_item_take_type<T>(character: &mut HeterogeneousHashMap<usize>)
+where
+    T: any::Any + fmt::Debug + Clone + PartialEq,
+{
+    assert!(character.contains_type::<T>());
+
+    let expected = character
+        .get_map::<T>()
+        .cloned()
+        .unwrap();
+    let taken = character
+        .take_type::<T>()
+        .unwrap();
+
+    assert_eq!(taken, expected);
+
+    assert!(!character.contains_type::<T>());
+
+    character.insert_type::<InventoryItem>();
+    character.extend::<_, T>(taken.into_iter());
+
+    let result = character
+        .get_map::<T>()
+        .cloned()
+        .unwrap();
+
+    assert_eq!(result, expected);
+}
+
+fn run_test_heterogeneous_hash_map_inventory_item_take_type_many<T>(mut characters: HomogeneousHashMap<String, HeterogeneousHashMap<usize>>)
+where
+    T: any::Any + fmt::Debug + Clone + PartialEq,
+{
+    for character in characters.values_mut() {
+        character.insert_type::<T>();
+    }
+
+    let keys: Vec<Key<String, _>> = characters.keys().cloned().collect();
+    for key in keys.iter() {
+        let character = characters.get_mut_unchecked(key);
+        run_test_heterogeneous_hash_map_inventory_item_take_type::<T>(character);
+    }
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type1() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<CharacterName>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type2() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<PlayerName>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type3() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Age>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type4() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Race>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type5() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Job>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type6() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Status>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type7() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Description>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type8() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Stats>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type9() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<HitPoints>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type10() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<MagicPoints>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type11() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Familiar>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type12() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Chuunibyou>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type13() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Equipment>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type14() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<Ability>(characters)
+}
+
+#[test]
+fn test_heterogeneous_hash_map_inventory_item_take_type15() {
+    let characters = get_character_map();
+
+    run_test_heterogeneous_hash_map_inventory_item_take_type_many::<InventoryItem>(characters)
 }
