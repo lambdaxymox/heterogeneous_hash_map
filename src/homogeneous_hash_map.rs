@@ -1678,12 +1678,10 @@ where
     }
 }
 
-impl<K, T, S, const N: usize> From<[(Key<K, T>, T); N]> for HomogeneousHashMap<K, T, S>
+impl<K, T, const N: usize> From<[(Key<K, T>, T); N]> for HomogeneousHashMap<K, T, hash::RandomState>
 where
     K: any::Any + hash::Hash + Eq,
     T: any::Any,
-    S: any::Any + hash::BuildHasher + Send + Sync + Default,
-    S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     fn from(array: [(Key<K, T>, T); N]) -> Self {
         HomogeneousHashMap::from_iter(array)
