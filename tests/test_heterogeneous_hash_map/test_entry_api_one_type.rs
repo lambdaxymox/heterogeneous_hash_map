@@ -23,6 +23,8 @@ impl Default for AlchemyItem {
     }
 }
 
+struct NonExistentItemCategory;
+
 #[test]
 fn test_heterogeneous_hash_map_insert_entry1() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -30,8 +32,11 @@ fn test_heterogeneous_hash_map_insert_entry1() {
     let key = Key::new(1_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(0));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key(&key));
     assert_eq!(het_map.get(&key), None);
+    assert_eq!(het_map.get_key_value(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
@@ -45,7 +50,10 @@ fn test_heterogeneous_hash_map_insert_entry1() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(1));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Swallow", 3_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Swallow", 3_u32))));
 }
 
@@ -60,8 +68,11 @@ fn test_heterogeneous_hash_map_insert_entry2() {
     let key = Key::new(3_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(2));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type::<AlchemyItem>(Key::new(3_usize));
@@ -75,7 +86,10 @@ fn test_heterogeneous_hash_map_insert_entry2() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Cat", 1_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Cat", 1_u32))));
 }
 
@@ -91,7 +105,10 @@ fn test_heterogeneous_hash_map_insert_entry3() {
     let key = Key::new(2_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 
     {
@@ -106,7 +123,10 @@ fn test_heterogeneous_hash_map_insert_entry3() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 10_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 10_u32))));
 }
 
@@ -117,8 +137,11 @@ fn test_heterogeneous_hash_map_or_insert1() {
     let key = Key::new(1_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(0));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key(&key));
     assert_eq!(het_map.get(&key), None);
+    assert_eq!(het_map.get_key_value(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
@@ -132,7 +155,10 @@ fn test_heterogeneous_hash_map_or_insert1() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(1));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Swallow", 3_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Swallow", 3_u32))));
 }
 
@@ -147,8 +173,11 @@ fn test_heterogeneous_hash_map_or_insert2() {
     let key = Key::new(3_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(2));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key(&key));
     assert_eq!(het_map.get(&key), None);
+    assert_eq!(het_map.get_key_value(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
@@ -162,7 +191,10 @@ fn test_heterogeneous_hash_map_or_insert2() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Cat", 1_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Cat", 1_u32))));
 }
 
@@ -178,7 +210,10 @@ fn test_heterogeneous_hash_map_or_insert3() {
     let key = Key::new(2_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 
     {
@@ -193,7 +228,10 @@ fn test_heterogeneous_hash_map_or_insert3() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 }
 
@@ -204,8 +242,11 @@ fn test_heterogeneous_hash_map_or_insert_with1() {
     let key = Key::new(1_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(0));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
@@ -220,7 +261,10 @@ fn test_heterogeneous_hash_map_or_insert_with1() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(1));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Specter Oil", 7_u32))));
 }
 
@@ -235,8 +279,11 @@ fn test_heterogeneous_hash_map_or_insert_with2() {
     let key = Key::new(3_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(2));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
@@ -251,7 +298,10 @@ fn test_heterogeneous_hash_map_or_insert_with2() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Specter Oil", 7_u32))));
 }
 
@@ -267,7 +317,10 @@ fn test_heterogeneous_hash_map_or_insert_with3() {
     let key = Key::new(2_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 
     {
@@ -283,7 +336,10 @@ fn test_heterogeneous_hash_map_or_insert_with3() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 }
 
@@ -294,8 +350,11 @@ fn test_heterogeneous_hash_map_or_insert_with_key1() {
     let key = Key::new(1_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(0));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
@@ -316,7 +375,10 @@ fn test_heterogeneous_hash_map_or_insert_with_key1() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(1));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get(&key), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
     assert_eq!(het_map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Specter Oil", 7_u32))));
 }
 
@@ -331,8 +393,11 @@ fn test_heterogeneous_hash_map_or_insert_with_key2() {
     let key = Key::new(3_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(2));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
@@ -353,7 +418,10 @@ fn test_heterogeneous_hash_map_or_insert_with_key2() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Vampire Oil", 17_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Vampire Oil", 17_u32))));
 }
 
@@ -369,7 +437,10 @@ fn test_heterogeneous_hash_map_or_insert_with_key3() {
     let key = Key::new(2_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 
     {
@@ -391,7 +462,10 @@ fn test_heterogeneous_hash_map_or_insert_with_key3() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 }
 
@@ -402,8 +476,11 @@ fn test_heterogeneous_hash_map_and_modify1() {
     let key = Key::new(1_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(0));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
@@ -419,7 +496,10 @@ fn test_heterogeneous_hash_map_and_modify1() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(0));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 }
 
@@ -434,8 +514,11 @@ fn test_heterogeneous_hash_map_and_modify2() {
     let key = Key::new(3_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(2));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
@@ -451,7 +534,10 @@ fn test_heterogeneous_hash_map_and_modify2() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(2));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 }
 
@@ -467,7 +553,10 @@ fn test_heterogeneous_hash_map_and_modify3() {
     let key = Key::new(2_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 
     {
@@ -484,7 +573,10 @@ fn test_heterogeneous_hash_map_and_modify3() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 2_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 2_u32))));
 }
 
@@ -495,8 +587,11 @@ fn test_heterogeneous_hash_map_or_default1() {
     let key = Key::new(1_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(0));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type::<AlchemyItem>(Key::new(1_usize));
@@ -510,7 +605,10 @@ fn test_heterogeneous_hash_map_or_default1() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(1));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::default()));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(1_usize), &AlchemyItem::default())));
 }
 
@@ -525,8 +623,11 @@ fn test_heterogeneous_hash_map_or_default2() {
     let key = Key::new(3_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(2));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(!het_map.contains_key::<AlchemyItem, _>(&key));
     assert_eq!(het_map.get::<AlchemyItem, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type::<AlchemyItem>(Key::new(3_usize));
@@ -540,7 +641,10 @@ fn test_heterogeneous_hash_map_or_default2() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::default()));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(3_usize), &AlchemyItem::default())));
 }
 
@@ -556,7 +660,10 @@ fn test_heterogeneous_hash_map_or_default3() {
     let key = Key::new(2_usize);
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 
     {
@@ -571,6 +678,9 @@ fn test_heterogeneous_hash_map_or_default3() {
     }
 
     assert_eq!(het_map.len::<AlchemyItem>(), Some(3));
+    assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
+
     assert!(het_map.contains_key::<AlchemyItem, _>(&key));
+    assert_eq!(het_map.get::<AlchemyItem, _>(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
 }
