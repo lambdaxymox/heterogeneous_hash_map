@@ -1,4 +1,7 @@
-use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+use heterogeneous_hash_map::{
+    HeterogeneousHashMap,
+    Key,
+};
 
 use criterion::{
     Criterion,
@@ -57,8 +60,4 @@ fn bench_heterogeneous_hash_map_remove(c: &mut Criterion) {
     });
 }
 
-criterion_group!(
-    bench_remove,
-    bench_heterogeneous_hash_map_remove,
-    bench_hash_map_remove
-);
+criterion_group!(bench_remove, bench_heterogeneous_hash_map_remove, bench_hash_map_remove);

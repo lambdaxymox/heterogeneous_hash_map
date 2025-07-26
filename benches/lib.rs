@@ -4,8 +4,8 @@
 #![no_std]
 extern crate std;
 
-mod bench_homogeneous_hash_map;
 mod bench_heterogeneous_hash_map;
+mod bench_homogeneous_hash_map;
 
 use criterion::criterion_main;
 

@@ -1,4 +1,7 @@
-use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+use heterogeneous_hash_map::{
+    HeterogeneousHashMap,
+    Key,
+};
 
 use criterion::{
     Criterion,
