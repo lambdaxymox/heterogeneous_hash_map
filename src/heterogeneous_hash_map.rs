@@ -1599,8 +1599,8 @@ where
     /// Iterating over the metadata of a nonempty heterogeneous hash map.
     ///
     /// ```
-    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
-    /// # use core::any::Any;
+    /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key, TypeMetadata};
+    /// # use core::any::{Any, TypeId};
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
     /// het_map.insert_type::<i32>();
@@ -1608,9 +1608,24 @@ where
     /// het_map.insert_type::<Box<dyn Any>>();
     /// let mut iter = het_map.metadata_iter();
     ///
-    /// assert!(iter.next().is_some());
-    /// assert!(iter.next().is_some());
-    /// assert!(iter.next().is_some());
+    /// let expected = {
+    ///     let mut _expected = Vec::from([
+    ///         (TypeId::of::<i32>(),          TypeMetadata::of::<i32>()),
+    ///         (TypeId::of::<String>(),       TypeMetadata::of::<String>()),
+    ///         (TypeId::of::<Box<dyn Any>>(), TypeMetadata::of::<Box<dyn Any>>()),
+    ///     ]);
+    ///     _expected.sort_by(|v1, v2| v1.0.cmp(&v2.0));
+    ///     _expected
+    /// };
+    /// let result = {
+    ///     let mut _result = Vec::new();
+    ///     _result.push(iter.next().unwrap());
+    ///     _result.push(iter.next().unwrap());
+    ///     _result.push(iter.next().unwrap());
+    ///     _result.sort_by(|v1, v2| v1.0.cmp(&v2.0));
+    ///     _result
+    /// };
+    ///
     /// assert!(iter.next().is_none());
     /// ```
     pub fn metadata_iter(&self) -> TypeMetadataIter<'_> {
