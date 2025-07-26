@@ -380,6 +380,10 @@ where
     /// hash map. This method returns `false` if an equivalent key to the key `key` does not exist
     /// in the homogeneous hash map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -416,6 +420,10 @@ where
     /// `key`. If an equivalent key to the key `key` does not exist in the homogeneous hash map,
     /// this method returns `None`.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -451,6 +459,10 @@ where
     /// and `value` is the value corresponding to `eq_key`. If an equivalent key to the key `key`
     /// does not exist in the homogeneous hash map, this method returns `None`.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -485,6 +497,10 @@ where
     /// returns `Some(&mut value)`, where `value` is the value corresponding to the equivalent key
     /// to `key`. If an equivalent key to the key `key` does not exist in the homogeneous hash map,
     /// this method returns `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -539,6 +555,10 @@ where
     /// `key`, and `value` is the value corresponding to `eq_key`. If an equivalent key to the key
     /// `key` does not exist in the homogeneous hash map, this method returns `None`.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -568,6 +588,10 @@ where
 
     /// Returns a reference to the value with the equivalent key to the given one, if it
     /// exists.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Panics
     ///
@@ -602,6 +626,10 @@ where
 
     /// Returns a mutable reference to the value with the equivalent key to the given one, if it
     /// exists.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Panics
     ///
@@ -716,6 +744,10 @@ where
     /// * If the entry with the equivalent key does not exist in the map, it is inserted into the
     ///   homogeneous hash map and the method returns `None`.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -799,6 +831,10 @@ where
     ///   corresponding to the equivalent key to `key`.
     /// * If the entry with the equivalent key does not exist in the map, this method does nothing
     ///   and returns `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -889,6 +925,10 @@ where
     /// * If the entry with the equivalent key does not exist in the map, this method does nothing
     ///   and returns `None`.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -971,6 +1011,10 @@ where
     ///
     /// The resulting entry can be queried or manipulated directly, instead of going through the
     /// homogeneous hash map to do it.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -1332,6 +1376,11 @@ where
     /// After calling this method, the collection will be empty. This method does not change the
     /// allocated capacity of the homogeneous hash map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(n)** time, where `n` is an affine function of the length of the
+    /// index map.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1365,6 +1414,11 @@ where
     /// This method removes all entries `e` for which `keep(&e)` returns `false`. This method
     /// visits each element exactly once, keeping only those entries `e` for which `keep(&e)`
     /// returns `true`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in average **O(n)** time, where `n` is an affine function of the length
+    /// of the index map.
     ///
     /// # Examples
     ///
@@ -1417,6 +1471,11 @@ where
     /// After calling this method, the capacity will be greater than or equal to
     /// `self.len() + additional` if it returns. This method does nothing if the collection
     /// capacity is already sufficient. This method preserves the contents even if a panic occurs.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(n)** time, where `n` is an affine function of the length of
+    /// the index map.
     ///
     /// # Panics
     ///
@@ -1471,6 +1530,11 @@ where
     ///
     /// This method returns an error if the capacity overflows, or the allocator reports a failure.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(n)** time, where `n` is an affine function of the length of
+    /// the index map.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1520,6 +1584,11 @@ where
     ///
     /// [`with_capacity`]: HomogeneousHashMap::with_capacity
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(n)** time, where `n` is an affine function of the length of
+    /// the index map.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1557,6 +1626,11 @@ where
     /// method does nothing.
     ///
     /// [`with_capacity`]: TypeProjectedIndexMap::with_capacity
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(n)** time, where `n` is an affine function of the length of
+    /// the index map.
     ///
     /// # Examples
     ///

@@ -432,6 +432,10 @@ where
     /// This method returns `true` if the type `T` does not exist in the map. This method returns
     /// `false` if the type `T` already exists in the map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -476,6 +480,11 @@ where
     ///
     /// This method returns `true` if the type `T` does not exist in the map. This method returns
     /// `false` if the type `T` already exists in the map.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(1 + m)** time, where `m` is an affine function of the
+    /// value capacity of the given type provided to the method.
     ///
     /// # Examples
     ///
@@ -522,6 +531,12 @@ where
     /// This method returns `true` if the type `T` exists in the map. This method returns `false`
     /// if the type `T` does not exist in the map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
+    /// # Examples
+    ///
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
     /// #
@@ -562,6 +577,10 @@ where
     /// Returns a reference to the homogeneous hash map containing all values of a given type
     /// from the heterogeneous hash map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Panics
     ///
     /// This method panics if the given type `T` does not exist in the map.
@@ -590,6 +609,10 @@ where
 
     /// Returns a mutable reference to the homogeneous hash map containing all values of a given
     /// type from the heterogeneous hash map.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Panics
     ///
@@ -627,6 +650,10 @@ where
     /// If `T` exists in the heterogeneous hash map, this method returns `Some(&map)`, where
     /// `map` is the homogeneous hash map containing all values of type `T`. If `T` does not exist
     /// in the heterogeneous map, this method returns `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -679,6 +706,10 @@ where
     /// If `T` exists in the heterogeneous hash map, this method returns `Some(&mut map)`, where
     /// `map` is the homogeneous hash map containing all values of type `T`. If `T` does not exist
     /// in the heterogeneous map, this method returns `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -737,6 +768,10 @@ where
     /// If the type `T` does not exist in the heterogeneous hash map, this method inserts the type
     /// `T` into the map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -788,6 +823,11 @@ where
     ///
     /// If the type `T` does not exist in the heterogeneous hash map, this method inserts the type
     /// `T` into the map with a minimum capacity specified by `capacity`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(1 + m)** time, where `m` is an affine function of the
+    /// value capacity of the given type provided to the method.
     ///
     /// # Examples
     ///
@@ -847,6 +887,11 @@ where
     ///   no values of type `T` do.
     /// * If the given type `T` does not exist in the heterogeneous hash map, this method returns
     ///   `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(1 + m)** time, where `m` is an affine function of the
+    /// value capacity of the given type provided to the method.
     ///
     /// # Examples
     ///
@@ -942,6 +987,10 @@ where
     ///   entries of type `T` from the heterogeneous hash map.
     /// * If the given type `T` does not exist in the heterogeneous hash map, this method returns
     ///   `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -1054,6 +1103,12 @@ where
     /// from the map, and deallocates memory that was allocated for each type removed from the
     /// map. The map retains its type capacity after calling this method.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(n + m)** time, where `n` is an affine function of the
+    /// number of types in the heterogeneous hash map, and `m` is an affine function of the
+    /// maximum value length of each type stored in the heterogeneous hash map.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1102,6 +1157,11 @@ where
     S::Hasher: any::Any + hash::Hasher + Send + Sync,
 {
     /// Computes the total number of values across all types in the heterogeneous hash map.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(n)** time, where `n` is an affine function of the
+    /// number of types in the heterogeneous hash map.
     ///
     /// # Examples
     ///
@@ -1446,6 +1506,10 @@ where
     /// type in the map, if the type exists in the map. This method returns `None` if the given
     /// type does not exist in the map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1481,6 +1545,10 @@ where
     /// This method returns `Some(metadata)` where `metadata` is the metadata describing the given
     /// type in the map, if the type exists in the map. This method returns `None` if the given
     /// type does not exist in the map.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -1559,6 +1627,10 @@ where
     /// This method returns `true` if the key-value pair with the given type and the given key
     /// exists in the map. This method returns `false` otherwise.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// Querying an empty heterogeneous hash map.
@@ -1614,6 +1686,10 @@ where
     /// to the key `key` exists in the map corresponding to the value `value`. This method returns
     /// `None` if the value with the given type and the given key `key` does not exist in the map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1653,6 +1729,10 @@ where
     /// `value`. This method returns `None` if the key-value pair with the given value type and an
     /// equivalent key to the given key `key` does not exist in the map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1690,6 +1770,10 @@ where
     /// This method returns `Some(&value)`, where `value` has the given type, and an equivalent key
     /// to the key `key` exists in the map corresponding to the value `value`. This method returns
     /// `None` if the value with the given type and the given key `key` does not exist in the map.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -1729,6 +1813,10 @@ where
     /// equivalent key `eq_key` to the key `key` exists in the map corresponding to the value
     /// `value`. This method returns `None` if the key-value pair with the given value type and an
     /// equivalent key to the given key `key` does not exist in the map.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -1823,6 +1911,10 @@ where
     /// Inserts a new key-value pair of a given type with a given key into the heterogeneous hash
     /// map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in amortized **O(1)** time.
+    ///
     /// # Examples
     ///
     /// ```
@@ -1852,6 +1944,10 @@ where
     /// This method returns `Some(value)`, where `value` is the value associated with the
     /// equivalent key to the key `key` if it exists in the map. If an equivalent key to `key`
     /// does not exist in the map, this method returns `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -1892,6 +1988,10 @@ where
     /// `key` in the map, and `value` is the value associated with `eq_key`, if an equivalent key
     /// to the key `key` exists in the map. If an equivalent key to `key` does not exist in the map,
     /// this method returns `None`.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Examples
     ///
@@ -2263,6 +2363,10 @@ where
     /// Returns a reference to the value of the given type with the given key, if it exists
     /// in the heterogeneous hash map.
     ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
+    ///
     /// # Panics
     ///
     /// This method panics if the given type `T` does not exist in the map, or the type exists,
@@ -2292,6 +2396,10 @@ where
 
     /// Returns a mutable reference to the value of the given type with the given key, if it exists
     /// in the heterogeneous hash map.
+    ///
+    /// # Complexity Characteristics
+    ///
+    /// This method runs in **O(1)** time.
     ///
     /// # Panics
     ///
