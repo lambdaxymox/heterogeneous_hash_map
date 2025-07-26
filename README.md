@@ -31,7 +31,7 @@ your `Cargo.toml` file
 
 ```toml
 [dependencies]
-heterogeneous_hash_map = "1.0.0"
+heterogeneous_hash_map = "1.1.0"
 ```
 
 This library has a `nightly` feature to unlock using custom memory allocators for all the 
@@ -39,7 +39,7 @@ collections in the library. To use `nightly` add
 
 ```toml
 [dependencies.heterogeneous_hash_map]
-version = "1.0.0"
+version = "1.1.0"
 features = ["nightly"]
 ```
 
@@ -47,7 +47,7 @@ or
 
 ```toml
 [dependencies]
-heterogeneous_hash_map = { version = "1.0.0", features = ["nightly"] }
+heterogeneous_hash_map = { version = "1.1.0", features = ["nightly"] }
 ```
 
 to your `Cargo.toml` file. Optionally, you can add the crate declaration
