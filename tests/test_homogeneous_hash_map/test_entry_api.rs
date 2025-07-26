@@ -31,6 +31,9 @@ fn test_homogeneous_hash_map_insert_entry1() {
     assert_eq!(map.len(), 0);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), None);
 
     {
         let entry = map.entry(Key::new(1_usize));
@@ -45,7 +48,10 @@ fn test_homogeneous_hash_map_insert_entry1() {
 
     assert_eq!(map.len(), 1);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Swallow", 3_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Swallow", 3_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
 }
 
 #[test]
@@ -59,6 +65,11 @@ fn test_homogeneous_hash_map_insert_entry2() {
     assert_eq!(map.len(), 2);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
 
     {
         let entry = map.entry(Key::new(3_usize));
@@ -73,7 +84,12 @@ fn test_homogeneous_hash_map_insert_entry2() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Cat", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Cat", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
 #[test]
@@ -87,7 +103,12 @@ fn test_homogeneous_hash_map_insert_entry3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 
     {
         let entry = map.entry(Key::new(2_usize));
@@ -102,7 +123,12 @@ fn test_homogeneous_hash_map_insert_entry3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 10_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 10_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 10_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
 #[test]
@@ -113,6 +139,9 @@ fn test_homogeneous_hash_map_or_insert1() {
     assert_eq!(map.len(), 0);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), None);
 
     {
         let entry = map.entry(Key::new(1_usize));
@@ -127,7 +156,10 @@ fn test_homogeneous_hash_map_or_insert1() {
 
     assert_eq!(map.len(), 1);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Swallow", 3_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Swallow", 3_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
 }
 
 #[test]
@@ -141,6 +173,11 @@ fn test_homogeneous_hash_map_or_insert2() {
     assert_eq!(map.len(), 2);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
 
     {
         let entry = map.entry(Key::new(3_usize));
@@ -155,7 +192,12 @@ fn test_homogeneous_hash_map_or_insert2() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Cat", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Cat", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
 #[test]
@@ -169,7 +211,12 @@ fn test_homogeneous_hash_map_or_insert3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 
     {
         let entry = map.entry(Key::new(2_usize));
@@ -184,7 +231,12 @@ fn test_homogeneous_hash_map_or_insert3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
 #[test]
@@ -195,6 +247,9 @@ fn test_homogeneous_hash_map_or_insert_with1() {
     assert_eq!(map.len(), 0);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), None);
 
     {
         let entry = map.entry(Key::new(1_usize));
@@ -210,7 +265,10 @@ fn test_homogeneous_hash_map_or_insert_with1() {
 
     assert_eq!(map.len(), 1);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Specter Oil", 7_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
 }
 
 #[test]
@@ -224,6 +282,11 @@ fn test_homogeneous_hash_map_or_insert_with2() {
     assert_eq!(map.len(), 2);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
 
     {
         let entry = map.entry(Key::new(3_usize));
@@ -239,7 +302,12 @@ fn test_homogeneous_hash_map_or_insert_with2() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Specter Oil", 7_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
 }
 
 #[test]
@@ -253,7 +321,12 @@ fn test_homogeneous_hash_map_or_insert_with3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 
     {
         let entry = map.entry(Key::new(2_usize));
@@ -269,7 +342,12 @@ fn test_homogeneous_hash_map_or_insert_with3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
 #[test]
@@ -280,6 +358,9 @@ fn test_homogeneous_hash_map_or_insert_with_key1() {
     assert_eq!(map.len(), 0);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), None);
 
     {
         let entry = map.entry(Key::new(1_usize));
@@ -301,7 +382,10 @@ fn test_homogeneous_hash_map_or_insert_with_key1() {
 
     assert_eq!(map.len(), 1);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Specter Oil", 7_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
 }
 
 #[test]
@@ -315,6 +399,11 @@ fn test_homogeneous_hash_map_or_insert_with_key2() {
     assert_eq!(map.len(), 2);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
 
     {
         let entry = map.entry(Key::new(3_usize));
@@ -336,7 +425,12 @@ fn test_homogeneous_hash_map_or_insert_with_key2() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Vampire Oil", 17_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(3_usize), &AlchemyItem::new("Vampire Oil", 17_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Vampire Oil", 17_u32)));
 }
 
 #[test]
@@ -350,7 +444,12 @@ fn test_homogeneous_hash_map_or_insert_with_key3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 
     {
         let entry = map.entry(Key::new(2_usize));
@@ -372,7 +471,12 @@ fn test_homogeneous_hash_map_or_insert_with_key3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
 #[test]
@@ -383,6 +487,9 @@ fn test_homogeneous_hash_map_and_modify1() {
     assert_eq!(map.len(), 0);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), None);
 
     {
         let entry = map.entry(Key::new(1_usize));
@@ -399,7 +506,10 @@ fn test_homogeneous_hash_map_and_modify1() {
 
     assert_eq!(map.len(), 0);
     assert!(!map.contains_key(&key));
+    assert_eq!(map.get(&key), None);
     assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), None);
 }
 
 #[test]
@@ -413,6 +523,11 @@ fn test_homogeneous_hash_map_and_modify2() {
     assert_eq!(map.len(), 2);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
 
     {
         let entry = map.entry(Key::new(3_usize));
@@ -429,7 +544,12 @@ fn test_homogeneous_hash_map_and_modify2() {
 
     assert_eq!(map.len(), 2);
     assert!(!map.contains_key(&key));
+    assert_eq!(map.get(&key), None);
     assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
 }
 
 #[test]
@@ -443,7 +563,12 @@ fn test_homogeneous_hash_map_and_modify3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 
     {
         let entry = map.entry(Key::new(2_usize));
@@ -460,7 +585,12 @@ fn test_homogeneous_hash_map_and_modify3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 2_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 2_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 2_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
 #[test]
@@ -471,6 +601,9 @@ fn test_homogeneous_hash_map_or_default1() {
     assert_eq!(map.len(), 0);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), None);
 
     {
         let entry = map.entry(Key::new(1_usize));
@@ -485,7 +618,10 @@ fn test_homogeneous_hash_map_or_default1() {
 
     assert_eq!(map.len(), 1);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::default()));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(1_usize), &AlchemyItem::default())));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::default()));
 }
 
 #[test]
@@ -499,6 +635,11 @@ fn test_homogeneous_hash_map_or_default2() {
     assert_eq!(map.len(), 2);
     assert!(!map.contains_key(&key));
     assert_eq!(map.get(&key), None);
+    assert_eq!(map.get_key_value(&key), None);
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), None);
 
     {
         let entry = map.entry(Key::new(3_usize));
@@ -513,7 +654,12 @@ fn test_homogeneous_hash_map_or_default2() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::default()));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(3_usize), &AlchemyItem::default())));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::default()));
 }
 
 #[test]
@@ -527,7 +673,12 @@ fn test_homogeneous_hash_map_or_default3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 
     {
         let entry = map.entry(Key::new(2_usize));
@@ -542,5 +693,10 @@ fn test_homogeneous_hash_map_or_default3() {
 
     assert_eq!(map.len(), 3);
     assert!(map.contains_key(&key));
+    assert_eq!(map.get(&key), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
     assert_eq!(map.get_key_value(&key), Some((&Key::new(2_usize), &AlchemyItem::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(map.get(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
+    assert_eq!(map.get(&Key::new(2_usize)), Some(&AlchemyItem::new("Golden Oriole", 1_u32)));
+    assert_eq!(map.get(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
