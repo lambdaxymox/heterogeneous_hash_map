@@ -597,6 +597,7 @@ where
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
+    #[track_caller]
     pub fn get_map_unchecked<T>(&self) -> &HomogeneousHashMap<K, T, S>
     where
         T: any::Any,
@@ -630,6 +631,7 @@ where
     ///
     /// assert_eq!(map.len(), 0);
     /// ```
+    #[track_caller]
     pub fn get_map_mut_unchecked<T>(&mut self) -> &mut HomogeneousHashMap<K, T, S>
     where
         T: any::Any,
