@@ -74,7 +74,7 @@ fn test_heterogeneous_hash_map_insert_entry1() {
     assert_eq!(het_map.len::<QuestItem>(), Some(0));
     assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
 
-    assert!(!het_map.contains_key(&key));
+    assert!(!het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
@@ -124,6 +124,7 @@ fn test_heterogeneous_hash_map_insert_entry2() {
 
     assert!(!het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), None);
+    assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
     {
         let entry = het_map.entry_or_insert_type::<Potion>(Key::new(3_usize));
@@ -142,6 +143,7 @@ fn test_heterogeneous_hash_map_insert_entry2() {
     assert_eq!(het_map.len::<NonExistentItemCategory>(), None);
 
     assert!(het_map.contains_key::<Potion, _>(&key));
+    assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Cat", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(3_usize), &Potion::new("Cat", 1_u32))));
 }
 
