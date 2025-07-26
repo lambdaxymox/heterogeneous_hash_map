@@ -1,7 +1,26 @@
 [package]
 name = "heterogeneous_hash_map"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2024"
+authors = ["LambdaXymox <lambda.xymox@gmail.com>"]
+description = "A cache-friendly hash map for working with heterogeneously typed data with limited reflection capabilities."
+categories = [
+    "data-structures",
+    "no-std",
+]
+keywords = [
+    "no_std",
+    "hetergeneous",
+    "containers",
+]
+license = "Apache-2.0 OR MIT"
+readme = "README.md"
+repository = "https://github.com/lambdaxymox/heterogeneous_hash_map"
+
+[lib]
+name = "heterogeneous_hash_map"
+path = "src/lib.rs"
+crate-type = ["rlib", "cdylib"]
 
 [features]
 default = ["std"]
