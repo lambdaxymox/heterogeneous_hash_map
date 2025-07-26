@@ -78,6 +78,13 @@ fn test_heterogeneous_hash_map_insert_entry1() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
 
@@ -97,6 +104,13 @@ fn test_heterogeneous_hash_map_insert_entry1() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Swallow", 3_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(1_usize), &Potion::new("Swallow", 3_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -126,6 +140,15 @@ fn test_heterogeneous_hash_map_insert_entry2() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type::<Potion>(Key::new(3_usize));
 
@@ -145,6 +168,15 @@ fn test_heterogeneous_hash_map_insert_entry2() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Cat", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(3_usize), &Potion::new("Cat", 1_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -175,6 +207,15 @@ fn test_heterogeneous_hash_map_insert_entry3() {
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(2_usize));
 
@@ -194,6 +235,15 @@ fn test_heterogeneous_hash_map_insert_entry3() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 10_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 10_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 10_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -219,6 +269,13 @@ fn test_heterogeneous_hash_map_or_insert1() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
 
@@ -238,6 +295,13 @@ fn test_heterogeneous_hash_map_or_insert1() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Swallow", 3_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(1_usize), &Potion::new("Swallow", 3_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -267,6 +331,15 @@ fn test_heterogeneous_hash_map_or_insert2() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
 
@@ -286,6 +359,15 @@ fn test_heterogeneous_hash_map_or_insert2() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Cat", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(3_usize), &Potion::new("Cat", 1_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -316,6 +398,15 @@ fn test_heterogeneous_hash_map_or_insert3() {
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(2_usize));
 
@@ -335,6 +426,15 @@ fn test_heterogeneous_hash_map_or_insert3() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -360,6 +460,11 @@ fn test_heterogeneous_hash_map_or_insert_with1() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
 
@@ -380,6 +485,11 @@ fn test_heterogeneous_hash_map_or_insert_with1() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Specter Oil", 7_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(1_usize), &Potion::new("Specter Oil", 7_u32))));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -409,6 +519,15 @@ fn test_heterogeneous_hash_map_or_insert_with2() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
 
@@ -429,6 +548,15 @@ fn test_heterogeneous_hash_map_or_insert_with2() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Specter Oil", 7_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(3_usize), &Potion::new("Specter Oil", 7_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Specter Oil", 7_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -459,6 +587,15 @@ fn test_heterogeneous_hash_map_or_insert_with3() {
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(2_usize));
 
@@ -479,6 +616,15 @@ fn test_heterogeneous_hash_map_or_insert_with3() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -503,6 +649,13 @@ fn test_heterogeneous_hash_map_or_insert_with_key1() {
     assert!(!het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
@@ -530,6 +683,13 @@ fn test_heterogeneous_hash_map_or_insert_with_key1() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Specter Oil", 7_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(1_usize), &Potion::new("Specter Oil", 7_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Specter Oil", 7_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -559,6 +719,15 @@ fn test_heterogeneous_hash_map_or_insert_with_key2() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
 
@@ -585,6 +754,15 @@ fn test_heterogeneous_hash_map_or_insert_with_key2() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Vampire Oil", 17_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(3_usize), &Potion::new("Vampire Oil", 17_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Vampire Oil", 17_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -615,6 +793,15 @@ fn test_heterogeneous_hash_map_or_insert_with_key3() {
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(2_usize));
 
@@ -641,6 +828,15 @@ fn test_heterogeneous_hash_map_or_insert_with_key3() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -666,6 +862,11 @@ fn test_heterogeneous_hash_map_and_modify1() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(1_usize));
 
@@ -687,6 +888,11 @@ fn test_heterogeneous_hash_map_and_modify1() {
     assert!(!het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -716,6 +922,15 @@ fn test_heterogeneous_hash_map_and_modify2() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(3_usize));
 
@@ -737,6 +952,15 @@ fn test_heterogeneous_hash_map_and_modify2() {
     assert!(!het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -767,6 +991,15 @@ fn test_heterogeneous_hash_map_and_modify3() {
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type(Key::new(2_usize));
 
@@ -788,6 +1021,15 @@ fn test_heterogeneous_hash_map_and_modify3() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 2_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 2_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 2_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -813,6 +1055,8 @@ fn test_heterogeneous_hash_map_or_default1() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), None);
+
     {
         let entry = het_map.entry_or_insert_type::<Potion>(Key::new(1_usize));
 
@@ -832,6 +1076,13 @@ fn test_heterogeneous_hash_map_or_default1() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::default()));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(1_usize), &Potion::default())));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::default()));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -861,6 +1112,15 @@ fn test_heterogeneous_hash_map_or_default2() {
     assert_eq!(het_map.get::<Potion, _>(&key), None);
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), None);
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), None);
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type::<Potion>(Key::new(3_usize));
 
@@ -880,6 +1140,15 @@ fn test_heterogeneous_hash_map_or_default2() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::default()));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(3_usize), &Potion::default())));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::default()));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
 
 #[test]
@@ -910,6 +1179,15 @@ fn test_heterogeneous_hash_map_or_default3() {
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
 
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
+
     {
         let entry = het_map.entry_or_insert_type::<Potion>(Key::new(2_usize));
 
@@ -929,4 +1207,13 @@ fn test_heterogeneous_hash_map_or_default3() {
     assert!(het_map.contains_key::<Potion, _>(&key));
     assert_eq!(het_map.get::<Potion, _>(&key), Some(&Potion::new("Golden Oriole", 1_u32)));
     assert_eq!(het_map.get_key_value::<Potion, _>(&key), Some((&Key::new(2_usize), &Potion::new("Golden Oriole", 1_u32))));
+
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(1_usize)), Some(&Potion::new("Swallow", 3_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(2_usize)), Some(&Potion::new("Golden Oriole", 1_u32)));
+    assert_eq!(het_map.get::<Potion, _>(&Key::new(3_usize)), Some(&Potion::new("Cat", 1_u32)));
+
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(1_usize)), Some(&Oil::new("Specter Oil", 2_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(2_usize)), Some(&Oil::new("Vampire Oil", 1_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(3_usize)), Some(&Oil::new("Relict Oil", 5_u32)));
+    assert_eq!(het_map.get::<Oil, _>(&Key::new(4_usize)), Some(&Oil::new("Hanged Man's Venom", 8_u32)));
 }
