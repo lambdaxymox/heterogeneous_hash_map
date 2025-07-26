@@ -1,6 +1,6 @@
 [package]
 name = "heterogeneous_hash_map"
-version = "1.1.0"
+version = "1.2.0"
 edition = "2024"
 authors = ["LambdaXymox <lambda.xymox@gmail.com>"]
 description = "A cache-friendly hash map for working with heterogeneously typed data with limited reflection capabilities."
