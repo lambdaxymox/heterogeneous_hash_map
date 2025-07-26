@@ -21,7 +21,7 @@ Example use cases for heterogeneous hash maps include:
   formats like JSON or user input, especially for dynamic UIs or generic data pipelines.
 * Resource management for heterogeneous computing applications.
 
-The goal is to provide **type-safe, ergonomic, and flexible storage** for real-world Rust systems that 
+The goal is to provide **type-safe, ergonomic, and flexible storage** for real-world software systems that 
 need to mix value types while maintaining safety and clarity.
 
 ## Getting Started
@@ -99,7 +99,7 @@ It can do the following:
 * Add new types to the collection without necessarily adding values of that type.
 
 In summary, the `HeterogeneousHashMap` data structure is a flexible data store accommodating 
-multiple data types at runtime without messing with macros, no need for boxing everything behind 
+multiple data types at runtime without messing with macros, or boxing everything behind 
 something like`Box<dyn Any>`. This library does this with clean, type-safe Rust. In addition, data 
 is stored internally using compact type-erased data storage.
 
@@ -115,7 +115,4 @@ focused on compile-time safety, not dynamic type management. This is an inherent
 working with heterogeneous, type-driven data in Rust.
 
 Additionally, this is not a classic ECS or archetype system: the key and value **type** together 
-define uniqueness, so there is no enforced aggregation of “components” under a single ID. 
-
-These constraints are a result of Rust's commitment to **performance, safety, and zero-cost 
-abstractions**, which necessarily limit certain dynamic behaviors found in managed languages.
+define uniqueness, so there is no enforced aggregation of “components” under a single ID.
