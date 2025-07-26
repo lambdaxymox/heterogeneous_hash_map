@@ -25,6 +25,7 @@ impl Default for AlchemyItem {
 
 struct NonExistentItemCategory;
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_insert_entry1() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -63,6 +64,7 @@ fn test_heterogeneous_hash_map_insert_entry1() {
     assert_eq!(het_map.get_key_value::<AlchemyItem, _>(&key), Some((&Key::new(1_usize), &AlchemyItem::new("Swallow", 3_u32))));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_insert_entry2() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -107,6 +109,7 @@ fn test_heterogeneous_hash_map_insert_entry2() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_insert_entry3() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -152,6 +155,7 @@ fn test_heterogeneous_hash_map_insert_entry3() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert1() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -188,6 +192,7 @@ fn test_heterogeneous_hash_map_or_insert1() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(1_usize)), Some(&AlchemyItem::new("Swallow", 3_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert2() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -232,6 +237,7 @@ fn test_heterogeneous_hash_map_or_insert2() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert3() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -277,6 +283,7 @@ fn test_heterogeneous_hash_map_or_insert3() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert_with1() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -314,6 +321,7 @@ fn test_heterogeneous_hash_map_or_insert_with1() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(1_usize)), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert_with2() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -359,6 +367,7 @@ fn test_heterogeneous_hash_map_or_insert_with2() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert_with3() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -405,6 +414,7 @@ fn test_heterogeneous_hash_map_or_insert_with3() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert_with_key1() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -448,6 +458,7 @@ fn test_heterogeneous_hash_map_or_insert_with_key1() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(1_usize)), Some(&AlchemyItem::new("Specter Oil", 7_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert_with_key2() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -499,6 +510,7 @@ fn test_heterogeneous_hash_map_or_insert_with_key2() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Vampire Oil", 17_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_insert_with_key3() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -551,6 +563,7 @@ fn test_heterogeneous_hash_map_or_insert_with_key3() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_and_modify1() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -589,6 +602,7 @@ fn test_heterogeneous_hash_map_and_modify1() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(1_usize)), None);
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_and_modify2() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -635,6 +649,7 @@ fn test_heterogeneous_hash_map_and_modify2() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), None);
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_and_modify3() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -682,6 +697,7 @@ fn test_heterogeneous_hash_map_and_modify3() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::new("Cat", 1_u32)));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_default1() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -718,6 +734,7 @@ fn test_heterogeneous_hash_map_or_default1() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(1_usize)), Some(&AlchemyItem::default()));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_default2() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -762,6 +779,7 @@ fn test_heterogeneous_hash_map_or_default2() {
     assert_eq!(het_map.get::<AlchemyItem, _>(&Key::new(3_usize)), Some(&AlchemyItem::default()));
 }
 
+#[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_or_default3() {
     let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
