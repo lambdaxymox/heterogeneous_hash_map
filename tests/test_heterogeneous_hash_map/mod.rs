@@ -1,6 +1,6 @@
+mod test_entry_api_many_types;
+mod test_entry_api_one_type;
 mod test_heterogeneous_hash_map_many_types;
 mod test_heterogeneous_hash_map_one_type;
 mod test_heterogeneous_hash_map_two_types;
 mod test_heterogeneous_hash_map_types;
-mod test_entry_api_one_type;
-mod test_entry_api_many_types;

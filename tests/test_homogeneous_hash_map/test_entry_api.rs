@@ -1,4 +1,7 @@
-use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+use heterogeneous_hash_map::{
+    HomogeneousHashMap,
+    Key,
+};
 
 use alloc_crate::string::String;
 
