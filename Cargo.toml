@@ -1,6 +1,6 @@
 [package]
 name = "heterogeneous_hash_map"
-version = "1.3.0"
+version = "1.4.0"
 edition = "2024"
 authors = ["LambdaXymox <lambda.xymox@gmail.com>"]
 description = "A cache-friendly hash map for working with heterogeneously typed data with limited reflection capabilities."
@@ -30,16 +30,16 @@ nightly = ["opaque/nightly"]
 [dependencies]
 
 [dependencies.opaque]
-version = "1.3.0"
+version = "1.4.0"
 git = "https://github.com/lambdaxymox/opaque"
 
 [dependencies.hashbrown]
-version = "0.15.4"
+version = "0.17.0"
 
 [dev-dependencies]
 
 [dev-dependencies.criterion]
-version = "0.7.0"
+version = "0.8.2"
 
 [[bench]]
 name = "bench_heterogeneous_hash_map"
