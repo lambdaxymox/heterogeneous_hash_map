@@ -13,6 +13,7 @@ use core::fmt;
 ///
 /// ```
 /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+/// #
 /// # use core::any::Any;
 /// #
 /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -569,6 +570,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -595,6 +597,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -629,6 +632,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -655,6 +659,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -689,6 +694,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -715,6 +721,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -754,6 +761,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -789,6 +797,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -832,6 +841,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -868,6 +878,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -912,6 +923,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -947,6 +959,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -990,6 +1003,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -1025,6 +1039,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, OccupiedEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_occupied<K: Any, T: Any>(entry: Entry<'_, K, T>) -> OccupiedEntry<'_, K, T> {
@@ -1105,6 +1120,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {
@@ -1126,6 +1142,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {
@@ -1154,6 +1171,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {
@@ -1175,6 +1193,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {
@@ -1203,6 +1222,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {
@@ -1233,6 +1253,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {
@@ -1272,6 +1293,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HomogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {
@@ -1303,6 +1325,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Entry, Key, VacantEntry};
+    /// #
     /// # use core::any::Any;
     /// #
     /// fn into_vacant<K: Any, T: Any>(entry: Entry<'_, K, T>) -> VacantEntry<'_, K, T> {

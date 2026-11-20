@@ -17,6 +17,7 @@ impl TypeMetadata {
     ///
     /// ```
     /// # use heterogeneous_hash_map::TypeMetadata;
+    /// #
     /// # use core::any;
     /// # use core::any::TypeId;
     /// # use core::mem;
@@ -46,6 +47,7 @@ impl TypeMetadata {
     ///
     /// ```
     /// # use heterogeneous_hash_map::TypeMetadata;
+    /// #
     /// # use core::any;
     /// # use core::any::TypeId;
     /// # use core::mem;
@@ -65,6 +67,7 @@ impl TypeMetadata {
     ///
     /// ```
     /// # use heterogeneous_hash_map::TypeMetadata;
+    /// #
     /// # use core::any;
     /// # use core::any::TypeId;
     /// # use core::mem;
@@ -84,6 +87,7 @@ impl TypeMetadata {
     ///
     /// ```
     /// # use heterogeneous_hash_map::TypeMetadata;
+    /// #
     /// # use core::any;
     /// # use core::any::TypeId;
     /// # use core::mem;
@@ -103,6 +107,7 @@ impl TypeMetadata {
     ///
     /// ```
     /// # use heterogeneous_hash_map::TypeMetadata;
+    /// #
     /// # use core::any;
     /// # use core::any::TypeId;
     /// # use core::mem;

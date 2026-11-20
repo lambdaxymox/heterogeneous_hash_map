@@ -656,6 +656,7 @@ where
 ///
 /// ```
 /// # use heterogeneous_hash_map::HeterogeneousHashMap;
+/// #
 /// # use core::any::TypeId;
 /// #
 /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();

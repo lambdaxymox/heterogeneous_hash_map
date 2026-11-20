@@ -46,6 +46,7 @@ impl<K, T> Key<K, T> {
     ///
     /// ```
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
     /// # use core::any::Any;
     /// #
     /// let key: Key<usize, Box<dyn Any>> = Key::new(usize::MAX);
@@ -64,6 +65,7 @@ impl<K, T> Key<K, T> {
     ///
     /// ```
     /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+    /// #
     /// # use core::any::Any;
     /// #
     /// let key: Key<usize, Box<dyn Any>> = Key::new(usize::MAX);

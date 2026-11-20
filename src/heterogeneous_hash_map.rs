@@ -67,6 +67,7 @@ use hashbrown::hash_map;
 ///
 /// ```
 /// # use heterogeneous_hash_map::{Key, HeterogeneousHashMap};
+/// #
 /// # use core::f64;
 /// #
 /// // Some weird mathematical constants.
@@ -295,6 +296,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
+    /// #
     /// # use std::hash::RandomState;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize, RandomState> = HeterogeneousHashMap::with_hasher(RandomState::new());
@@ -326,6 +328,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::HeterogeneousHashMap;
+    /// #
     /// # use std::hash::RandomState;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize, RandomState> = HeterogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
@@ -1211,6 +1214,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::any;
     /// # use core::hash;
     /// # use std::hash::RandomState;
@@ -1277,6 +1281,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::any::Any;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -1292,6 +1297,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::any::Any;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -1314,6 +1320,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::any::Any;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::with_capacity(10);
@@ -1361,6 +1368,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::any::Any;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -1425,6 +1433,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::f64;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -1466,6 +1475,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::f64;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -1551,6 +1561,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key};
+    /// #
     /// # use core::any::TypeId;
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();
@@ -1595,6 +1606,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{HeterogeneousHashMap, Key, TypeMetadata};
+    /// #
     /// # use core::any::{Any, TypeId};
     /// #
     /// let mut het_map: HeterogeneousHashMap<usize> = HeterogeneousHashMap::new();

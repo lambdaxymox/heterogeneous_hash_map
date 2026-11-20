@@ -154,6 +154,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::HomogeneousHashMap;
+    /// #
     /// # use std::hash::RandomState;
     /// #
     /// let map: HomogeneousHashMap<usize, i32> = HomogeneousHashMap::with_hasher(RandomState::new());
@@ -175,6 +176,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::{Key, HomogeneousHashMap};
+    /// #
     /// # use std::hash::RandomState;
     /// #
     /// let mut map: HomogeneousHashMap<usize, i32> = HomogeneousHashMap::with_capacity_and_hasher(3, RandomState::new());
@@ -356,6 +358,7 @@ where
     ///
     /// ```
     /// # use heterogeneous_hash_map::HomogeneousHashMap;
+    /// #
     /// # use std::hash::RandomState;
     /// #
     /// let map: HomogeneousHashMap<usize, String> = HomogeneousHashMap::with_hasher(RandomState::new());
