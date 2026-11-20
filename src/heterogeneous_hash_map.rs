@@ -2049,7 +2049,6 @@ where
         map.remove_entry(key)
     }
 
-
     /// Returns the entry in the heterogeneous hash map corresponding to the given key, if it
     /// exists.
     ///

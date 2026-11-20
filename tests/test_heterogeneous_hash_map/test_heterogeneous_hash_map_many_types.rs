@@ -4852,7 +4852,6 @@ fn test_heterogeneous_hash_map_inventory_item_insert_remove2() {
     assert_eq!(character.len::<InventoryItem>(), Some(3));
 }
 
-
 #[rustfmt::skip]
 #[test]
 fn test_heterogeneous_hash_map_inventory_item_insert_remove3() {
