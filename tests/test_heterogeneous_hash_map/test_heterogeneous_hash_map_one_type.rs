@@ -3,12 +3,6 @@ use heterogeneous_hash_map::{
     Key,
 };
 
-#[cfg(feature = "nightly")]
-use std::alloc;
-
-#[cfg(not(feature = "nightly"))]
-use opaque::allocator_api::alloc;
-
 use core::any;
 use std::boxed::Box;
 use std::string::String;

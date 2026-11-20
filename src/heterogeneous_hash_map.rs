@@ -13,6 +13,7 @@ use crate::iterator::{
 use crate::key::Key;
 use crate::metadata::TypeMetadata;
 
+use alloc_crate::alloc;
 use alloc_crate::vec::Vec;
 use core::any;
 use core::borrow::Borrow;
@@ -24,12 +25,6 @@ use std::hash;
 
 #[cfg(not(feature = "std"))]
 use core::hash;
-
-#[cfg(feature = "nightly")]
-use std::alloc;
-
-#[cfg(not(feature = "nightly"))]
-use opaque::allocator_api::alloc;
 
 use hashbrown::hash_map;
 

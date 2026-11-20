@@ -8,16 +8,7 @@ use criterion::{
     criterion_group,
 };
 
-use std::hash;
 use std::vec::Vec;
-
-#[cfg(feature = "nightly")]
-use std::alloc;
-
-#[cfg(not(feature = "nightly"))]
-use opaque::allocator_api::alloc;
-
-use hashbrown::hash_map;
 
 fn bench_hash_map_remove(c: &mut Criterion) {
     let keys = (0..1000).map(Key::new);

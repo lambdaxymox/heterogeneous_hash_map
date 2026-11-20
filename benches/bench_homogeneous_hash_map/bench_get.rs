@@ -10,12 +10,6 @@ use criterion::{
 
 use std::hash;
 
-#[cfg(feature = "nightly")]
-use std::alloc;
-
-#[cfg(not(feature = "nightly"))]
-use opaque::allocator_api::alloc;
-
 use hashbrown::hash_map;
 
 fn bench_hash_map_get(c: &mut Criterion) {

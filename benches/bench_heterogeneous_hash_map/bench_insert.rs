@@ -8,14 +8,6 @@ use criterion::{
     criterion_group,
 };
 
-use std::hash;
-
-#[cfg(feature = "nightly")]
-use std::alloc;
-
-#[cfg(not(feature = "nightly"))]
-use opaque::allocator_api::alloc;
-
 use hashbrown::hash_map;
 
 fn bench_hash_map_insert(c: &mut Criterion) {
